@@ -15,6 +15,7 @@ jobs:
     permissions:
       contents: read
       deployments: write
+      packages: write
     name: Build docker images and publish to ghcr.io
     steps:
       - name: Checkout
