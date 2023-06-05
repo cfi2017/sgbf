@@ -19,14 +19,14 @@ COPY . .
 RUN cargo build --release --package sgbf-api
 
 FROM debian:stable-slim AS runtime
-WORKDIR /app
+WORKDIR /app/sgbf
 
 RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8080
 
-COPY --from=builder /app/sgbf/target/release/sgbf-api /app/sgbf
-COPY ./sgbf-api/config.yaml /app/config.yaml
+COPY --from=builder /app/sgbf/target/release/sgbf-api .
+COPY ./sgbf-api/config.yaml /app/sgbf/config.yaml
 
 LABEL org.opencontainers.image.source = "https://github.com/cfi2017/sgbf"
 CMD ["/app/sgbf-api"]
