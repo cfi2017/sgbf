@@ -10,6 +10,7 @@ use axum::routing::{get, post};
 use axum_client_ip::SecureClientIpSource;
 use tokio::signal;
 use tower::ServiceBuilder;
+use tower_http::catch_panic::CatchPanicLayer;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::LatencyUnit;
 use tower_http::trace::{DefaultOnRequest, DefaultOnResponse, TraceLayer};
@@ -37,15 +38,16 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
         .layer(
             ServiceBuilder::new()
                 // Handle errors from middleware
-                .layer(cors)
-                .layer(HandleErrorLayer::new(handle_error))
-                .load_shed()
-                .concurrency_limit(1024)
-                .timeout(Duration::from_secs(10))
                 .layer(TraceLayer::new_for_http()
                     .on_response(DefaultOnResponse::new().level(Level::INFO).latency_unit(LatencyUnit::Millis))
                     .on_request(DefaultOnRequest::new().level(Level::DEBUG))
-                ),
+                )
+                .layer(cors)
+                .layer(CatchPanicLayer::new())
+                .layer(HandleErrorLayer::new(handle_error))
+                .load_shed()
+                .concurrency_limit(1024)
+                .timeout(Duration::from_secs(20))
         )
         .layer(SecureClientIpSource::ConnectInfo.into_extension())
         .with_state(state.clone());

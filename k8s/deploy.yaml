@@ -15,6 +15,8 @@ spec:
   template:
     metadata:
       name: api
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: api
         swiss.dev/logging: json
