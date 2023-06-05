@@ -1,4 +1,4 @@
-POST http://localhost:8000/reservation/login
+POST {{url}}/reservation/login
 content-type: application/json
 
 {
@@ -11,9 +11,9 @@ client.global.set('token', response.body.token);
 %}
 
 ###
-GET http://localhost:8000/reservation/calendar
+GET {{url}}/reservation/calendar
 Authorization: Bearer {{token}}
 
 ###
-GET http://localhost:8000/reservation/day?date=2023-06-04
+GET {{url}}/reservation/day?date=2023-06-04
 Authorization: Bearer {{token}}

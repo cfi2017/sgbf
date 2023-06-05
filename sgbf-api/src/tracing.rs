@@ -26,7 +26,7 @@ pub struct TracingConfig {
     logger: LoggerConfig,
 }
 
-pub fn init_tracing(cfg: &TracingConfig) -> anyhow::Result<ClientInitGuard> {
+pub fn init_tracing(cfg: &TracingConfig) -> anyhow::Result<Option<ClientInitGuard>> {
     if std::env::var_os("RUST_LOG").is_none() {
         // Set `RUST_LOG=todos=debug` to see debug logs,
         // this only shows access logs.
@@ -36,17 +36,13 @@ pub fn init_tracing(cfg: &TracingConfig) -> anyhow::Result<ClientInitGuard> {
     LogTracer::init().context("could not initialise log tracer")?;
 
     // sentry initialisation
-    let _guard = sentry::init(sentry::ClientOptions {
-        // Set this a to lower value in production
-        dsn: cfg
-            .error_reporting
-            .sentry_dsn
-            .as_ref()
-            .map(|dsn| Dsn::from_str(dsn).unwrap()),
-        traces_sample_rate: cfg.error_reporting.sampling_rate,
-        release: sentry::release_name!(),
-        ..sentry::ClientOptions::default()
-    });
+    let _guard = cfg.error_reporting.sentry_dsn.as_ref().map(|dsn| sentry::init(sentry::ClientOptions {
+            // Set this a to lower value in production
+            dsn: Some(Dsn::from_str(dsn).unwrap()),
+            traces_sample_rate: cfg.error_reporting.sampling_rate,
+            release: sentry::release_name!(),
+            ..sentry::ClientOptions::default()
+    }));
 
     // opentelemetry tracing exporter
     let tracer = opentelemetry_otlp::new_pipeline()
