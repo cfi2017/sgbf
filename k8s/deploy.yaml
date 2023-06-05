@@ -3,6 +3,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
+  annotations:
+    linkerd.io/inject: enabled
   labels:
     app: api
 spec:
@@ -15,6 +17,7 @@ spec:
       name: api
       labels:
         app: api
+        swiss.dev/logging: json
     spec:
       containers:
         - name: api
