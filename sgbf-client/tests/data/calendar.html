@@ -1,0 +1,3664 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Language" content="de-ch">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+    <meta name="ProgId" content="FrontPage.Editor.Document">
+    <link rel="stylesheet" href="../sgf_class.css" type="text/css">
+
+    <title>Einsatzliste - Roster</title>
+
+    <!--  OnMouseOver Backgroundcolor -->
+
+    <script language="JavaScript">
+        <!--
+        function FP_changeProp() {//v1.0
+            var args = arguments, d = document, i, j, id = args[0], o = FP_getObjectByID(id), s, ao, v, x;
+            d.$cpe = new Array();
+            if (o) for (i = 2; i < args.length; i += 2) {
+                v = args[i + 1];
+                s = "o";
+                ao = args[i].split(".");
+                for (j = 0; j < ao.length; j++) {
+                    s += "." + ao[j];
+                    if (null == eval(s)) {
+                        s = null;
+                        break;
+                    }
+                }
+                x = new Object;
+                x.o = o;
+                x.n = new Array();
+                x.v = new Array();
+                x.n[x.n.length] = s;
+                eval("x.v[x.v.length]=" + s);
+                d.$cpe[d.$cpe.length] = x;
+                if (s) eval(s + "=v");
+            }
+        }
+
+        function FP_getObjectByID(id, o) {//v1.0
+            var c, el, els, f, m, n;
+            if (!o) o = document;
+            if (o.getElementById) el = o.getElementById(id);
+            else if (o.layers) c = o.layers; else if (o.all) el = o.all[id];
+            if (el) return el;
+            if (o.id == id || o.name == id) return o;
+            if (o.childNodes) c = o.childNodes;
+            if (c)
+                for (n = 0; n < c.length; n++) {
+                    el = FP_getObjectByID(id, c[n]);
+                    if (el) return el;
+                }
+            f = o.forms;
+            if (f) for (n = 0; n < f.length; n++) {
+                els = f[n].elements;
+                for (m = 0; m < els.length; m++) {
+                    el = FP_getObjectByID(id, els[n]);
+                    if (el) return el;
+                }
+            }
+            return null;
+        }
+
+        function FP_changePropRestore() {//v1.0
+            var d = document, x;
+            if (d.$cpe) {
+                for (i = 0; i < d.$cpe.length; i++) {
+                    x = d.$cpe[i];
+                    if (x.v == "") x.v = "";
+                    eval("x." + x.n + "=x.v");
+                }
+                d.$cpe = null;
+            }
+        }
+
+        // -->
+    </script>
+
+    <script language="JavaScript">
+        function MM_findObj(n, d) { //v4.01
+            var p, i, x;
+            if (!d) d = document;
+            if ((p = n.indexOf("?")) > 0 && parent.frames.length) {
+                d = parent.frames[n.substring(p + 1)].document;
+                n = n.substring(0, p);
+            }
+            if (!(x = d[n]) && d.all) x = d.all[n];
+            for (i = 0; !x && i < d.forms.length; i++) x = d.forms[i][n];
+            for (i = 0; !x && d.layers && i < d.layers.length; i++) x = MM_findObj(n, d.layers[i].document);
+            if (!x && d.getElementById) x = d.getElementById(n);
+            return x;
+        }
+
+        function MM_swapImage() { //v3.0
+            var i, j = 0, x, a = MM_swapImage.arguments;
+            document.MM_sr = new Array;
+            for (i = 0; i < (a.length - 2); i += 3)
+                if ((x = MM_findObj(a[i])) != null) {
+                    document.MM_sr[j++] = x;
+                    if (!x.oSrc) x.oSrc = x.src;
+                    x.src = a[i + 2];
+                }
+        }
+
+        function MM_swapImgRestore() { //v3.0
+            var i, x, a = document.MM_sr;
+            for (i = 0; a && i < a.length && (x = a[i]) && x.oSrc; i++) x.src = x.oSrc;
+        }
+
+        function MM_preloadImages() { //v3.0
+            var d = document;
+            if (d.images) {
+                if (!d.MM_p) d.MM_p = new Array();
+                var i, j = d.MM_p.length, a = MM_preloadImages.arguments;
+                for (i = 0; i < a.length; i++)
+                    if (a[i].indexOf("#") != 0) {
+                        d.MM_p[j] = new Image;
+                        d.MM_p[j++].src = a[i];
+                    }
+            }
+        }
+    </script>
+
+
+    <SCRIPT TYPE="text/javascript">
+        <!--
+        function popup(mylink, windowname) {
+            if (!window.focus) return true;
+            var href;
+            if (typeof (mylink) == 'string')
+                href = mylink;
+            else
+                href = mylink.href;
+            window.open(href, windowname, 'width=520,height=480,scrollbars=yes');
+            return false;
+        }
+
+        //-->
+    </SCRIPT>
+
+    <script language="JavaScript">
+        function MM_popupMsg(msg) { //v1.0
+            alert(msg);
+        }
+    </script>
+
+    <script language="JavaScript">
+        <!--
+        Verstecken
+        für
+        ältere
+        Browser--
+
+        function subm() {
+            document.form_roster.submit();
+        }
+
+        function myFocus() {
+            document.form_roster.t_days.focus();
+        }
+
+        function auto() {
+            focus(document.form_roster.t_days);
+        }
+
+        // Ende Verstecken -->
+    </script>
+
+</head>
+
+<body background="../images/background_body.gif" style="background-attachment: fixed" class="normal">
+
+<font class="title">Einsatzliste Schlepppiloten + Windenfahrer</font>
+
+<br>&nbsp;
+
+<table border="0" cellspacing="1" class="normal">
+
+    <tr>
+        <td colspan="9">
+            <form name="form_roster" method="POST" action="list_roster_new.php">
+
+                <select size="1" name="timebracket" onChange="subm()" class="normal">
+                    <option value="-1">Meine Termine</option>
+                    <option value="2023-06" selected>Juni</option>
+                    <option value="2023-07">Juli</option>
+                    <option value="2023-08">August</option>
+                    <option value="2023-09">September</option>
+                    <option value="2023-10">Oktober</option>
+                    <option value="2023-11">November</option>
+                    <option value="2023-12">Dezember</option>
+                    <option value="2024-01">2024 Januar</option>
+                    <option value="2024-02">2024 Februar</option>
+                    <option value="2024-03">2024 März</option>
+                    <option value="2024-04">2024 April</option>
+                    <option value="2024-05">2024 Mai</option>
+
+                    <option value="-9">Alle zukünftigen Termine</option>
+                    <option value="-100"> 2023</option>
+                    <option value="-110"> 2022</option>
+
+                </select>
+                &nbsp;&nbsp;&nbsp;
+                <select size="1" name="event_type" onChange="subm()" class="normal">
+                    <option value="0">Alle</option>
+                    <option value="T"
+                            Warning: Undefined array key
+                    "event_type" in /home/httpd/vhosts/schlepppiloten.ch/httpsdocs/roster/list_roster_new.php on line
+                    200
+                    >Schlepp</option>
+                    <option value="W"
+                            Warning: Undefined array key
+                    "event_type" in /home/httpd/vhosts/schlepppiloten.ch/httpsdocs/roster/list_roster_new.php on line
+                    201
+                    >Winde</option>
+                    <option value="B"
+                            Warning: Undefined array key
+                    "event_type" in /home/httpd/vhosts/schlepppiloten.ch/httpsdocs/roster/list_roster_new.php on line
+                    202
+                    >Fluglehrer</option>
+                </select>
+                &nbsp;&nbsp;&nbsp;
+                68 Treffer&nbsp;&nbsp;&nbsp;
+
+
+            </form>
+        </td>
+        <td align="right">
+            <a href='list_roster_new.php?printit=1&timebracket=2023-06' XXtarget="print">
+                <img src='../images/icon_print.gif' border="0">
+            </a>
+
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="9">&nbsp;<hr>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6"><b> Juni 2023</td>
+    </tr>
+    <tr>
+        <td colspan="9">&nbsp;</td>
+    </tr>
+
+    <tr bgcolor='99,cc,ff ' id='id12248' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12248',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12248'></a>
+            <a name='2023-06-05'></a>
+            &nbsp;<b> 05.06.&nbsp;&nbsp;&nbsp;Mo </b>&nbsp;
+        <td nowrap>&nbsp;23&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-05&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                <b>&nbsp;1&nbsp;</b>&nbsp;&nbsp;(1) </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp;
+Warning: Undefined variable $datetime3 in /home/httpd/vhosts/schlepppiloten.ch/httpsdocs/roster/list_roster_new.php on line 331
+1 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11521' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11521',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11521'></a>
+            <a name='2023-06-06'></a>
+            &nbsp;<b> 06.06.&nbsp;&nbsp;&nbsp;Di </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-06&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                <b>&nbsp;7&nbsp;</b>&nbsp;&nbsp;(7) </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 2 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -18:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11741' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11741',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11741'></a>
+            <a name='2023-06-06'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11777' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11777',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11777'></a>
+            <a name='2023-06-06'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Domenic Planta</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11705' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11705',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11705'></a>
+            <a name='2023-06-06'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:green"><strong>W</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Beat Kehrli</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12249' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12249',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12249'></a>
+            <a name='2023-06-07'></a>
+            &nbsp;<b> 07.06.&nbsp;&nbsp;&nbsp;Mi </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-07&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 3 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12250' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12250',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12250'></a>
+            <a name='2023-06-08'></a>
+            &nbsp;<b> 08.06.&nbsp;&nbsp;&nbsp;Do </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-08&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 4 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12251' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12251',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12251'></a>
+            <a name='2023-06-09'></a>
+            &nbsp;<b> 09.06.&nbsp;&nbsp;&nbsp;Fr </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-09&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 5 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12161' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12161',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12161'></a>
+            <a name='2023-06-10'></a>
+            &nbsp;<b> 10.06.&nbsp;&nbsp;&nbsp;Sa </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-10&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                <b>&nbsp;1&nbsp;</b>&nbsp;&nbsp;(2) </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 6 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12109' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12109',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12109'></a>
+            <a name='2023-06-10'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11558' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11558',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11558'></a>
+            <a name='2023-06-10'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:30</a> -12:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            David Schlumpf</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11904' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11904',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11904'></a>
+            <a name='2023-06-10'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11830' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11830',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11830'></a>
+            <a name='2023-06-10'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11648' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11648',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11648'></a>
+            <a name='2023-06-10'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 14:00</a> -18:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            David Schlumpf</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12110' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12110',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12110'></a>
+            <a name='2023-06-11'></a>
+            &nbsp;<b> 11.06.&nbsp;&nbsp;&nbsp;So </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-11&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                <b>&nbsp;1&nbsp;</b>&nbsp;&nbsp;(1) </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 7 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12162' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12162',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12162'></a>
+            <a name='2023-06-11'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11595' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11595',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11595'></a>
+            <a name='2023-06-11'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 10:30</a> -12:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Thomas Spycher</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11905' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11905',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11905'></a>
+            <a name='2023-06-11'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11831' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11831',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11831'></a>
+            <a name='2023-06-11'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11649' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11649',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11649'></a>
+            <a name='2023-06-11'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 14:00</a> -18:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Thomas Spycher</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12252' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12252',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12252'></a>
+            <a name='2023-06-12'></a>
+            &nbsp;<b> 12.06.&nbsp;&nbsp;&nbsp;Mo </b>&nbsp;
+        <td nowrap>&nbsp;24&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-12&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 1 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11522' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11522',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11522'></a>
+            <a name='2023-06-13'></a>
+            &nbsp;<b> 13.06.&nbsp;&nbsp;&nbsp;Di </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-13&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                <b>&nbsp;1&nbsp;</b>&nbsp;&nbsp;(1) </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 2 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -18:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11706' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11706',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11706'></a>
+            <a name='2023-06-13'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:green"><strong>W</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11742' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11742',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11742'></a>
+            <a name='2023-06-13'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11778' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11778',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11778'></a>
+            <a name='2023-06-13'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12253' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12253',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12253'></a>
+            <a name='2023-06-14'></a>
+            &nbsp;<b> 14.06.&nbsp;&nbsp;&nbsp;Mi </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-14&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 3 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12254' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12254',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12254'></a>
+            <a name='2023-06-15'></a>
+            &nbsp;<b> 15.06.&nbsp;&nbsp;&nbsp;Do </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-15&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 4 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12255' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12255',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12255'></a>
+            <a name='2023-06-16'></a>
+            &nbsp;<b> 16.06.&nbsp;&nbsp;&nbsp;Fr </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-16&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 5 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12111' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12111',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12111'></a>
+            <a name='2023-06-17'></a>
+            &nbsp;<b> 17.06.&nbsp;&nbsp;&nbsp;Sa </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-17&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 6 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Andreas Lerch</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12163' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12163',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12163'></a>
+            <a name='2023-06-17'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11559' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11559',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11559'></a>
+            <a name='2023-06-17'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:30</a> -12:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Manuel Frey</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11832' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11832',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11832'></a>
+            <a name='2023-06-17'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11906' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11906',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11906'></a>
+            <a name='2023-06-17'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Andreas Lerch</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11650' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11650',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11650'></a>
+            <a name='2023-06-17'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 14:00</a> -18:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Manuel Frey</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12164' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12164',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12164'></a>
+            <a name='2023-06-18'></a>
+            &nbsp;<b> 18.06.&nbsp;&nbsp;&nbsp;So </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-18&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 7 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12112' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12112',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12112'></a>
+            <a name='2023-06-18'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11596' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11596',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11596'></a>
+            <a name='2023-06-18'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 10:30</a> -12:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Roger Freiburghaus</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11833' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11833',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11833'></a>
+            <a name='2023-06-18'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11907' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11907',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11907'></a>
+            <a name='2023-06-18'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11651' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11651',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11651'></a>
+            <a name='2023-06-18'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 14:00</a> -18:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Roger Freiburghaus</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12256' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12256',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12256'></a>
+            <a name='2023-06-19'></a>
+            &nbsp;<b> 19.06.&nbsp;&nbsp;&nbsp;Mo </b>&nbsp;
+        <td nowrap>&nbsp;25&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-19&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 1 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11523' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11523',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11523'></a>
+            <a name='2023-06-20'></a>
+            &nbsp;<b> 20.06.&nbsp;&nbsp;&nbsp;Di </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-20&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 2 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -18:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11743' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11743',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11743'></a>
+            <a name='2023-06-20'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Stephan Kilchmann Simonius</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11779' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11779',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11779'></a>
+            <a name='2023-06-20'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11707' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11707',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11707'></a>
+            <a name='2023-06-20'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:green"><strong>W</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12257' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12257',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12257'></a>
+            <a name='2023-06-21'></a>
+            &nbsp;<b> 21.06.&nbsp;&nbsp;&nbsp;Mi </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-21&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 3 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12258' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12258',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12258'></a>
+            <a name='2023-06-22'></a>
+            &nbsp;<b> 22.06.&nbsp;&nbsp;&nbsp;Do </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-22&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 4 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12259' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12259',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12259'></a>
+            <a name='2023-06-23'></a>
+            &nbsp;<b> 23.06.&nbsp;&nbsp;&nbsp;Fr </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-23&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 5 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12113' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12113',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12113'></a>
+            <a name='2023-06-24'></a>
+            &nbsp;<b> 24.06.&nbsp;&nbsp;&nbsp;Sa </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-24&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 6 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12165' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12165',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12165'></a>
+            <a name='2023-06-24'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11560' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11560',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11560'></a>
+            <a name='2023-06-24'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:30</a> -12:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Markus Guler</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11908' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11908',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11908'></a>
+            <a name='2023-06-24'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11834' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11834',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11834'></a>
+            <a name='2023-06-24'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11652' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11652',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11652'></a>
+            <a name='2023-06-24'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 14:00</a> -18:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Markus Guler</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12166' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12166',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12166'></a>
+            <a name='2023-06-25'></a>
+            &nbsp;<b> 25.06.&nbsp;&nbsp;&nbsp;So </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-25&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 7 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id12114' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12114',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12114'></a>
+            <a name='2023-06-25'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 09:00</a> -13:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11597' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11597',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11597'></a>
+            <a name='2023-06-25'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 10:30</a> -12:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Manuel Frey</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11909' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11909',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11909'></a>
+            <a name='2023-06-25'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11835' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11835',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11835'></a>
+            <a name='2023-06-25'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:00</a> -20:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='d8,d8,d8 ' id='id11653' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11653',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11653'></a>
+            <a name='2023-06-25'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 14:00</a> -18:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+            Manuel Frey</b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12260' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12260',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12260'></a>
+            <a name='2023-06-26'></a>
+            &nbsp;<b> 26.06.&nbsp;&nbsp;&nbsp;Mo </b>&nbsp;
+        <td nowrap>&nbsp;26&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-26&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 1 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11524' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11524',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11524'></a>
+            <a name='2023-06-27'></a>
+            &nbsp;<b> 27.06.&nbsp;&nbsp;&nbsp;Di </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-27&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 2 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -18:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11744' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11744',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11744'></a>
+            <a name='2023-06-27'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11780' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11780',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11780'></a>
+            <a name='2023-06-27'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:black"><strong>FI</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id11708' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id11708',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='11708'></a>
+            <a name='2023-06-27'></a>
+            &nbsp;<b> </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+        </td>
+        <!--
+	<td nowrap>&nbsp;  &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 17:00</a> -21:30</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:green"><strong>W</strong></span>
+            <!-- <img src='../images/type_event_w.gif' title='Winde'> -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12261' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12261',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12261'></a>
+            <a name='2023-06-28'></a>
+            &nbsp;<b> 28.06.&nbsp;&nbsp;&nbsp;Mi </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-28&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 3 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12262' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12262',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12262'></a>
+            <a name='2023-06-29'></a>
+            &nbsp;<b> 29.06.&nbsp;&nbsp;&nbsp;Do </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-29&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 4 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+    <tr bgcolor='e8,e8,e8 ' id='id12263' onMouseOut="FP_changePropRestore()"
+        onmouseover="FP_changeProp(/*id*/'id12263',1,'style.backgroundColor','#ffffEE')">
+
+        <td nowrap>
+            <a name='12263'></a>
+            <a name='2023-06-30'></a>
+            &nbsp;<b> 30.06.&nbsp;&nbsp;&nbsp;Fr </b>&nbsp;
+        <td nowrap>&nbsp;&nbsp;
+        </td>
+
+        <td align="center">
+            <a href="participant_edit.php?fe_t=participant_sf&select_date=2023-06-30&fe_f=text"
+               onClick="return popup(this, 'notes')" title='Anmeldungen Segelflieger'>
+                SF+ </a>
+        </td>
+        <!--
+	<td nowrap>&nbsp; 5 &nbsp;
+	</td>
+	-->
+
+        <td align="right" nowrap></a>&nbsp;
+        </td>
+        <td align="right" nowrap> </a>&nbsp;
+        </td>
+        <td nowrap>&nbsp; 13:30</a> -17:00</a>
+            &nbsp;
+        </td>
+        <td align="center"><span style="color:fuchsia"><strong>S</strong></span>
+            <!-- <img src='../images/type_event_t.gif' title='Schlepp'>  -->
+
+        </td>
+
+        <td align="right" nowrap>
+
+        </td>
+        <td></td>
+
+        <td align="center" nowrap><b>
+
+
+        </td>
+        <td align="center" nowrap><b>
+
+
+        </b>
+        </td>
+        <td align="center" nowrap>&nbsp;
+            &nbsp;
+        </td>
+
+    </tr>
+
+</table>
+</body>
+
+
+</html>

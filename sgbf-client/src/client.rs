@@ -2,8 +2,10 @@ use std::sync::Arc;
 use reqwest::cookie;
 use reqwest::cookie::CookieStore;
 use serde::Serialize;
+use tracing::instrument;
 use crate::parsing;
 use crate::model::{Day, RosterEntry};
+use crate::parsing::Parser;
 
 pub struct Client {
     inner: reqwest::Client,
@@ -11,6 +13,7 @@ pub struct Client {
 }
 
 impl Client {
+    #[instrument(skip(password))]
     pub async fn from_credentials(username: &str, password: &str) -> Self {
         let provider = Arc::new(cookie::Jar::default());
         let client = Self {
@@ -21,6 +24,7 @@ impl Client {
         client
     }
 
+    #[instrument(skip(token))]
     pub async fn from_token(token: &str) -> Self {
         let jar = cookie::Jar::default();
         jar.add_cookie_str(format!("PHPSESSID={}", token).as_str(), &reqwest::Url::parse(BASE_URL).unwrap());
@@ -37,11 +41,12 @@ impl Client {
         let jar = self.cookie_provider.as_ref();
         let cookie = jar.cookies(&reqwest::Url::parse(BASE_URL).unwrap()).unwrap();
         let cookie = cookie.to_str().unwrap();
-        let cookie = cookie.split(";").next().unwrap();
-        let cookie = cookie.split("=").nth(1).unwrap();
+        let cookie = cookie.split(';').next().unwrap();
+        let cookie = cookie.split('=').nth(1).unwrap();
         cookie.to_string()
     }
 
+    #[instrument(skip(self, password))]
     async fn login(&self, username: &str, password: &str) {
         let url = format!("{}{}", BASE_URL, PATH_LOGIN);
         let body = LoginBody {
@@ -56,6 +61,7 @@ impl Client {
         let _ = self.inner.execute(request).await.unwrap();
     }
 
+    #[instrument(skip(self))]
     pub async fn get_calendar(&self) -> Vec<Day> {
         let url = format!("{}{}", BASE_URL, PATH_CALENDAR);
         let request = self.inner.get(url)
@@ -65,9 +71,10 @@ impl Client {
         // body is html
         let body = response.text().await.unwrap();
         // parse
-        parsing::parse_calendar(body)
+        Parser::default().parse_calendar(body)
     }
 
+    #[instrument(skip(self))]
     pub async fn get_day(&self, date: chrono::NaiveDate) -> Vec<RosterEntry> {
         let url = format!("{}{}", BASE_URL, PATH_DAY);
         let request = self.inner.get(url)
@@ -79,7 +86,7 @@ impl Client {
         // body is html
         let body = response.text().await.unwrap();
         // parse
-        parsing::parse_roster(body)
+        Parser::default().parse_roster(body)
     }
 }
 

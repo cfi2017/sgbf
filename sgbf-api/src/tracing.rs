@@ -1,6 +1,7 @@
 use std::str::FromStr;
 
 use anyhow::Context;
+use opentelemetry_otlp::WithExportConfig;
 use sentry::types::Dsn;
 use sentry::ClientInitGuard;
 use serde::Deserialize;
@@ -51,7 +52,7 @@ pub fn init_tracing(cfg: &TracingConfig) -> anyhow::Result<ClientInitGuard> {
     // opentelemetry tracing exporter
     let tracer = opentelemetry_otlp::new_pipeline()
         .tracing()
-        .with_exporter(opentelemetry_otlp::new_exporter().tonic())
+        .with_exporter(opentelemetry_otlp::new_exporter().tonic().with_endpoint("http://localhost:4317"))
         .install_batch(opentelemetry::runtime::Tokio)
         .context("could not create otel tracing exporter")?;
 
