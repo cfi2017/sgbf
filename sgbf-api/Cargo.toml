@@ -1,0 +1,33 @@
+[package]
+name = "sgbf-api"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# common libraries
+anyhow = "1.0.71"
+config = { version = "0.13.3", features = ["yaml"] }
+chrono = { version = "0.4", features = ["serde"] }
+serde = { version = "1", features = ["serde_derive"] }
+serde_json = { version = "1" }
+sgbf-client = { path = "../sgbf-client", features = ["axum"] }
+
+# async runtime
+tokio = { version = "1", features = ["full"] }
+
+# axum & tower
+axum = { version = "0.6", features = ["headers", "http2"] }
+axum-client-ip = "0.4"
+axum-macros = "0.3"
+tower = { version = "0.4", features = ["util", "timeout", "load-shed", "limit"] }
+tower-layer = "0.3"
+tower-http = { version = "0.4", features = ["add-extension", "auth", "compression-full", "limit", "trace"] }
+hyper = "0.14"
+# for libraries
+# axum-core = "0.3"
+
+# tracing
+tracing = { version = "0.1.37", features = ["log"] }
+tracing-subscriber = "0.3.17"

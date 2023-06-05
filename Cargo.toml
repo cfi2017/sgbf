@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "sgbf-api",
+    "sgbf-client",
+    "sgbf-cli"
+]

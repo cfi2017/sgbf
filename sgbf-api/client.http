@@ -1,0 +1,19 @@
+POST http://localhost:8000/reservation/login
+content-type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+> {%
+client.global.set('token', response.body.token);
+%}
+
+###
+GET http://localhost:8000/reservation/calendar
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:8000/reservation/day?date=2023-06-04
+Authorization: Bearer {{token}}
