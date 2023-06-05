@@ -29,4 +29,4 @@ COPY --from=builder /app/sgbf/target/release/sgbf-api .
 COPY ./sgbf-api/config.yaml /app/sgbf/config.yaml
 
 LABEL org.opencontainers.image.source = "https://github.com/cfi2017/sgbf"
-CMD ["/app/sgbf-api"]
+CMD ["/app/sgbf/sgbf-api"]

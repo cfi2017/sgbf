@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/cfi2017/sgbf:main
+          image: ghcr.io/cfi2017/sgbf:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
