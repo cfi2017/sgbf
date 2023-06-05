@@ -1,2 +1,7 @@
-target
-**/target/
+target/
+k8s/
+.github/
+.git/
+.idea/
+.dockerignore
+**/Dockerfile
