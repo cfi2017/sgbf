@@ -38,7 +38,7 @@ apiVersion: getambassador.io/v3alpha1
 metadata:
   name: api-mapping
 spec:
-  prefix: /api
+  prefix: /api/
   service: api:80
   rewrite: /
   hostname: sgbf.swiss.dev

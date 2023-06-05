@@ -11,7 +11,9 @@ use axum_client_ip::SecureClientIpSource;
 use tokio::signal;
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
-use tower_http::trace::TraceLayer;
+use tower_http::LatencyUnit;
+use tower_http::trace::{DefaultOnRequest, DefaultOnResponse, TraceLayer};
+use tracing::Level;
 use crate::config::Config;
 use crate::routes;
 use crate::state::{AppState, SharedState};
@@ -40,7 +42,10 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
                 .load_shed()
                 .concurrency_limit(1024)
                 .timeout(Duration::from_secs(10))
-                .layer(TraceLayer::new_for_http()),
+                .layer(TraceLayer::new_for_http()
+                    .on_response(DefaultOnResponse::new().level(Level::INFO).latency_unit(LatencyUnit::Millis))
+                    .on_request(DefaultOnRequest::new().level(Level::DEBUG))
+                ),
         )
         .layer(SecureClientIpSource::ConnectInfo.into_extension())
         .with_state(state.clone());
