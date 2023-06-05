@@ -44,6 +44,7 @@ pub fn init_tracing(cfg: &TracingConfig) -> anyhow::Result<ClientInitGuard> {
             .as_ref()
             .map(|dsn| Dsn::from_str(dsn).unwrap()),
         traces_sample_rate: cfg.error_reporting.sampling_rate,
+        release: sentry::release_name!(),
         ..sentry::ClientOptions::default()
     });
 

@@ -26,4 +26,7 @@ spec:
           ports:
             - containerPort: 8000
               name: http
+          env:
+            - name: SGBF__TRACING__ERROR_REPORTING__SENTRY_DSN
+              value: "https://952ffd64359f4f2e83b283faacdd545f@sentry.service.cloud.swiss.dev/3"
       restartPolicy: Always
