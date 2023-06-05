@@ -4,12 +4,13 @@ use std::time::Duration;
 use anyhow::Context;
 use axum::{BoxError, Router};
 use axum::error_handling::HandleErrorLayer;
-use axum::http::StatusCode;
+use axum::http::{Method, StatusCode};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum_client_ip::SecureClientIpSource;
 use tokio::signal;
 use tower::ServiceBuilder;
+use tower_http::cors::{Any, CorsLayer};
 use tower_http::trace::TraceLayer;
 use crate::config::Config;
 use crate::routes;
@@ -18,11 +19,14 @@ use crate::state::{AppState, SharedState};
 pub async fn init_default_server() -> anyhow::Result<()> {
     let config = Config::load().context("could not load config")?;
     let state = SharedState::build(AppState::new(config.to_owned()));
+    let _guard = crate::tracing::init_tracing(&config.tracing)?;
     init_server(&config, state).await
 }
 
 pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()> {
-
+    let cors = CorsLayer::new()
+        .allow_methods([Method::GET, Method::POST])
+        .allow_origin(Any);
     let server = Router::new()
         .route("/status", get(routes::status))
         .route("/reservation/login", post(routes::reservation::login))
@@ -31,6 +35,7 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
         .layer(
             ServiceBuilder::new()
                 // Handle errors from middleware
+                .layer(cors)
                 .layer(HandleErrorLayer::new(handle_error))
                 .load_shed()
                 .concurrency_limit(1024)

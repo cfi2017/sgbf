@@ -23,11 +23,22 @@ axum-client-ip = "0.4"
 axum-macros = "0.3"
 tower = { version = "0.4", features = ["util", "timeout", "load-shed", "limit"] }
 tower-layer = "0.3"
-tower-http = { version = "0.4", features = ["add-extension", "auth", "compression-full", "limit", "trace"] }
+tower-http = { version = "0.4", features = ["add-extension", "auth", "compression-full", "limit", "trace", "cors"] }
 hyper = "0.14"
 # for libraries
 # axum-core = "0.3"
 
 # tracing
-tracing = { version = "0.1.37", features = ["log"] }
-tracing-subscriber = "0.3.17"
+tracing = { version = "0.1", features = ["log"] }
+log = "0.4"
+tracing-log = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt", "json", "env-filter"] }
+tracing-error = { version = "0.2", features = ["traced-error"] }
+# error reporting
+sentry = "0.31"
+sentry-tracing = "0.31"
+# otel harness
+tracing-opentelemetry = "0.18"
+opentelemetry = { version = "0.18", features = ["rt-tokio"] }
+opentelemetry-otlp = { version = "0.11", features = ["tokio", "metrics"] }
+opentelemetry_sdk = "0.18"

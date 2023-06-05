@@ -28,4 +28,5 @@ EXPOSE 8080
 COPY --from=builder /app/sgbf/target/release/sgbf-api /app/sgbf
 COPY ./sgbf-api/config.yaml /app/config.yaml
 
+LABEL org.opencontainers.image.source = "https://github.com/cfi2017/sgbf"
 CMD ["/app/sgbf-api"]

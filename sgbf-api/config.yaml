@@ -1,3 +1,9 @@
 server:
   host: 0.0.0.0
   port: 8000
+tracing:
+  error_reporting:
+    sentry_dsn: ""
+    sampling_rate: 0.1
+  logger:
+      level: "info"

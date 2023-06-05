@@ -10,6 +10,7 @@ pub struct Server {
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
     pub server: Server,
+    pub tracing: crate::tracing::TracingConfig
 }
 
 impl Config {
