@@ -1,0 +1,61 @@
+apiVersion: getambassador.io/v3alpha1
+kind: Host
+metadata:
+  name: sgbf-host
+spec:
+  hostname: "sgbf.swiss.dev"
+  tlsSecret:
+    name: sgbf-tls
+  requestPolicy:
+    insecure:
+      action: Redirect
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: sgbf
+spec:
+  secretName: sgbf-tls
+  issuerRef:
+    name: cloudflare-issuer
+    kind: ClusterIssuer
+  commonName: sgbf.swiss.dev
+  dnsNames:
+    - sgbf.swiss.dev
+---
+kind: AuthService
+apiVersion: getambassador.io/v3alpha1
+metadata:
+  name: oathkeeper
+spec:
+  auth_service: http://oathkeeper-api.auth:4456
+  path_prefix: /decisions
+  allowed_authorization_headers:
+    - X-Identity
+---
+kind: Mapping
+apiVersion: getambassador.io/v3alpha1
+metadata:
+  name: api-mapping
+spec:
+  prefix: /api
+  service: api:80
+  rewrite: /
+  hostname: sgbf.swiss.dev
+---
+apiVersion: oathkeeper.ory.sh/v1alpha1
+kind: Rule
+metadata:
+  name: allow-sgbf-api
+spec:
+  match:
+    methods:
+      - GET
+      - POST
+      - OPTIONS
+      - HEAD
+    url: https://sgbf.swiss.dev/api/<.*>
+  authenticators:
+    - handler: noop
+  authorizer:
+    handler: allow
