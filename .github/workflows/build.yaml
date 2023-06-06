@@ -17,6 +17,7 @@ jobs:
         include:
           - dockerfile: ./sgbf-api/Dockerfile
             image: ghcr.io/cfi2017/sgbf
+            context: .
           - dockerfile: ./frontend/Dockerfile
             image: ghcr.io/cfi2017/sgbf-frontend
             context: ./frontend
@@ -53,7 +54,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
