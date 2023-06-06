@@ -16,10 +16,10 @@ jobs:
       matrix:
         include:
           - dockerfile: ./sgbf-api/Dockerfile
-            image: ghcr.io/cfi2017/sgbf
+            image: ghcr.io/cfi2017/sgbf/api
             context: .
           - dockerfile: ./frontend/Dockerfile
-            image: ghcr.io/cfi2017/sgbf-frontend
+            image: ghcr.io/cfi2017/sgbf/frontend
             context: ./frontend
     permissions:
       contents: read
