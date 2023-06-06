@@ -1,10 +1,13 @@
 use std::borrow::Cow;
 use std::net::SocketAddr;
+use std::str::FromStr;
 use std::time::Duration;
 use anyhow::Context;
 use axum::{BoxError, Router};
 use axum::error_handling::HandleErrorLayer;
+use axum::headers::HeaderName;
 use axum::http::{Method, StatusCode};
+use axum::http::header::{AUTHORIZATION, CONTENT_TYPE};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum_client_ip::SecureClientIpSource;
@@ -29,6 +32,7 @@ pub async fn init_default_server() -> anyhow::Result<()> {
 pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()> {
     let cors = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST])
+        .allow_headers(vec![CONTENT_TYPE, AUTHORIZATION])
         .allow_origin(Any);
     let server = Router::new()
         .route("/status", get(routes::status))

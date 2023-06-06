@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RosterEntry {
     pub name: String,
     pub message: String,
@@ -15,6 +16,7 @@ pub enum RosterEntryType {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Day {
     pub date: chrono::NaiveDate,
     pub registered_pilots: Stats,
@@ -38,6 +40,7 @@ impl From<(u32, u32)> for Stats {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PersonEntry {
     pub time_frame: TimeFrame,
     pub name: String,
@@ -50,10 +53,10 @@ pub type TimeFrame = (chrono::NaiveTime, chrono::NaiveTime);
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum EntryType {
-    #[serde(rename = "FI")]
+    #[serde(rename = "FlightInstructor")]
     FlightInstructor,
-    #[serde(rename = "S")]
+    #[serde(rename = "TowingPilot")]
     TowingPilot,
-    #[serde(rename = "W")]
+    #[serde(rename = "WinchOperator")]
     WinchOperator,
 }

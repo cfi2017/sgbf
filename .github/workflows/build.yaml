@@ -17,6 +17,9 @@ jobs:
         include:
           - dockerfile: ./sgbf-api/Dockerfile
             image: ghcr.io/cfi2017/sgbf
+          - dockerfile: ./frontend/Dockerfile
+            image: ghcr.io/cfi2017/sgbf-frontend
+            context: ./frontend
     permissions:
       contents: read
       deployments: write
