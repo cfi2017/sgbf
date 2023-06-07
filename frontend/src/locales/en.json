@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "settings": "Settings",
+    "reservation": "Reservation System",
+    "logout": "Logout"
+  },
+  "reservation": {
+    "title": "Reservation System",
+    "refresh": "Refresh",
+    "calendar": "Calendar",
+    "entry": {
+      "registered_label": "Registered pilots",
+      "definite": "definite",
+      "tentative": "tentative",
+      "pilotType": {
+        "instructor": "FI",
+        "towPilot": "S",
+        "winchOperator": "W"
+      }
+    },
+    "day": {
+      "briefing": {
+        "title": "Briefing",
+        "dabs": "DABS Briefing"
+      },
+      "registered": {
+        "title": "Registered",
+        "definite": "Registered",
+        "tentative": "Interested",
+        "unavailable": "Absent"
+      },
+      "registration": {
+        "title": "Registration",
+        "entry_type": "Registration Type",
+        "definite": "Registered",
+        "tentative": "Interested",
+        "unavailable": "Absent",
+        "save": "Save",
+        "remarks": "Remarks"
+      },
+      "close": "Close"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "notifications": {
+      "title": "Notifications",
+      "activate": "Activate Notifications",
+      "subOptions": {
+        "flightInstructors": "Notifications for Flight Instructors",
+        "towPilots": "Notifications for Tow Pilots",
+        "manyParticipants": "Notifications for many Participants"
+      }
+    },
+    "language": {
+      "title": "Language"
+    }
+  },
+  "language": {
+    "en": "English",
+    "de": "German"
+  }
+}

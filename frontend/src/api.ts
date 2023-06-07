@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type {AxiosInstance} from 'axios';
-import type {Day, RosterEntry} from "@/model";
+import type {DayOverview, RosterEntry, Day} from "@/model";
 
 class ApiService {
     private instance: AxiosInstance;
@@ -16,18 +16,24 @@ class ApiService {
         return response.data.token;
     }
 
-    public async getCalendar(token: string): Promise<Day[]> {
+    public async getCalendar(token: string): Promise<DayOverview[]> {
         const response = await this.instance.get('/calendar', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         return response.data;
     }
 
-    public async getDay(date: string, token: string): Promise<RosterEntry[]> {
+    public async getDay(date: string, token: string): Promise<Day> {
         const response = await this.instance.get(`/day?date=${date}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         return response.data;
+    }
+    
+    public async updateDay(date: string, token: string, day: Day) {
+        await this.instance.post(`/day?date=${date}`, day, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
     }
 }
 

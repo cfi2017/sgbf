@@ -38,7 +38,7 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
         .route("/status", get(routes::status))
         .route("/reservation/login", post(routes::reservation::login))
         .route("/reservation/calendar", get(routes::reservation::get_calendar))
-        .route("/reservation/day", get(routes::reservation::get_day))
+        .route("/reservation/day", get(routes::reservation::get_day).post(routes::reservation::update_day))
         .layer(
             ServiceBuilder::new()
                 // Handle errors from middleware

@@ -1,7 +1,7 @@
-use scraper::ElementRef;
+use scraper::{ElementRef, Html};
 use serde::{Deserialize, Serialize};
 use tracing::{debug, instrument, trace};
-use crate::model::{Day, EntryType, PersonEntry, RosterEntry, RosterEntryType, TimeFrame};
+use crate::model::{Day, DayOverview, EditAction, EntryType, ParticipantType, PersonEntry, RosterEntry, RosterEntryType, TimeFrame};
 
 #[derive(Debug, Default)]
 pub struct Parser {
@@ -14,6 +14,11 @@ struct Selectors {
     tr: scraper::Selector,
     td: scraper::Selector,
     a: scraper::Selector,
+    action: scraper::Selector,
+    format: scraper::Selector,
+    edit_id: scraper::Selector,
+    remarks: scraper::Selector,
+    checked: scraper::Selector,
 }
 
 impl Selectors {
@@ -23,6 +28,11 @@ impl Selectors {
             tr: scraper::Selector::parse("tr").unwrap(),
             td: scraper::Selector::parse("td").unwrap(),
             a: scraper::Selector::parse("a").unwrap(),
+            action: scraper::Selector::parse("body > form > input[type=hidden]:nth-child(3)").unwrap(),
+            format: scraper::Selector::parse("body > form > input[type=hidden]:nth-child(6)").unwrap(),
+            edit_id: scraper::Selector::parse("body > form > input[type=hidden]:nth-child(5)").unwrap(),
+            remarks: scraper::Selector::parse("body > form > table:nth-child(1) > tbody > tr:nth-child(7) > td > textarea").unwrap(),
+            checked: scraper::Selector::parse("input[checked]").unwrap(),
         }
     }
 }
@@ -36,8 +46,57 @@ impl Default for Selectors {
 impl Parser {
 
     #[instrument(skip(document))]
-    pub fn parse_roster(&self, document: String) -> Vec<RosterEntry> {
+    pub fn parse_day(&self, document: String) -> Day {
         let document = scraper::Html::parse_document(&document);
+        let roster = self.parse_roster(&document);
+        let action = self.parse_action(&document);
+        let format = document.select(&self.selectors.format).next().unwrap().value().attr("value").unwrap().to_string();
+        match action {
+            EditAction::Add => Day {
+                entries: roster,
+                action,
+                id: None,
+                participant_type: ParticipantType::GliderPilot,
+                format,
+                remarks: None,
+                entry_type: None,
+            },
+            EditAction::Edit => {
+                let id = document.select(&self.selectors.edit_id).next().unwrap().value().attr("value").unwrap().to_string();
+                let remarks = document.select(&self.selectors.remarks).next().unwrap().text().collect::<String>();
+                let checked = document.select(&self.selectors.checked).next().unwrap().value().attr("value").unwrap().to_string();
+                let entry_type = match checked.as_str() {
+                    "1" => Some(RosterEntryType::Tentative),
+                    "2" => Some(RosterEntryType::Definite),
+                    "-1" => Some(RosterEntryType::Unavailable),
+                    _ => None,
+                };
+                Day {
+                    entries: roster,
+                    action,
+                    id: Some(id.parse().unwrap()),
+                    participant_type: ParticipantType::GliderPilot,
+                    format,
+                    remarks: Some(remarks),
+                    entry_type,
+                }
+            }
+        }
+    }
+
+    #[instrument(skip(document))]
+    pub fn parse_action(&self, document: &Html) -> EditAction {
+        let action = document.select(&self.selectors.action).next().unwrap();
+        let action = action.value().attr("value").unwrap();
+        match action {
+            "edit" => EditAction::Edit,
+            "add" => EditAction::Add,
+            _ => panic!("unknown action: {}", action),
+        }
+    }
+
+    #[instrument(skip(document))]
+    pub fn parse_roster(&self, document: &Html) -> Vec<RosterEntry> {
         // find 2nd table element
         let table = document.select(&self.selectors.table).nth(2).unwrap();
         // iterate over trs
@@ -81,7 +140,7 @@ impl Parser {
     }
 
     #[instrument(skip(document))]
-    pub fn parse_calendar(&self, document: String) -> Vec<Day> {
+    pub fn parse_calendar(&self, document: String) -> Vec<DayOverview> {
         let document = scraper::Html::parse_document(&document);
         // find table element
         let table = document.select(&self.selectors.table).take(1).next().unwrap();
@@ -109,7 +168,7 @@ impl Parser {
             }
         }
 
-        grouped_rows.into_iter().map(Day::from).collect::<Vec<_>>()
+        grouped_rows.into_iter().map(DayOverview::from).collect::<Vec<_>>()
     }
 
     #[instrument(skip(el))]
@@ -191,7 +250,7 @@ pub struct TableEntry {
     note_2: Option<String>,
 }
 
-impl From<Vec<TableEntry>> for Day {
+impl From<Vec<TableEntry>> for DayOverview {
 
     #[instrument(skip(value))]
     fn from(value: Vec<TableEntry>) -> Self {
@@ -212,7 +271,7 @@ impl From<Vec<TableEntry>> for Day {
                 None
             }
         }).collect::<Vec<_>>();
-        Day {
+        DayOverview {
             date,
             registered_pilots: registered_pilots.into(),
             entries,

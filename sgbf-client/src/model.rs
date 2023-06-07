@@ -2,6 +2,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct Day {
+    pub entries: Vec<RosterEntry>,
+    pub action: EditAction,
+    pub id: Option<i32>,
+    pub participant_type: ParticipantType,
+    pub format: String,
+    pub remarks: Option<String>,
+    pub entry_type: Option<RosterEntryType>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum EditAction {
+    Edit,
+    Add,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ParticipantType {
+    #[serde(rename = "participant_sf")]
+    GliderPilot,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RosterEntry {
     pub name: String,
     pub message: String,
@@ -9,6 +34,7 @@ pub struct RosterEntry {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Copy)]
+#[serde(rename_all = "PascalCase")]
 pub enum RosterEntryType {
     Definite,
     Tentative,
@@ -17,7 +43,7 @@ pub enum RosterEntryType {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Day {
+pub struct DayOverview {
     pub date: chrono::NaiveDate,
     pub registered_pilots: Stats,
     pub entries: Vec<PersonEntry>,

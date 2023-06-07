@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  annotations:
+    linkerd.io/inject: enabled
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      name: frontend
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: frontend
+        swiss.dev/logging: json
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/cfi2017/sgbf/frontend:sha-4f360b1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: http
+      restartPolicy: Always

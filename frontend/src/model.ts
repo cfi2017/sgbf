@@ -1,4 +1,22 @@
 
+export interface Day {
+    entries: RosterEntry[];
+    action: EditAction;
+    id?: number;
+    participantType: ParticipantType;
+    format: string,
+    remarks?: string;
+    entryType?: RosterEntryType;
+}
+
+export enum EditAction {
+    Add = 'add',
+    Edit = 'edit',
+}
+
+export enum ParticipantType {
+    GliderPilot = "participant_sf"
+}
 
 export interface RosterEntry {
     name: string;
@@ -12,7 +30,7 @@ export enum RosterEntryType {
     Unavailable = 'Unavailable',
 }
 
-export interface Day {
+export interface DayOverview {
     date: string; // equivalent to chrono::NaiveDate in JavaScript
     registeredPilots: Stats;
     entries: PersonEntry[];

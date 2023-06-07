@@ -9,21 +9,21 @@ import {createI18n} from "vue-i18n";
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import {createVuetify} from "vuetify";
-import piniaPluginPersistedState from "pinia-plugin-persistedstate";
+import piniaPluginPersistedState, {createPersistedState} from "pinia-plugin-persistedstate";
 
 const app = createApp(App)
 
-const i18n = createI18n({
+import en from './locales/en.json';
+import de from './locales/de.json';
+
+type MessageSchema = typeof en;
+const i18n = createI18n<[MessageSchema], 'en', 'de'>({
     locale: 'en', // set locale
     fallbackLocale: 'en', // set fallback locale
     legacy: false,
     messages: {
-        en: {
-            // English translations go here
-        },
-        fr: {
-            // French translations go here
-        },
+        en: en,
+        de: de,
         // add other languages here
     },
 });
@@ -31,7 +31,9 @@ const i18n = createI18n({
 const vuetify = createVuetify();
 
 const pinia = createPinia();
-pinia.use(piniaPluginPersistedState);
+pinia.use(createPersistedState({
+    auto: true
+}));
 app.use(pinia)
 app.use(router)
 app.use(vuetify)

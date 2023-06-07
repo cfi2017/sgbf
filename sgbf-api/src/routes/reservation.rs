@@ -1,6 +1,6 @@
 use axum::{extract, Json};
 use axum_macros::debug_handler;
-use sgbf_client::model::{Day, RosterEntry};
+use sgbf_client::model::{Day, DayOverview, RosterEntry};
 use serde::{Serialize, Deserialize};
 use crate::server::ServerError;
 
@@ -26,7 +26,7 @@ pub async fn login(
 
 pub async fn get_calendar(
     client: sgbf_client::Client
-) -> Result<Json<Vec<Day>>, ServerError> {
+) -> Result<Json<Vec<DayOverview>>, ServerError> {
     let calendar = client.get_calendar().await;
     Ok(Json(calendar))
 }
@@ -39,7 +39,16 @@ pub struct GetDayQuery {
 pub async fn get_day(
     client: sgbf_client::Client,
     extract::Query(query): extract::Query<GetDayQuery>
-) -> Result<Json<Vec<RosterEntry>>, ServerError> {
-    let calendar = client.get_day(query.date).await;
-    Ok(Json(calendar))
+) -> Result<Json<Day>, ServerError> {
+    let day = client.get_day(query.date).await;
+    Ok(Json(day))
+}
+
+pub async fn update_day(
+    client: sgbf_client::Client,
+    extract::Query(query): extract::Query<GetDayQuery>,
+    extract::Json(payload): extract::Json<Day>
+) -> Result<(), ServerError> {
+    client.update_day(query.date, payload).await;
+    Ok(())
 }

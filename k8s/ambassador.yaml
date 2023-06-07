@@ -43,6 +43,15 @@ spec:
   rewrite: /
   hostname: sgbf.swiss.dev
 ---
+kind: Mapping
+apiVersion: getambassador.io/v3alpha1
+metadata:
+  name: frontend-mapping
+spec:
+  prefix: /
+  service: frontend:80
+  hostname: sgbf.swiss.dev
+---
 apiVersion: oathkeeper.ory.sh/v1alpha1
 kind: Rule
 metadata:
@@ -54,7 +63,7 @@ spec:
       - POST
       - OPTIONS
       - HEAD
-    url: https://sgbf.swiss.dev/api/<.*>
+    url: https://sgbf.swiss.dev/<.*>
   authenticators:
     - handler: noop
   authorizer:

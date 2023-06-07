@@ -4,7 +4,7 @@ use reqwest::cookie::CookieStore;
 use serde::Serialize;
 use tracing::instrument;
 use crate::parsing;
-use crate::model::{Day, RosterEntry};
+use crate::model::{Day, DayOverview, EditAction, ParticipantType, RosterEntry, RosterEntryType};
 use crate::parsing::Parser;
 
 pub struct Client {
@@ -62,7 +62,7 @@ impl Client {
     }
 
     #[instrument(skip(self))]
-    pub async fn get_calendar(&self) -> Vec<Day> {
+    pub async fn get_calendar(&self) -> Vec<DayOverview> {
         let url = format!("{}{}", BASE_URL, PATH_CALENDAR);
         let request = self.inner.get(url)
             .build()
@@ -75,7 +75,7 @@ impl Client {
     }
 
     #[instrument(skip(self))]
-    pub async fn get_day(&self, date: chrono::NaiveDate) -> Vec<RosterEntry> {
+    pub async fn get_day(&self, date: chrono::NaiveDate) -> Day {
         let url = format!("{}{}", BASE_URL, PATH_DAY);
         let request = self.inner.get(url)
             // fe_t=participant_sf&select_date=2023-06-04&fe_f=text
@@ -86,7 +86,45 @@ impl Client {
         // body is html
         let body = response.text().await.unwrap();
         // parse
-        Parser::default().parse_roster(body)
+        Parser::default().parse_day(body)
+    }
+
+    #[instrument(skip(self))]
+    pub async fn update_day(&self, date: chrono::NaiveDate, day: Day) {
+        let url = format!("{}{}", BASE_URL, PATH_DAY_UPDATE);
+        let remarks = day.remarks.unwrap_or_default();
+        let date = date.format("%Y-%m-%d").to_string();
+        let mut form: Vec<(&str, &str)> = vec![
+            ("RB_status", match day.entry_type {
+                Some(t) => match t {
+                    RosterEntryType::Definite => "2",
+                    RosterEntryType::Tentative => "1",
+                    RosterEntryType::Unavailable => "-1",
+                },
+                None => "0",
+            }),
+            ("TAfe_fsn", remarks.as_str()),
+            ("Bfieldedit_send", "Speichern"),
+            ("T_My_Action", match day.action {
+                EditAction::Edit => "edit",
+                EditAction::Add => "add",
+            }),
+            ("Tfe_t", match day.participant_type {
+                ParticipantType::GliderPilot => "participant_sf",
+            }),
+            ("Tfe_f", day.format.as_str()),
+            ("T_My_Date", date.as_ref())
+        ];
+        let id = day.id.unwrap_or_default();
+        let id = id.to_string();
+        if day.id.is_some() {
+            form.push(("Tfe_r", id.as_ref()));
+        }
+        let request = self.inner.post(url)
+            .form(&form)
+            .build()
+            .unwrap();
+        let _ = self.inner.execute(request).await.unwrap();
     }
 }
 
@@ -95,6 +133,7 @@ const PATH_MENU: &str = "/menu.php";
 const PATH_LOGIN: &str = "/edit/login_check.php";
 const PATH_CALENDAR: &str = "/roster/list_roster_new.php";
 const PATH_DAY: &str = "/roster/participant_edit.php";
+const PATH_DAY_UPDATE: &str = "/roster/participant_update.php";
 
 #[derive(Debug, Clone, Serialize)]
 struct LoginBody {
