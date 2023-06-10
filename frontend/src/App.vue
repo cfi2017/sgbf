@@ -32,14 +32,13 @@ import {defineComponent, ref} from 'vue';
 import router from "@/router";
 import {useI18n} from "vue-i18n";
 import {useSettingsStore} from "@/stores/settings";
+import {useStore} from "@/stores/reservation";
 export default defineComponent({
   name: 'App',
   setup() {
+    const store = useStore();
     const logout = () => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('username');
-      localStorage.removeItem('password');
-      router.push('/login');
+      store.logout();
     }
     const {t} = useI18n();
     const settings = useSettingsStore();

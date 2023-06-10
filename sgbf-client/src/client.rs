@@ -1,7 +1,9 @@
 use std::sync::Arc;
+use anyhow::Context;
 use reqwest::cookie;
 use reqwest::cookie::CookieStore;
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
+use thiserror::Error;
 use tracing::instrument;
 use crate::parsing;
 use crate::model::{Day, DayOverview, EditAction, ParticipantType, RosterEntry, RosterEntryType};
@@ -10,6 +12,16 @@ use crate::parsing::Parser;
 pub struct Client {
     inner: reqwest::Client,
     cookie_provider: Arc<cookie::Jar>,
+}
+
+pub type Result<T> = std::result::Result<T, ClientError>;
+
+#[derive(Debug, Error)]
+pub enum ClientError {
+    #[error("invalid token")]
+    InvalidToken,
+    #[error("unknown error")]
+    Unknown(#[from] anyhow::Error)
 }
 
 impl Client {
@@ -62,20 +74,23 @@ impl Client {
     }
 
     #[instrument(skip(self))]
-    pub async fn get_calendar(&self) -> Vec<DayOverview> {
+    pub async fn get_calendar(&self) -> Result<Vec<DayOverview>> {
         let url = format!("{}{}", BASE_URL, PATH_CALENDAR);
         let request = self.inner.get(url)
             .build()
-            .unwrap();
-        let response = self.inner.execute(request).await.unwrap();
+            .context("Failed to build request")?;
+        let response = self.inner.execute(request).await.context("Failed to execute request")?;
         // body is html
-        let body = response.text().await.unwrap();
+        let body = response.text().await.context("Failed to read response body")?;
+        if body.contains("Eintrag vorhanden") {
+            return Err(ClientError::InvalidToken);
+        }
         // parse
-        Parser::default().parse_calendar(body)
+        Parser::default().parse_calendar(body).map_err(|e| e.into())
     }
 
     #[instrument(skip(self))]
-    pub async fn get_day(&self, date: chrono::NaiveDate) -> Day {
+    pub async fn get_day(&self, date: chrono::NaiveDate) -> anyhow::Result<Day> {
         let url = format!("{}{}", BASE_URL, PATH_DAY);
         let request = self.inner.get(url)
             // fe_t=participant_sf&select_date=2023-06-04&fe_f=text

@@ -20,6 +20,9 @@ class ApiService {
         const response = await this.instance.get('/calendar', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
+        if (response.status === 401) {
+            throw "unauthorized";
+        }
         return response.data;
     }
 
@@ -29,7 +32,7 @@ class ApiService {
         });
         return response.data;
     }
-    
+
     public async updateDay(date: string, token: string, day: Day) {
         await this.instance.post(`/day?date=${date}`, day, {
             headers: { 'Authorization': `Bearer ${token}` }

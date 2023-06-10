@@ -81,9 +81,23 @@ async fn handle_error(error: BoxError) -> impl IntoResponse {
     )
 }
 
-pub struct ServerError(anyhow::Error);
+pub enum ServerError {
+    InvalidToken,
+    Unknown(UnknownServerError),
+}
 
 impl IntoResponse for ServerError {
+    fn into_response(self) -> Response {
+        match self {
+            Self::InvalidToken => (StatusCode::UNAUTHORIZED, "Invalid token").into_response(),
+            Self::Unknown(err) => err.into_response(),
+        }
+    }
+}
+
+pub struct UnknownServerError(anyhow::Error);
+
+impl IntoResponse for UnknownServerError {
     fn into_response(self) -> Response {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
@@ -94,6 +108,15 @@ impl IntoResponse for ServerError {
 }
 
 impl<E> From<E> for ServerError
+    where
+        E: Into<anyhow::Error>,
+{
+    fn from(err: E) -> Self {
+        Self::Unknown(err.into().into())
+    }
+}
+
+impl<E> From<E> for UnknownServerError
     where
         E: Into<anyhow::Error>,
 {
