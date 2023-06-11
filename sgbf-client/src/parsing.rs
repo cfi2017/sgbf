@@ -20,6 +20,7 @@ struct Selectors {
     edit_id: scraper::Selector,
     remarks: scraper::Selector,
     checked: scraper::Selector,
+    username: scraper::Selector,
 }
 
 impl Selectors {
@@ -34,6 +35,7 @@ impl Selectors {
             edit_id: scraper::Selector::parse("body > form > input[type=hidden]:nth-child(5)").unwrap(),
             remarks: scraper::Selector::parse("body > form > table:nth-child(1) > tbody > tr:nth-child(7) > td > textarea").unwrap(),
             checked: scraper::Selector::parse("input[checked]").unwrap(),
+            username: scraper::Selector::parse("body > p > table:nth-child(3) > tbody > tr:nth-child(1) > td > a").unwrap()
         }
     }
 }
@@ -268,6 +270,15 @@ impl Parser {
             .ok_or_else(|| anyhow!("could not get name attribute"))
             .map(|v| chrono::NaiveDate::parse_from_str(v, "%Y-%m-%d").context("could not parse date"))?
             .context("could not parse date")
+    }
+    
+    #[instrument(skip(document))]
+    pub fn parse_menu(&self, document: String) -> anyhow::Result<String> {
+        let document = scraper::Html::parse_document(&document);
+        let username = document.select(&self.selectors.username).next()
+            .context("could not select username")?
+            .text().collect::<String>().trim().to_string();
+        Ok(username)
     }
 
 }

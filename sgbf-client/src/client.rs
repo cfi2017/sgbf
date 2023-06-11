@@ -73,6 +73,20 @@ impl Client {
         let _ = self.inner.execute(request).await.unwrap();
     }
 
+    pub async fn get_user(&self) -> Result<Option<String>> {
+        let url = format!("{}{}", BASE_URL, PATH_MENU);
+        let request = self.inner.get(url)
+            .build()
+            .context("Failed to build request")?;
+        let response = self.inner.execute(request).await.context("Failed to execute request")?;
+        let body = response.text().await.context("Failed to read response body")?;
+        if body.contains("logout") {
+            let username = parsing::Parser::default().parse_menu(body)?;
+            return Ok(Some(username));
+        }
+        Ok(None)
+    }
+
     #[instrument(skip(self))]
     pub async fn get_calendar(&self) -> Result<Vec<DayOverview>> {
         let url = format!("{}{}", BASE_URL, PATH_CALENDAR);
@@ -160,16 +174,24 @@ struct LoginBody {
 }
 
 #[cfg(feature = "axum")]
-mod axum {
-    use axum::extract::FromRequestParts;
+pub mod axum {
+    use axum::extract::{FromRef, FromRequestParts};
     use axum::async_trait;
     use axum::http::StatusCode;
     use axum::http::request::Parts;
 
+    use std::collections::HashMap;
+    use std::sync::{Arc, Mutex};
+    use std::time::{Duration, Instant};
+    use tokio::time::{sleep, timeout};
+
     #[async_trait]
-    impl <S> FromRequestParts<S> for super::Client {
+    impl <S> FromRequestParts<S> for super::Client
+        where AuthCache: FromRef<S>,
+              S: Send + Sync
+    {
         type Rejection = StatusCode;
-        async fn from_request_parts(parts: &mut Parts, _: &S) -> Result<Self, Self::Rejection> {
+        async fn from_request_parts(parts: &mut Parts, s: &S) -> Result<Self, Self::Rejection> {
             // get authorization header
             let header = parts.headers.get("Authorization");
             // check if header is present
@@ -180,10 +202,26 @@ mod axum {
                     if header.starts_with("Bearer ") {
                         // get token
                         let token = header.strip_prefix("Bearer ").unwrap();
+                        let cache = AuthCache::from_ref(s);
                         // create client
                         let client = super::Client::from_token(token).await;
+                        if cache.is_token_authenticated(token) {
+                            // return client
+                            return Ok(client);
+                        }
+                        if cache.is_token_invalid(token) {
+                            // return error
+                            return Err(StatusCode::UNAUTHORIZED);
+                        }
+                        let result = client.get_user().await;
+                        if let Ok(result) = result {
+                            cache.add_token(token.to_owned(), Duration::from_secs( 60 * 10), result.clone());
+                            if result.is_some() {
+                                return Ok(client)
+                            }
+                        }
                         // return client
-                        return Ok(client);
+                        return Err(StatusCode::UNAUTHORIZED);
                     }
                 }
             }
@@ -191,4 +229,55 @@ mod axum {
             Err(StatusCode::UNAUTHORIZED)
         }
     }
+
+    #[derive(Debug, Default, Clone)]
+    pub struct AuthCache {
+        pub tokens: Arc<Mutex<HashMap<String, (Instant, Option<String>)>>>
+    }
+
+    impl AuthCache {
+        pub fn new() -> Self {
+            Default::default()
+        }
+
+        pub(crate) fn is_token_invalid(&self, token: &str) -> bool {
+            let guard = self.tokens.lock().unwrap();
+            let token = guard.get(token);
+            match token {
+                Some((_, ok)) => ok.is_some(),
+                None => false
+            }
+        }
+
+        // ensure that the token is valid and not expired
+        pub fn is_token_authenticated(&self, token: &str) -> bool {
+            let now = Instant::now();
+            let guard = self.tokens.lock().unwrap();
+            let token = guard.get(token);
+            match token {
+                Some((time, ok)) => time > &now && ok.is_some(),
+                None => false
+            }
+        }
+
+        pub fn add_token(&self, token: String, duration: Duration, result: Option<String>) {
+            let now = Instant::now();
+            let expires = now + duration;
+            self.tokens.lock().unwrap().insert(token, (expires, result));
+        }
+
+        pub fn remove_expired_tokens(&self) {
+            let now = Instant::now();
+            let mut tokens = self.tokens.lock().unwrap();
+            tokens.retain(|_, (expires, _)| expires > &mut now.to_owned());
+        }
+
+        pub async fn start_polling(&self) {
+            loop {
+                self.remove_expired_tokens();
+                sleep(Duration::from_secs(60 * 5)).await;
+            }
+        }
+    }
+
 }

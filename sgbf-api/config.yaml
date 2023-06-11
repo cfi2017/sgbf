@@ -1,6 +1,9 @@
 server:
   host: 0.0.0.0
   port: 8000
+cache:
+  # username: ""
+  # password: ""
 tracing:
   error_reporting:
     # sentry_dsn: ""

@@ -1,6 +1,7 @@
 use std::borrow::Cow;
 use std::net::SocketAddr;
 use std::str::FromStr;
+use std::sync::Arc;
 use std::time::Duration;
 use anyhow::Context;
 use axum::{BoxError, Router};
@@ -17,16 +18,39 @@ use tower_http::catch_panic::CatchPanicLayer;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::LatencyUnit;
 use tower_http::trace::{DefaultOnRequest, DefaultOnResponse, TraceLayer};
-use tracing::Level;
+use tracing::{info, Level};
+use sgbf_client::client::axum::AuthCache;
+use crate::cache::Cache;
 use crate::config::Config;
 use crate::routes;
 use crate::state::{AppState, SharedState};
 
 pub async fn init_default_server() -> anyhow::Result<()> {
     let config = Config::load().context("could not load config")?;
-    let state = SharedState::build(AppState::new(config.to_owned()));
     let _guard = crate::tracing::init_tracing(&config.tracing)?;
-    init_server(&config, state).await
+    let auth_cache = AuthCache::new();
+    let cache = Arc::new(Cache::new(&config.cache.username, &config.cache.password));
+    let cache_handle = {
+        let cache = cache.clone();
+        info!("starting cache polling");
+        tokio::spawn(async move {
+            cache.start_polling().await
+        })
+    };
+    let auth_cache_handle = {
+        let auth_cache = auth_cache.clone();
+        info!("starting auth cache polling");
+        tokio::spawn(async move {
+            auth_cache.start_polling().await
+        })
+    };
+    let state = SharedState::build(AppState::new(auth_cache, cache, config.to_owned()));
+    _ = init_server(&config, state).await;
+    info!("shutting down cache polling");
+    cache_handle.abort();
+    info!("shutting down auth cache polling");
+    auth_cache_handle.abort();
+    Ok(())
 }
 
 pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()> {
@@ -148,5 +172,5 @@ async fn shutdown_signal() {
         _ = terminate => {},
     }
 
-    println!("signal received, starting graceful shutdown");
+    info!("signal received, starting graceful shutdown");
 }

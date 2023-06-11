@@ -30,7 +30,7 @@ hyper = "0.14"
 
 # tracing
 tracing = { version = "0.1", features = ["log"] }
-log = { version = "0.4", features = ["max_level_debug", "release_max_level_info"] }
+log = { version = "0.4", features = ["max_level_info", "release_max_level_info"] }
 tracing-log = "0.1"
 tracing-subscriber = { version = "0.3", features = ["fmt", "json", "env-filter"] }
 tracing-error = { version = "0.2", features = ["traced-error"] }

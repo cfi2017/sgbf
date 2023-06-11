@@ -1,10 +1,13 @@
+use std::time::Duration;
 use anyhow::Context;
 use axum::{extract, Json};
+use axum::extract::State;
 use axum_macros::debug_handler;
 use opentelemetry::trace::SpanKind::Server;
 use sgbf_client::model::{Day, DayOverview, RosterEntry};
 use serde::{Serialize, Deserialize};
 use crate::server::{ServerError, UnknownServerError};
+use crate::state::SharedState;
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
@@ -19,21 +22,27 @@ pub struct LoginResponse {
 
 #[debug_handler]
 pub async fn login(
+    State(state): State<SharedState>,
     Json(payload): Json<LoginRequest>
 ) -> Result<Json<LoginResponse>, UnknownServerError> {
     let client = sgbf_client::Client::from_credentials(&payload.username, &payload.password).await;
     let token = client.get_token();
+    let auth_cache = state.inner.read().unwrap().auth_cache.clone();
+    auth_cache.add_token(token.clone(), Duration::from_secs(60 * 60 * 4), true);
     Ok(Json(LoginResponse { token }))
 }
 
 pub async fn get_calendar(
-    client: sgbf_client::Client
+    _client: sgbf_client::Client,
+    State(state): State<SharedState>
 ) -> Result<Json<Vec<DayOverview>>, ServerError> {
-    let calendar = client.get_calendar().await;
-    if let Err(sgbf_client::client::ClientError::InvalidToken) = calendar {
-        return Err(ServerError::InvalidToken);
-    }
-    let calendar = calendar.context("failed to get calendar")?;
+    let cache = state.inner.read().unwrap().cache.clone();
+    let calendar = cache.inner.read().await.day_overviews.clone();
+    // let calendar = client.get_calendar().await;
+    // if let Err(sgbf_client::client::ClientError::InvalidToken) = calendar {
+    //     return Err(ServerError::InvalidToken);
+    // }
+    // let calendar = calendar.context("failed to get calendar")?;
     Ok(Json(calendar))
 }
 
