@@ -28,7 +28,8 @@ pub async fn login(
     let client = sgbf_client::Client::from_credentials(&payload.username, &payload.password).await;
     let token = client.get_token();
     let auth_cache = state.inner.read().unwrap().auth_cache.clone();
-    auth_cache.add_token(token.clone(), Duration::from_secs(60 * 60 * 4), true);
+    let user = client.get_user().await?;
+    auth_cache.add_token(token.clone(), Duration::from_secs(60 * 60 * 4), user);
     Ok(Json(LoginResponse { token }))
 }
 
