@@ -93,7 +93,7 @@ export default defineComponent({
     };
 
     const formatDate = (date: string) => {
-      return format(new Date(date), 'PPP');  // Pretty print the date
+      return format(new Date(date), 'PPPP');  // Pretty print the date
     };
     const selectDay = (date: string) => {
       selectedDay.value = date;

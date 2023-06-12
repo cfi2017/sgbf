@@ -20,9 +20,6 @@ class ApiService {
         const response = await this.instance.get('/calendar', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        if (response.status === 401) {
-            throw "unauthorized";
-        }
         return response.data;
     }
 

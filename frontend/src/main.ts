@@ -17,16 +17,6 @@ import en from './locales/en.json';
 import de from './locales/de.json';
 
 type MessageSchema = typeof en;
-const i18n = createI18n<[MessageSchema], 'en', 'de'>({
-    locale: 'en', // set locale
-    fallbackLocale: 'en', // set fallback locale
-    legacy: false,
-    messages: {
-        en: en,
-        de: de,
-        // add other languages here
-    },
-});
 
 const vuetify = createVuetify();
 
@@ -34,6 +24,16 @@ const pinia = createPinia();
 pinia.use(createPersistedState({
     auto: true
 }));
+const i18n = createI18n<[MessageSchema], 'en', 'de'>({
+    locale: JSON.parse((localStorage.getItem('settingsStore') || '{}')).locale || 'en', // set locale
+    fallbackLocale: 'en', // set fallback locale
+    legacy: false,
+    messages: {
+        'en': en,
+        'de': de,
+        // add other languages here
+    },
+});
 app.use(pinia)
 app.use(router)
 app.use(vuetify)

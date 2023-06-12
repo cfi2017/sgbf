@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/cfi2017/sgbf/api:sha-4f360b1
+          image: ghcr.io/cfi2017/sgbf/api:sha-2d686d3
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
@@ -33,4 +33,14 @@ spec:
               value: "https://952ffd64359f4f2e83b283faacdd545f@sentry.service.cloud.swiss.dev/3"
             - name: RUST_LOG
               value: "info"
+            - name: SGBF__CACHE__USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cache
+                  key: username
+            - name: SGBF__CACHE__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cache
+                  key: password
       restartPolicy: Always

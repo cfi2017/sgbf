@@ -2,7 +2,9 @@ import { defineStore } from 'pinia';
 import { apiService } from '@/api';
 import type { DayOverview, RosterEntry, Day } from '@/model';
 import {RosterEntryType} from "@/model";
-import router from "@/router"; // Assuming models.ts has the interface and type definitions
+import router from "@/router";
+import type {AxiosError} from "axios";
+import {isAxiosError} from "axios"; // Assuming models.ts has the interface and type definitions
 
 export const useStore = defineStore({
     id: 'mainStore',
@@ -29,9 +31,18 @@ export const useStore = defineStore({
             if (!this.token) throw new Error("Not authenticated");
             try {
                 this.calendar = await apiService.getCalendar(this.token);
-            } catch (ex) {
-                if (ex === "unauthorized") {
-                    this.logout();
+            } catch (ex: any | AxiosError) {
+                if (isAxiosError(ex)) {
+                    const error = ex as AxiosError;
+                    // console.error(error);
+                    if (error.response?.status === 401) {
+                        if (localStorage.getItem('username') && localStorage.getItem('password')) {
+                            await this.login(localStorage.getItem('username')!, localStorage.getItem('password')!);
+                            await this.getCalendar();
+                        } else {
+                            await this.logout();
+                        }
+                    }
                 }
             }
         },
