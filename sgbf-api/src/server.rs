@@ -6,6 +6,7 @@ use std::time::Duration;
 use anyhow::Context;
 use axum::{BoxError, Router};
 use axum::error_handling::HandleErrorLayer;
+use axum::extract::State;
 use axum::headers::HeaderName;
 use axum::http::{Method, StatusCode};
 use axum::http::header::{AUTHORIZATION, CONTENT_TYPE};
@@ -13,6 +14,7 @@ use axum::middleware::from_fn_with_state;
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum_client_ip::SecureClientIpSource;
+use firestore::FirestoreDb;
 use tokio::signal;
 use tower::ServiceBuilder;
 use tower_http::catch_panic::CatchPanicLayer;
@@ -25,12 +27,16 @@ use crate::cache::Cache;
 use crate::config::Config;
 use crate::routes;
 use crate::state::{AppState, SharedState};
+use crate::store::with_uid;
 
 pub async fn init_default_server() -> anyhow::Result<()> {
     let config = Config::load().context("could not load config")?;
     let _guard = crate::tracing::init_tracing(&config.tracing)?;
+
+    let db = FirestoreDb::new(&config.firebase.project).await?;
+
     let auth_cache = AuthCache::new();
-    let cache = Arc::new(Cache::new(&config.cache.username, &config.cache.password));
+    let cache = Arc::new(Cache::new(db.clone(), &config.cache.username, &config.cache.password));
     let cache_handle = {
         let cache = cache.clone();
         info!("starting cache polling");
@@ -45,7 +51,12 @@ pub async fn init_default_server() -> anyhow::Result<()> {
             auth_cache.start_polling().await
         })
     };
-    let state = SharedState::build(AppState::new(auth_cache, cache, config.to_owned()));
+    let state = SharedState::build(AppState {
+        auth_cache,
+        config: config.clone(),
+        cache: cache.clone(),
+        db: db.clone()
+    });
     _ = init_server(&config, state).await;
     info!("shutting down cache polling");
     cache_handle.abort();
@@ -59,14 +70,17 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
         .allow_methods([Method::GET, Method::POST])
         .allow_headers(vec![CONTENT_TYPE, AUTHORIZATION])
         .allow_origin(Any);
+    let auth_service = ServiceBuilder::new()
+        .layer(from_fn_with_state(state.clone(), sgbf_client::client::axum::auth::<_, SharedState>))
+        .layer(from_fn_with_state(state.clone(), with_uid::<_, SharedState>));
     let server = Router::new()
         .route("/status", get(routes::status))
         .route("/reservation/login", post(routes::reservation::login))
         .route("/reservation/calendar", get(routes::reservation::get_calendar)
-            .route_layer(from_fn_with_state(state.clone(), sgbf_client::client::axum::auth::<_, SharedState>))
+            .layer(auth_service.to_owned())
         )
         .route("/reservation/day", get(routes::reservation::get_day).post(routes::reservation::update_day)
-            .route_layer(from_fn_with_state(state.clone(), sgbf_client::client::axum::auth::<_, SharedState>))
+            .layer(auth_service.to_owned())
         )
         .layer(
             ServiceBuilder::new()

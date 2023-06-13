@@ -42,3 +42,5 @@ tracing-opentelemetry = "0.18"
 opentelemetry = { version = "0.18", features = ["rt-tokio"] }
 opentelemetry-otlp = { version = "0.11", features = ["tokio", "metrics"] }
 opentelemetry_sdk = "0.18"
+firestore = "0.32.2"
+sha2 = "0.10.6"

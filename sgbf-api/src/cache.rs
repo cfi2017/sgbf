@@ -3,6 +3,7 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 use axum::headers::authorization::Credentials;
 use chrono::NaiveDate;
+use firestore::FirestoreDb;
 use tokio::select;
 use tokio::sync::{mpsc, RwLock};
 use tokio::time::timeout;
@@ -46,6 +47,7 @@ pub type CacheRef = Arc<Cache>;
 pub struct Cache {
     pub last_update: Arc<RwLock<chrono::DateTime<chrono::Utc>>>,
     pub inner: Arc<RwLock<Calendar>>,
+    db: FirestoreDb,
     credentials: (String, String),
     tx_handle: mpsc::Sender<()>,
     rx_handle: Arc<RwLock<mpsc::Receiver<()>>>
@@ -53,12 +55,13 @@ pub struct Cache {
 
 impl Cache {
 
-    pub fn new(username: &str, password: &str) -> Self {
+    pub fn new(db: FirestoreDb, username: &str, password: &str) -> Self {
         let (tx, rx) = mpsc::channel(1);
         Self {
             last_update: Arc::new(RwLock::new(chrono::Utc::now())),
             inner: Arc::new(RwLock::new(Default::default())),
             credentials: (username.to_owned(), password.to_owned()),
+            db,
             tx_handle: tx,
             rx_handle: Arc::new(RwLock::new(rx)),
         }

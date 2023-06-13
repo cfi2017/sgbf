@@ -4,6 +4,8 @@ server:
 cache:
   # username: ""
   # password: ""
+firebase:
+  # project_id: ""
 tracing:
   error_reporting:
     # sentry_dsn: ""

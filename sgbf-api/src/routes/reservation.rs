@@ -1,14 +1,17 @@
 use std::time::Duration;
 use anyhow::Context;
 use axum::{extract, Json};
-use axum::extract::State;
+use axum::extract::{FromRef, State};
 use axum_macros::debug_handler;
+use firestore::FirestoreDb;
 use log::info;
 use opentelemetry::trace::SpanKind::Server;
 use sgbf_client::model::{Day, DayOverview, RosterEntry};
 use serde::{Serialize, Deserialize};
+use sgbf_client::client::axum::AuthCache;
 use crate::server::{ServerError, UnknownServerError};
 use crate::state::SharedState;
+use crate::store::{get_user, store_token, store_user, User};
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
@@ -28,10 +31,20 @@ pub async fn login(
 ) -> Result<Json<LoginResponse>, UnknownServerError> {
     let client = sgbf_client::Client::from_credentials(&payload.username, &payload.password).await;
     let token = client.get_token();
-    let auth_cache = state.inner.read().unwrap().auth_cache.clone();
+    let auth_cache = AuthCache::from_ref(&state);
     let user = client.get_user().await?;
     if let Some(user) = &user {
         info!("logged in as {} (uid {})", user, payload.username);
+        let db = FirestoreDb::from_ref(&state);
+        let id = payload.username.parse::<i32>().context("could not parse user id")?;
+        if get_user(&db, id).await?.is_none() {
+            store_user(&db, &User {
+                name: user.to_owned(),
+                id,
+                settings: Default::default()
+            }).await?;
+        }
+        store_token(&db, &token, id).await?;
     }
     auth_cache.add_token(token.clone(), Duration::from_secs(60 * 60 * 4), user);
     Ok(Json(LoginResponse { token }))

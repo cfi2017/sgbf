@@ -43,4 +43,21 @@ spec:
                 secretKeyRef:
                   name: cache
                   key: password
+            - name: SGBF__FIREBASE__PROJECT
+              value: "sgbf-system"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/etc/sgbf/service-account.json"
+          volumeMounts:
+          - name: service-account
+            mountPath: /etc/sgbf/
+            readOnly: true
+
+      volumes:
+        - name: service-account
+          secret:
+            secretName: firebase
+            items:
+            - key: service-account.json
+              path: service-account.json
+
       restartPolicy: Always

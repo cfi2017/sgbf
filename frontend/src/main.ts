@@ -15,6 +15,7 @@ const app = createApp(App)
 
 import en from './locales/en.json';
 import de from './locales/de.json';
+import OneSignalVuePlugin from "@onesignal/onesignal-vue3";
 
 type MessageSchema = typeof en;
 
@@ -34,9 +35,19 @@ const i18n = createI18n<[MessageSchema], 'en', 'de'>({
         // add other languages here
     },
 });
+
+
+
 app.use(pinia)
 app.use(router)
 app.use(vuetify)
 app.use(i18n)
+app.use(OneSignalVuePlugin, {
+    appId: "597019c4-d476-4efa-9832-34791456301c",
+    safari_web_id: "web.onesignal.auto.52bd6d36-ef00-42e1-a687-b4f3eaae4ff3",
+    notifyButton: {
+        enable: true,
+    },
+});
 
 app.mount('#app')

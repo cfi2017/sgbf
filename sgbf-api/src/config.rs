@@ -8,6 +8,11 @@ pub struct Server {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+pub struct Firebase {
+    pub project: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct CacheConfig {
     pub username: String,
     pub password: String,
@@ -17,6 +22,7 @@ pub struct CacheConfig {
 pub struct Config {
     pub server: Server,
     pub cache: CacheConfig,
+    pub firebase: Firebase,
     pub tracing: crate::tracing::TracingConfig
 }
 

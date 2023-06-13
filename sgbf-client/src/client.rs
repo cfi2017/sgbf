@@ -267,7 +267,7 @@ pub mod axum {
 
     // token, username
    #[derive(Clone)]
-    pub struct AuthState(Option<(String, String)>);
+    pub struct AuthState(pub Option<(String, String)>);
 
     pub async fn auth<B, S>(
         State(s): State<S>,
