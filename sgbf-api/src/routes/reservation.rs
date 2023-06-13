@@ -3,6 +3,7 @@ use anyhow::Context;
 use axum::{extract, Json};
 use axum::extract::State;
 use axum_macros::debug_handler;
+use log::info;
 use opentelemetry::trace::SpanKind::Server;
 use sgbf_client::model::{Day, DayOverview, RosterEntry};
 use serde::{Serialize, Deserialize};
@@ -29,6 +30,9 @@ pub async fn login(
     let token = client.get_token();
     let auth_cache = state.inner.read().unwrap().auth_cache.clone();
     let user = client.get_user().await?;
+    if let Some(user) = &user {
+        info!("logged in as {} (uid {})", user, payload.username);
+    }
     auth_cache.add_token(token.clone(), Duration::from_secs(60 * 60 * 4), user);
     Ok(Json(LoginResponse { token }))
 }

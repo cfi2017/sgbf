@@ -9,6 +9,7 @@ use axum::error_handling::HandleErrorLayer;
 use axum::headers::HeaderName;
 use axum::http::{Method, StatusCode};
 use axum::http::header::{AUTHORIZATION, CONTENT_TYPE};
+use axum::middleware::from_fn_with_state;
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum_client_ip::SecureClientIpSource;
@@ -61,8 +62,12 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
     let server = Router::new()
         .route("/status", get(routes::status))
         .route("/reservation/login", post(routes::reservation::login))
-        .route("/reservation/calendar", get(routes::reservation::get_calendar))
-        .route("/reservation/day", get(routes::reservation::get_day).post(routes::reservation::update_day))
+        .route("/reservation/calendar", get(routes::reservation::get_calendar)
+            .route_layer(from_fn_with_state(state.clone(), sgbf_client::client::axum::auth::<_, SharedState>))
+        )
+        .route("/reservation/day", get(routes::reservation::get_day).post(routes::reservation::update_day)
+            .route_layer(from_fn_with_state(state.clone(), sgbf_client::client::axum::auth::<_, SharedState>))
+        )
         .layer(
             ServiceBuilder::new()
                 // Handle errors from middleware

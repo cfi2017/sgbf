@@ -175,8 +175,8 @@ struct LoginBody {
 
 #[cfg(feature = "axum")]
 pub mod axum {
-    use axum::extract::{FromRef, FromRequestParts};
-    use axum::async_trait;
+    use axum::extract::{FromRef, FromRequestParts, State};
+    use axum::{async_trait, http};
     use axum::http::StatusCode;
     use axum::http::request::Parts;
 
@@ -184,6 +184,8 @@ pub mod axum {
     use std::sync::{Arc, Mutex};
     use std::time::{Duration, Instant};
     use tokio::time::{sleep, timeout};
+    use axum::handler::Handler;
+    use tracing::{debug, info};
 
     #[async_trait]
     impl <S> FromRequestParts<S> for super::Client
@@ -192,40 +194,14 @@ pub mod axum {
     {
         type Rejection = StatusCode;
         async fn from_request_parts(parts: &mut Parts, s: &S) -> Result<Self, Self::Rejection> {
-            // get authorization header
-            let header = parts.headers.get("Authorization");
-            // check if header is present
-            if let Some(header) = header {
-                // check if header is valid
-                if let Ok(header) = header.to_str() {
-                    // check if header is valid
-                    if header.starts_with("Bearer ") {
-                        // get token
-                        let token = header.strip_prefix("Bearer ").unwrap();
-                        let cache = AuthCache::from_ref(s);
-                        // create client
-                        let client = super::Client::from_token(token).await;
-                        if cache.is_token_authenticated(token) {
-                            // return client
-                            return Ok(client);
-                        }
-                        if cache.is_token_invalid(token) {
-                            // return error
-                            return Err(StatusCode::UNAUTHORIZED);
-                        }
-                        let result = client.get_user().await;
-                        if let Ok(result) = result {
-                            cache.add_token(token.to_owned(), Duration::from_secs( 60 * 10), result.clone());
-                            if result.is_some() {
-                                return Ok(client)
-                            }
-                        }
-                        // return client
-                        return Err(StatusCode::UNAUTHORIZED);
-                    }
+            // get AuthState from extensions
+            let auth_state = parts.extensions.get::<AuthState>();
+            if let Some(auth_state) = auth_state {
+                if let Some((token, username)) = &auth_state.0 {
+                    debug!("user {}", username);
+                    return Ok(super::Client::from_token(token).await)
                 }
             }
-            // return error
             Err(StatusCode::UNAUTHORIZED)
         }
     }
@@ -260,6 +236,15 @@ pub mod axum {
             }
         }
 
+        pub fn get_state(&self, token: &str) -> Option<String> {
+            let guard = self.tokens.lock().unwrap();
+            let token = guard.get(token);
+            match token {
+                Some((_, ok)) => ok.clone(),
+                None => None
+            }
+        }
+
         pub fn add_token(&self, token: String, duration: Duration, result: Option<String>) {
             let now = Instant::now();
             let expires = now + duration;
@@ -278,6 +263,55 @@ pub mod axum {
                 sleep(Duration::from_secs(60 * 5)).await;
             }
         }
+    }
+
+    // token, username
+   #[derive(Clone)]
+    pub struct AuthState(Option<(String, String)>);
+
+    pub async fn auth<B, S>(
+        State(s): State<S>,
+        mut req: http::Request<B>,
+        next: axum::middleware::Next<B>
+    ) -> Result<axum::response::Response, StatusCode>
+        where AuthCache: FromRef<S> {
+        let header = req.headers().get("Authorization");
+        if let Some(header) = header {
+            if let Ok(header) = header.to_str() {
+                if header.starts_with("Bearer ") {
+                    // get token
+                    let token = header.strip_prefix("Bearer ").unwrap();
+                    let cache = AuthCache::from_ref(&s);
+
+                    let token = token.to_owned();
+                    // create client
+                    if cache.is_token_authenticated(&token) {
+                        // return client
+                        let state = cache.get_state(&token);
+                        req.extensions_mut()
+                            .insert(AuthState(state.map(|s| (token.to_owned(), s))));
+                        return Ok(next.run(req).await);
+                    }
+                    if cache.is_token_invalid(&token) {
+                        // return error
+                        return Err(StatusCode::UNAUTHORIZED);
+                    }
+                    let client = super::Client::from_token(&token).await;
+                    let result = client.get_user().await;
+                    if let Ok(result) = result {
+                        cache.add_token(token.to_owned(), Duration::from_secs( 60 * 10), result.clone());
+                        if result.is_some() {
+                            req.extensions_mut()
+                                .insert(AuthState(result.map(|s| (token.to_owned(), s))));
+                            return Ok(next.run(req).await)
+                        }
+                    }
+                    // return client
+                    return Err(StatusCode::UNAUTHORIZED);
+                }
+            }
+        }
+        Err(StatusCode::UNAUTHORIZED)
     }
 
 }

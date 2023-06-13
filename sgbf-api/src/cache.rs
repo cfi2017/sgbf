@@ -9,7 +9,7 @@ use tokio::time::timeout;
 use tracing::info;
 use sgbf_client::model::{Day, RosterEntryType};
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct Calendar {
     pub day_overviews: Vec<sgbf_client::model::DayOverview>,
     pub days: HashMap<NaiveDate, (Instant, Day)>
@@ -60,7 +60,7 @@ impl Cache {
             inner: Arc::new(RwLock::new(Default::default())),
             credentials: (username.to_owned(), password.to_owned()),
             tx_handle: tx,
-            rx_handle: Arc::new(RwLock::new(rx))
+            rx_handle: Arc::new(RwLock::new(rx)),
         }
     }
 

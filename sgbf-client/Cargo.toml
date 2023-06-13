@@ -17,6 +17,7 @@ serde_json = { version = "1" }
 tokio = { version = "1" }
 tracing = { version = "0.1" }
 axum = { version = "0.6", optional = true }
+tower = { version = "0.4", optional = true }
 scraper = "0.16.0"
 thiserror = { version = "1" }
 
