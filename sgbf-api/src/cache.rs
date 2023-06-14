@@ -7,7 +7,7 @@ use firestore::FirestoreDb;
 use tokio::select;
 use tokio::sync::{mpsc, RwLock};
 use tokio::time::timeout;
-use tracing::info;
+use tracing::{error, info};
 use sgbf_client::model::{Day, DayOverview, RosterEntryType};
 
 #[derive(Debug, Default, Clone)]
@@ -88,7 +88,12 @@ impl Cache {
         info!("updating cache");
         let client = sgbf_client::Client::from_credentials(&self.credentials.0, &self.credentials.1).await;
         // update calendar
-        let calendar = client.get_calendar().await.unwrap();
+        let calendar = client.get_calendar().await;
+        if calendar.is_err() {
+            error!("failed to update calendar {}", calendar.err().unwrap());
+            return;
+        }
+        let calendar = calendar.unwrap();
         let mut inner = self.inner.write().await;
         let old_calendar = inner.day_overviews.clone();
         // todo: compare old calendar to new one, send notifications for changes
@@ -103,8 +108,13 @@ impl Cache {
         let days = inner.days.clone();
         for (date, (expiry, old_day)) in &days {
             if inner.is_dirty(*date) || Instant::now() > *expiry {
-                let day = client.get_day(*date).await.unwrap();
-                inner.days.insert(*date, (Instant::now() + Duration::from_secs(600 * 3), day));
+                let day = client.get_day(*date).await;
+                if day.is_err() {
+                    error!("failed to update day cache {}", day.err().unwrap());
+                } else {
+                    let day = day.unwrap();
+                    inner.days.insert(*date, (Instant::now() + Duration::from_secs(600 * 3), day));
+                }
                 // todo: compare old day to new one, send notifications for changes
             }
         }
