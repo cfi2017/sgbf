@@ -24,7 +24,8 @@ axum-macros = "0.3"
 tower = { version = "0.4", features = ["util", "timeout", "load-shed", "limit"] }
 tower-layer = "0.3"
 tower-http = { version = "0.4", features = ["add-extension", "auth", "compression-full", "limit", "trace", "cors", "catch-panic"] }
-hyper = "0.14"
+hyper = { version = "0.14", features = ["full"] }
+reqwest = { version = "0.11", default-features = false, features = ["json", "cookies", "rustls-tls"] }
 # for libraries
 # axum-core = "0.3"
 
@@ -35,12 +36,19 @@ tracing-log = "0.1"
 tracing-subscriber = { version = "0.3", features = ["fmt", "json", "env-filter"] }
 tracing-error = { version = "0.2", features = ["traced-error"] }
 # error reporting
-sentry = "0.31"
-sentry-tracing = "0.31"
+sentry = {version = "0.31", default-features = false, features = [
+    "backtrace",
+    "contexts",
+    "debug-images",
+    "panic",
+    "tracing",
+    "reqwest",
+    "rustls"
+] }
 # otel harness
 tracing-opentelemetry = "0.18"
 opentelemetry = { version = "0.18", features = ["rt-tokio"] }
 opentelemetry-otlp = { version = "0.11", features = ["tokio", "metrics"] }
 opentelemetry_sdk = "0.18"
-firestore = "0.32.2"
+firestore = { version = "0.32.2", features = [] }
 sha2 = "0.10.6"

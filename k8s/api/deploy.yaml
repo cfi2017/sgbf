@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/cfi2017/sgbf/api:sha-1290112
+          image: ghcr.io/cfi2017/sgbf/api:sha-165a6ce
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000

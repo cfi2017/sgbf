@@ -8,7 +8,7 @@ use tokio::select;
 use tokio::sync::{mpsc, RwLock};
 use tokio::time::timeout;
 use tracing::info;
-use sgbf_client::model::{Day, RosterEntryType};
+use sgbf_client::model::{Day, DayOverview, RosterEntryType};
 
 #[derive(Debug, Default, Clone)]
 pub struct Calendar {
@@ -87,10 +87,34 @@ impl Cache {
     async fn update(&self) {
         info!("updating cache");
         let client = sgbf_client::Client::from_credentials(&self.credentials.0, &self.credentials.1).await;
+        // update calendar
         let calendar = client.get_calendar().await.unwrap();
         let mut inner = self.inner.write().await;
+        let old_calendar = inner.day_overviews.clone();
+        // todo: compare old calendar to new one, send notifications for changes
         inner.day_overviews = calendar.clone();
         let mut guard = self.last_update.write().await;
         *guard = chrono::Utc::now();
+        // only keep cached days in current period
+        inner.days.retain(|date, (_, _)| {
+            calendar.iter().any(|overview| overview.date == *date)
+        });
+        // check if any day caches are dirty or expired, update if necessary
+        let days = inner.days.clone();
+        for (date, (expiry, old_day)) in &days {
+            if inner.is_dirty(*date) || Instant::now() > *expiry {
+                let day = client.get_day(*date).await.unwrap();
+                inner.days.insert(*date, (Instant::now() + Duration::from_secs(600 * 3), day));
+                // todo: compare old day to new one, send notifications for changes
+            }
+        }
+    }
+
+    async fn compare_calendars(&self, old: &Vec<DayOverview>, new: &Vec<DayOverview>) {
+
+    }
+
+    async fn compare_days(&self, old: Day, new: Day) {
+
     }
 }

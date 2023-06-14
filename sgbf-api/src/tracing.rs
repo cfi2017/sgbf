@@ -83,7 +83,7 @@ pub fn init_tracing(cfg: &TracingConfig) -> anyhow::Result<ClientInitGuard> {
     let subscriber = tracing_subscriber::registry()
         .with(log_layer)
         .with(ErrorLayer::default())
-        .with(sentry_tracing::layer())
+        .with(sentry::integrations::tracing::layer())
         .with(tracer)
         .with(meter);
 
