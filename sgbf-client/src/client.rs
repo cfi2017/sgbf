@@ -259,7 +259,9 @@ pub mod axum {
 
         pub async fn start_polling(&self) {
             loop {
+                debug!("updating auth cache");
                 self.remove_expired_tokens();
+                info!("auth cache updated");
                 sleep(Duration::from_secs(60 * 5)).await;
             }
         }

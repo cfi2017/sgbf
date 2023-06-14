@@ -7,7 +7,7 @@ use firestore::FirestoreDb;
 use tokio::select;
 use tokio::sync::{mpsc, RwLock};
 use tokio::time::timeout;
-use tracing::{error, info};
+use tracing::{debug, error, info, instrument};
 use sgbf_client::model::{Day, DayOverview, RosterEntryType};
 
 #[derive(Debug, Default, Clone)]
@@ -72,10 +72,12 @@ impl Cache {
         self.tx_handle.send(()).await.unwrap();
     }
 
+    #[instrument(skip(self))]
     pub async fn start_polling(&self) {
         loop {
+            debug!("updating cache");
             self.update().await;
-
+            info!("cache updated");
             let mut rx = self.rx_handle.write().await;
             // drain the receiver if something happened during an update
             while rx.try_recv().is_ok() {}
@@ -85,7 +87,6 @@ impl Cache {
     }
 
     async fn update(&self) {
-        info!("updating cache");
         let client = sgbf_client::Client::from_credentials(&self.credentials.0, &self.credentials.1).await;
         // update calendar
         let calendar = client.get_calendar().await;
