@@ -7,8 +7,10 @@ use firestore::FirestoreDb;
 use tokio::select;
 use tokio::sync::{mpsc, RwLock};
 use tokio::time::timeout;
-use tracing::{debug, error, info, instrument};
+use tracing::{debug, error, info, instrument, warn};
 use sgbf_client::model::{Day, DayOverview, RosterEntryType};
+
+const REGISTERED_PILOTS_THRESHOLD: u32 = 10;
 
 #[derive(Debug, Default, Clone)]
 pub struct Calendar {
@@ -96,7 +98,7 @@ impl Cache {
         }
         let calendar = calendar.unwrap();
         let mut inner = self.inner.write().await;
-        let old_calendar = inner.day_overviews.clone();
+        let old_calendar = inner.clone();
         // todo: compare old calendar to new one, send notifications for changes
         inner.day_overviews = calendar.clone();
         let mut guard = self.last_update.write().await;
@@ -107,8 +109,8 @@ impl Cache {
         });
         // check if any day caches are dirty or expired, update if necessary
         let days = inner.days.clone();
-        for (date, (expiry, old_day)) in &days {
-            if inner.is_dirty(*date) || Instant::now() > *expiry {
+        for date in days.keys() {
+            if inner.is_dirty(*date) {
                 let day = client.get_day(*date).await;
                 if day.is_err() {
                     error!("failed to update day cache {}", day.err().unwrap());
@@ -119,9 +121,47 @@ impl Cache {
                 // todo: compare old day to new one, send notifications for changes
             }
         }
+        let new_calendar = inner.clone();
+        self.compare_calendars(old_calendar, new_calendar).await;
     }
 
-    async fn compare_calendars(&self, old: &Vec<DayOverview>, new: &Vec<DayOverview>) {
+    async fn compare_calendars(&self, mut old: Calendar, mut new: Calendar) {
+        if old.day_overviews.is_empty() || new.day_overviews.is_empty() {
+            return;
+        }
+        // transform each day into vector of changes
+        if old.day_overviews.first().map(|overview| overview.date) != new.day_overviews.first().map(|overview| overview.date) {
+            // remove first of old days
+            old.day_overviews.remove(0);
+        }
+        if old.day_overviews.last().map(|overview| overview.date) != new.day_overviews.last().map(|overview| overview.date) {
+            // remove last of old days
+            new.day_overviews.pop();
+        }
+
+        if old.day_overviews.len() != new.day_overviews.len() {
+            warn!("calendar length mismatch, cannot compare calendars");
+            return;
+        }
+
+        // zip old and new days together
+        let mut overviews = old.day_overviews.into_iter().zip(new.day_overviews.into_iter());
+        for (old_overview, new_overview) in overviews {
+            if old_overview.date != new_overview.date {
+                warn!("calendar date mismatch, cannot compare calendars");
+                return;
+            }
+            let relevant_pilots = new.days.get(&new_overview.date)
+                .map(|(_, day)| day.entries.iter()
+                    .map(|entry| entry.name.clone()).collect::<Vec<_>>())
+                .unwrap_or_default();
+            // change in registered pilots
+            if old_overview.registered_pilots.definitive < new_overview.registered_pilots.definitive
+                && new_overview.registered_pilots.definitive == REGISTERED_PILOTS_THRESHOLD {
+                // todo: notification for interested pilots
+                info!("{} pilot threshold reached for {}", REGISTERED_PILOTS_THRESHOLD, new_overview.date);
+            }
+        }
 
     }
 

@@ -183,6 +183,7 @@ pub mod axum {
     use std::collections::HashMap;
     use std::sync::{Arc, Mutex};
     use std::time::{Duration, Instant};
+    use anyhow::Context;
     use tokio::time::{sleep, timeout};
     use axum::handler::Handler;
     use tracing::{debug, info};
@@ -280,9 +281,8 @@ pub mod axum {
         let header = req.headers().get("Authorization");
         if let Some(header) = header {
             if let Ok(header) = header.to_str() {
-                if header.starts_with("Bearer ") {
+                if let Some(token) = header.strip_prefix("Bearer ") {
                     // get token
-                    let token = header.strip_prefix("Bearer ").unwrap();
                     let cache = AuthCache::from_ref(&s);
 
                     let token = token.to_owned();
