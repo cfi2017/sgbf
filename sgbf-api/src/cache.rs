@@ -161,6 +161,17 @@ impl Cache {
                 // todo: notification for interested pilots
                 info!("{} pilot threshold reached for {}", REGISTERED_PILOTS_THRESHOLD, new_overview.date);
             }
+
+            let old_entries = old_overview.entries;
+            let new_entries = new_overview.entries;
+            // get entries in new entries that are not in old entries
+            let new_entries = new_entries.into_iter().filter(|new_entry| {
+                !old_entries.iter().any(|old_entry| old_entry.name == new_entry.name)
+            }).collect::<Vec<_>>();
+            for new_entry in new_entries {
+                // todo: notification for interested pilots
+                info!("new entry {} for {} (type {:?})", new_entry.name, new_overview.date, new_entry.entry_type);
+            }
         }
 
     }
