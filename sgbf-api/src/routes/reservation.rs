@@ -6,7 +6,7 @@ use axum_macros::debug_handler;
 use firestore::FirestoreDb;
 use log::info;
 use opentelemetry::trace::SpanKind::Server;
-use sgbf_client::model::{Day, DayOverview, RosterEntry};
+use sgbf_client::model::{Day, DayOverview, RosterEntry, RosterEntryType};
 use serde::{Serialize, Deserialize};
 use sgbf_client::client::axum::AuthCache;
 use crate::server::{ServerError, UnknownServerError};
@@ -51,7 +51,7 @@ pub async fn login(
 }
 
 pub async fn get_calendar(
-    _client: sgbf_client::Client,
+    // _client: sgbf_client::Client,
     State(state): State<SharedState>
 ) -> Result<Json<Vec<DayOverview>>, ServerError> {
     let cache = state.inner.read().unwrap().cache.clone();
@@ -79,9 +79,12 @@ pub async fn get_day(
 
 pub async fn update_day(
     client: sgbf_client::Client,
+    State(state): State<SharedState>,
     extract::Query(query): extract::Query<GetDayQuery>,
     extract::Json(payload): extract::Json<Day>
-) -> Result<(), UnknownServerError> {
+) -> Result<Json<Day>, UnknownServerError> {
+    // check and update notification settings
     client.update_day(query.date, payload).await;
-    Ok(())
+    let day = client.get_day(query.date).await?;
+    Ok(Json(day))
 }
