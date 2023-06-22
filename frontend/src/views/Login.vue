@@ -40,6 +40,7 @@ import { useStore } from '@/stores/reservation';
 import { useI18n } from 'vue-i18n';
 import { useForm } from 'vee-validate';
 import router from "@/router";
+import {useOneSignal} from "@onesignal/onesignal-vue3";
 
 export default defineComponent({
   setup() {
@@ -54,6 +55,8 @@ export default defineComponent({
 
     const { handleSubmit, errors } = useForm();
 
+    const oneSignal = useOneSignal();
+
     const onSubmit = async (values: any) => {
       if (form.rememberMe) {
         // Save credentials to local storage
@@ -63,6 +66,7 @@ export default defineComponent({
 
       // Attempt to login
       await store.login(form.username, form.password);
+      await oneSignal.setExternalUserId(form.username);
       await router.push('/reservation/calendar');
     };
 
