@@ -16,6 +16,7 @@ const app = createApp(App)
 import en from './locales/en.json';
 import de from './locales/de.json';
 import OneSignalVuePlugin from "@onesignal/onesignal-vue3";
+import {BrowserTracing, init, Replay, vueRouterInstrumentation} from "@sentry/vue";
 
 type MessageSchema = typeof en;
 
@@ -48,7 +49,28 @@ const i18n = createI18n<[MessageSchema], 'en', 'de'>({
     },
 });
 
+init({
+    app,
+    dsn: "https://8fa5bfe05d9a470c976d060d4431f41a@sentry.service.cloud.swiss.dev/4",
+    integrations: [
+        new BrowserTracing({
+            // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+            tracePropagationTargets: ["localhost", /^https:\/\/sgbf\.swiss\.dev\/api/],
+            routingInstrumentation: vueRouterInstrumentation(router),
+        }),
+        new Replay(),
+    ],
 
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 0.1,
+
+    // Capture Replay for 10% of all sessions,
+    // plus for 100% of sessions with an error
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+});
 
 app.use(pinia)
 app.use(router)
