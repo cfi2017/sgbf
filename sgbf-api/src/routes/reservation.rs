@@ -36,15 +36,15 @@ pub async fn login(
     if let Some(user) = &user {
         info!("logged in as {} (uid {})", user, payload.username);
         let db = FirestoreDb::from_ref(&state);
-        let id = payload.username.parse::<i32>().context("could not parse user id")?;
-        if get_user(&db, id).await?.is_none() {
+        let id = payload.username;
+        if get_user(&db, &id).await?.is_none() {
             store_user(&db, &User {
                 name: user.to_owned(),
-                id,
+                id: id.to_string(),
                 settings: Default::default()
             }).await?;
         }
-        store_token(&db, &token, id).await?;
+        store_token(&db, &token, &id).await?;
     }
     auth_cache.add_token(token.clone(), Duration::from_secs(60 * 60 * 4), user);
     Ok(Json(LoginResponse { token }))

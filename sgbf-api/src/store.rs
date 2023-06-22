@@ -13,7 +13,7 @@ use crate::server::ServerError::Unknown;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct User {
-    pub id: i32,
+    pub id: String,
     pub name: String,
     pub settings: UserSettings,
 }
@@ -39,11 +39,11 @@ pub struct NotificationSettings {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TokenBinding {
-    pub user_id: i32,
+    pub user_id: String,
     pub expiry: chrono::DateTime<chrono::Utc>,
 }
 
-pub async fn store_token(db: &FirestoreDb, token: &str, user_id: i32) -> anyhow::Result<TokenBinding> {
+pub async fn store_token(db: &FirestoreDb, token: &str, user_id: &str) -> anyhow::Result<TokenBinding> {
     let mut hasher = Sha256::default();
     hasher.update(token);
     let hash = hasher.finalize();
@@ -53,7 +53,7 @@ pub async fn store_token(db: &FirestoreDb, token: &str, user_id: i32) -> anyhow:
         .in_col("tokens")
         .document_id(&hash)
         .object(&TokenBinding {
-            user_id,
+            user_id: user_id.to_string(),
             expiry: chrono::Utc::now() + chrono::Duration::hours(48),
         })
         .execute::<TokenBinding>()
@@ -61,7 +61,7 @@ pub async fn store_token(db: &FirestoreDb, token: &str, user_id: i32) -> anyhow:
     result.context("could not save token binding")
 }
 
-pub async fn get_uid_for_token(db: &FirestoreDb, token: &str) -> anyhow::Result<Option<i32>> {
+pub async fn get_uid_for_token(db: &FirestoreDb, token: &str) -> anyhow::Result<Option<String>> {
     let mut hasher = Sha256::default();
     hasher.update(token);
     let hash = hasher.finalize();
@@ -76,7 +76,7 @@ pub async fn get_uid_for_token(db: &FirestoreDb, token: &str) -> anyhow::Result<
     Ok(binding.map(|binding| binding.user_id))
 }
 
-pub struct Uid(pub i32);
+pub struct Uid(pub String);
 
 pub async fn with_uid<B, S>(
     State(s): State<S>,
@@ -110,7 +110,7 @@ pub async fn store_user(db: &FirestoreDb, user: &User) -> anyhow::Result<User> {
     result.context("could not save user")
 }
 
-pub async fn get_user(db: &FirestoreDb, user_id: i32) -> anyhow::Result<Option<User>> {
+pub async fn get_user(db: &FirestoreDb, user_id: &str) -> anyhow::Result<Option<User>> {
     let result = db.fluent()
         .select()
         .by_id_in("users")
