@@ -19,7 +19,19 @@ import OneSignalVuePlugin from "@onesignal/onesignal-vue3";
 
 type MessageSchema = typeof en;
 
-const vuetify = createVuetify();
+const vuetify = createVuetify({
+    theme: {
+        defaultTheme: 'sgbf',
+        themes: {
+            sgbf: {
+                dark: false,
+                colors: {
+                    primary: '#252F79'
+                }
+            }
+        }
+    }
+});
 
 const pinia = createPinia();
 pinia.use(createPersistedState({
@@ -47,7 +59,7 @@ app.use(OneSignalVuePlugin, {
     safari_web_id: "web.onesignal.auto.52bd6d36-ef00-42e1-a687-b4f3eaae4ff3",
     notifyButton: {
         enable: true,
-    },
+    }
 });
 
 app.mount('#app')
