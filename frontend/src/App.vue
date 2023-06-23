@@ -11,6 +11,7 @@
       <!-- Add navigation items here -->
       <v-list>
         <v-list-item prepend-icon="mdi-airplane-clock" @click="router.push('/reservation/calendar')" :title="t('nav.reservation')"></v-list-item>
+        <v-list-item v-if="dev" prepend-icon="mdi-clipboard-check-outline" @click="router.push('/reservation/checklist')" :title="t('nav.checklist')"></v-list-item>
         <v-divider></v-divider>
         <v-list-item prepend-icon="mdi-cog" :title="t('nav.settings')" @click="router.push('/settings')"></v-list-item>
         <v-list-item prepend-icon="mdi-exit-to-app" :title="t('nav.logout')" @click="logout()"></v-list-item>
@@ -42,12 +43,18 @@ export default defineComponent({
     }
     const {t} = useI18n();
     const settings = useSettingsStore();
+    store.checkLogin().then(() => console.log('checked login'))
+
+    // get store.dev reactive
+    const dev = store.dev;
+
     settings.loadSettings();
     const drawer = ref(false);
     return {
       drawer,
       router,
       logout,
+      dev,
       t
     }
   }

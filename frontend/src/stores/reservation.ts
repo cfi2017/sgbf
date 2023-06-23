@@ -12,11 +12,25 @@ export const useStore = defineStore({
         token: '',
         calendar: [] as DayOverview[],
         days: {} as Record<string, Day>,
+        dev: false
     }),
     persist: true,
     actions: {
         async login(username: string, password: string) {
             this.token = await apiService.login(username, password);
+        },
+        async checkLogin() {
+            if (!this.token) return;
+            try {
+                const me = await apiService.me(this.token);
+                console.log(me);
+                if (me.id === "10000315") {
+                    console.log("dev mode");
+                    this.dev = true;
+                }
+            } catch (ex) {
+                await this.logout();
+            }
         },
         async logout() {
             this.token = "";

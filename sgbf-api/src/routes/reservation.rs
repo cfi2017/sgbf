@@ -8,10 +8,10 @@ use log::info;
 use opentelemetry::trace::SpanKind::Server;
 use sgbf_client::model::{Day, DayOverview, RosterEntry, RosterEntryType};
 use serde::{Serialize, Deserialize};
-use sgbf_client::client::axum::AuthCache;
+use sgbf_client::client::axum::{AuthCache, AuthState};
 use crate::server::{ServerError, UnknownServerError};
 use crate::state::SharedState;
-use crate::store::{get_user, store_token, store_user, User};
+use crate::store::{get_user, store_token, store_user, Uid, User};
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
@@ -48,6 +48,16 @@ pub async fn login(
     }
     auth_cache.add_token(token.clone(), Duration::from_secs(60 * 60 * 4), user);
     Ok(Json(LoginResponse { token }))
+}
+
+#[debug_handler]
+pub async fn me(
+    State(state): State<SharedState>,
+    extract::Extension(Uid(uid)): extract::Extension<Uid>
+) -> Result<Json<User>, UnknownServerError> {
+    let db = FirestoreDb::from_ref(&state);
+    let user = get_user(&db, &uid).await?.context("failed to get user")?;
+    Ok(Json(user))
 }
 
 pub async fn get_calendar(

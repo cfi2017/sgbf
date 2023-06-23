@@ -86,3 +86,20 @@ pub enum EntryType {
     #[serde(rename = "WinchOperator")]
     WinchOperator,
 }
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Member {
+    pub name: String,
+    pub address: Option<String>,
+    pub private: Addresses,
+    pub office: Addresses,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Addresses {
+    pub phone: Option<String>,
+    pub email: Option<String>,
+    pub mobile: Option<String>,
+}

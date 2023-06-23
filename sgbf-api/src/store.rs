@@ -76,6 +76,7 @@ pub async fn get_uid_for_token(db: &FirestoreDb, token: &str) -> anyhow::Result<
     Ok(binding.map(|binding| binding.user_id))
 }
 
+#[derive(Debug, Clone)]
 pub struct Uid(pub String);
 
 pub async fn with_uid<B, S>(

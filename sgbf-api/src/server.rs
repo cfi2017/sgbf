@@ -20,8 +20,8 @@ use tower::ServiceBuilder;
 use tower_http::catch_panic::CatchPanicLayer;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::LatencyUnit;
-use tower_http::trace::{DefaultOnRequest, DefaultOnResponse, TraceLayer};
-use tracing::{info, Level};
+use tower_http::trace::{DefaultOnFailure, DefaultOnRequest, DefaultOnResponse, TraceLayer};
+use tracing::{error, info, Level};
 use sgbf_client::client::axum::AuthCache;
 use crate::cache::Cache;
 use crate::config::Config;
@@ -68,7 +68,12 @@ pub async fn init_default_server() -> anyhow::Result<()> {
 pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()> {
     let cors = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST])
-        .allow_headers(vec![CONTENT_TYPE, AUTHORIZATION])
+        .allow_headers(vec![
+            CONTENT_TYPE,
+            AUTHORIZATION,
+            HeaderName::from_str("baggage").unwrap(),
+            HeaderName::from_str("sentry-trace").unwrap(),
+        ])
         .allow_origin(Any);
     let auth_service = ServiceBuilder::new()
         .layer(from_fn_with_state(state.clone(), sgbf_client::client::axum::auth::<_, SharedState>))
@@ -77,6 +82,9 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
         .route("/status", get(routes::status))
         .route("/reservation/login", post(routes::reservation::login))
         .route("/reservation/calendar", get(routes::reservation::get_calendar)
+            .layer(auth_service.to_owned())
+        )
+        .route("/reservation/@me", get(routes::reservation::me)
             .layer(auth_service.to_owned())
         )
         .route("/reservation/day", get(routes::reservation::get_day).post(routes::reservation::update_day)
@@ -89,6 +97,7 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
                 .layer(TraceLayer::new_for_http()
                     .on_response(DefaultOnResponse::new().level(Level::INFO).latency_unit(LatencyUnit::Millis))
                     .on_request(DefaultOnRequest::new().level(Level::DEBUG))
+                    .on_failure(DefaultOnFailure::new().level(Level::ERROR))
                 )
                 .layer(cors)
                 .layer(HandleErrorLayer::new(handle_error))
@@ -142,6 +151,8 @@ pub struct UnknownServerError(anyhow::Error);
 
 impl IntoResponse for UnknownServerError {
     fn into_response(self) -> Response {
+        error!("Unknown server error: {}", self.0);
+        self.0.chain().for_each(|cause| error!("caused by: {}", cause));
         (
             StatusCode::INTERNAL_SERVER_ERROR,
             format!("Something went wrong: {}", self.0),

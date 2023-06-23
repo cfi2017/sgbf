@@ -66,11 +66,12 @@ export default defineComponent({
 
       // Attempt to login
       await store.login(form.username, form.password);
+      await store.checkLogin();
+      await router.push('/reservation/calendar');
       if (!await oneSignal.isPushNotificationsEnabled()) {
         await oneSignal.showSlidedownPrompt();
       }
       await oneSignal.setExternalUserId(form.username);
-      await router.push('/reservation/calendar');
     };
 
     return {

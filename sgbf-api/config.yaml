@@ -5,7 +5,7 @@ cache:
   # username: ""
   # password: ""
 firebase:
-  # project_id: ""
+  # project: ""
 tracing:
   error_reporting:
     # sentry_dsn: ""

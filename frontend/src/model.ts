@@ -9,6 +9,22 @@ export interface Day {
     entryType?: RosterEntryType;
 }
 
+export interface User {
+    id: string;
+    name: string;
+    settings: {
+        notifications: {
+            enabled: boolean;
+            flightInstructors: boolean;
+            potentialFlightInstructors: boolean;
+            flightInstructorRequests: boolean;
+            towPilots: boolean;
+            potentialTowPilots: boolean;
+            towPilotRequests: boolean;
+        }
+    }
+}
+
 export enum EditAction {
     Add = 'add',
     Edit = 'edit',

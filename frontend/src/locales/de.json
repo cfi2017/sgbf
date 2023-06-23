@@ -2,6 +2,7 @@
   "nav": {
     "settings": "Einstellungen",
     "reservation": "Reservationssystem",
+    "checklist": "Checkliste",
     "logout": "Abmelden"
   },
   "reservation": {
