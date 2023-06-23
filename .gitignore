@@ -2,3 +2,5 @@
 **/*.private.env.json
 .idea
 **/service-account.json
+sgbf-api/.env
+**/*.override.yaml
