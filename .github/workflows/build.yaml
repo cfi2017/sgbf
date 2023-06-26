@@ -9,18 +9,44 @@ on:
   # Run tests for any PRs.
   pull_request:
 jobs:
-  build:
+  # detect changes in repository - e.g. only build frontend if frontend has changed
+  changes:
     runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - '.github/workflows/**'
+              - 'frontend/**'
+            api:
+              - '.github/workflows/**'
+              - 'sgbf-api/**'
+              - 'sgbf-client/**'
+              - Cargo.toml
+              - Cargo.lock
+  build:
+    needs: changes
+    runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.meta.outputs.tags }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: ./sgbf-api/Dockerfile
+          - package: api
+            dockerfile: ./sgbf-api/Dockerfile
             image: ghcr.io/cfi2017/sgbf/api
             context: .
-          - dockerfile: ./frontend/Dockerfile
+          - package: frontend
+            dockerfile: ./frontend/Dockerfile
             image: ghcr.io/cfi2017/sgbf/frontend
             context: ./frontend
+        package: ${{ fromJSON(needs.changes.outputs.packages) }}
     permissions:
       contents: read
       deployments: write
@@ -61,3 +87,21 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  deploy:
+    needs:
+    - changes
+    - build
+    runs-on: ubuntu-latest
+    name: Write tags to k8s manifests using kustomize
+    strategy:
+      matrix:
+        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Kustomize edit images
+        uses: imranismail/setup-kustomize@v2
+        run: |
+          echo ${{ needs.build.outputs.tags }}
+          echo ${{ matrix.package }}
+          # echo ${{ needs.build.outputs.tags }} | xargs -n1 -I{} kustomize edit set image ghcr.io/cfi2017/sgbf/${{ matrix.package }}=sha-${{ github.sha }}
