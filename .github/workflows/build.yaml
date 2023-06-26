@@ -117,5 +117,5 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git add k8s
-          git commit -m "update image for ${{ matrix.package }}"
+          git commit -m "update image tag for ${{ matrix.package }}"
           git push
