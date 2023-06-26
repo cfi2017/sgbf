@@ -46,6 +46,16 @@ spec:
                   key: password
             - name: SGBF__FIREBASE__PROJECT
               value: "sgbf-system"
+            - name: SGBF__ONESIGNAL__KEY
+              valueFrom:
+                secretKeyRef:
+                  name: onesignal
+                  key: key
+            - name: SGBF__ONESIGNAL__ID
+              valueFrom:
+                secretKeyRef:
+                  name: onesignal
+                  key: id
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/etc/sgbf/service-account.json"
           volumeMounts:
