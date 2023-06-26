@@ -98,6 +98,8 @@ jobs:
       max-parallel: 1
       matrix:
         package: ${{ fromJSON(needs.changes.outputs.packages) }}
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v2
