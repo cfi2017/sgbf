@@ -13,7 +13,7 @@ chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1", features = ["serde_derive"] }
 serde_json = { version = "1" }
 sgbf-client = { path = "../sgbf-client", features = ["axum"] }
-onesignal-rust-api = { version = "2" }
+onesignal-rust-api = { git = "https://github.com/cfi2017/onesignal-rust-api" }
 
 # async runtime
 tokio = { version = "1", features = ["full"] }

@@ -21,7 +21,7 @@ RUN cargo build --release --package sgbf-api
 FROM debian:stable-slim AS runtime
 WORKDIR /app/sgbf
 
-RUN apt-get update && apt-get install -y ca-certificates openssl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8080
 
