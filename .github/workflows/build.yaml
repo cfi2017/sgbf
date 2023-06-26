@@ -94,6 +94,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Write tags to k8s manifests using kustomize
     strategy:
+      fail-fast: true
+      max-parallel: 1
       matrix:
         package: ${{ fromJSON(needs.changes.outputs.packages) }}
     steps:
@@ -102,6 +104,18 @@ jobs:
       - uses: imranismail/setup-kustomize@v2
       - name: Kustomize edit images
         run: |
+          cd k8s
           echo "${{ needs.build.outputs.tags }}"
           echo "${{ matrix.package }}"
-          echo "ghcr.io/cfi2017/sgbf/${{ matrix.package }}=sha-${{ github.sha }}"
+          # first seven characters of the sha
+          sha=$(echo ${{ github.sha:0:7 }} | cut -c1-7)
+          img="ghcr.io/cfi2017/sgbf/${{ matrix.package }}=sha-$sha"
+          echo "$img"
+          kustomize edit set image $img
+      - name: write to repo
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add k8s
+          git commit -m "update image for ${{ matrix.package }}"
+          git push
