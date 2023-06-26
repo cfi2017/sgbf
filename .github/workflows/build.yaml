@@ -102,6 +102,6 @@ jobs:
       - uses: imranismail/setup-kustomize@v2
       - name: Kustomize edit images
         run: |
-          echo ${{ needs.build.outputs.tags }}
-          echo ${{ matrix.package }}
+          echo "${{ needs.build.outputs.tags }}"
+          echo "${{ matrix.package }}"
           # echo ${{ needs.build.outputs.tags }} | xargs -n1 -I{} kustomize edit set image ghcr.io/cfi2017/sgbf/${{ matrix.package }}=sha-${{ github.sha }}
