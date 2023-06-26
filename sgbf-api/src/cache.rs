@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
+use anyhow::{bail, Context};
 use axum::headers::authorization::Credentials;
 use chrono::NaiveDate;
 use firestore::FirestoreDb;
@@ -78,8 +79,12 @@ impl Cache {
     pub async fn start_polling(&self) {
         loop {
             debug!("updating cache");
-            self.update().await;
-            info!("cache updated");
+            let result = self.update().await;
+            if result.is_err() {
+                error!("failed to update cache {}", result.err().unwrap());
+            } else {
+                info!("cache updated");
+            }
             let mut rx = self.rx_handle.write().await;
             // drain the receiver if something happened during an update
             while rx.try_recv().is_ok() {}
@@ -88,15 +93,10 @@ impl Cache {
         }
     }
 
-    async fn update(&self) {
-        let client = sgbf_client::Client::from_credentials(&self.credentials.0, &self.credentials.1).await;
+    async fn update(&self) -> anyhow::Result<()> {
+        let client = sgbf_client::Client::from_credentials(&self.credentials.0, &self.credentials.1).await.context("failed to create client")?;
         // update calendar
-        let calendar = client.get_calendar().await;
-        if calendar.is_err() {
-            error!("failed to update calendar {}", calendar.err().unwrap());
-            return;
-        }
-        let calendar = calendar.unwrap();
+        let calendar = client.get_calendar().await.context("failed to update calendar")?;
         let mut inner = self.inner.write().await;
         let old_calendar = inner.clone();
         // todo: compare old calendar to new one, send notifications for changes
@@ -111,18 +111,14 @@ impl Cache {
         let days = inner.days.clone();
         for date in days.keys() {
             if inner.is_dirty(*date) {
-                let day = client.get_day(*date).await;
-                if day.is_err() {
-                    error!("failed to update day cache {}", day.err().unwrap());
-                } else {
-                    let day = day.unwrap();
-                    inner.days.insert(*date, (Instant::now() + Duration::from_secs(600 * 3), day));
-                }
+                let day = client.get_day(*date).await.context("failed to update day cache")?;
+                inner.days.insert(*date, (Instant::now() + Duration::from_secs(600 * 3), day));
                 // todo: compare old day to new one, send notifications for changes
             }
         }
         let new_calendar = inner.clone();
         self.compare_calendars(old_calendar, new_calendar).await;
+        Ok(())
     }
 
     async fn compare_calendars(&self, mut old: Calendar, mut new: Calendar) {

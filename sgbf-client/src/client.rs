@@ -26,14 +26,14 @@ pub enum ClientError {
 
 impl Client {
     #[instrument(skip(password))]
-    pub async fn from_credentials(username: &str, password: &str) -> Self {
+    pub async fn from_credentials(username: &str, password: &str) -> anyhow::Result<Self> {
         let provider = Arc::new(cookie::Jar::default());
         let client = Self {
             inner: reqwest::Client::builder().cookie_provider(provider.clone()).build().unwrap(),
             cookie_provider: provider,
         };
-        client.login(username, password).await;
-        client
+        client.login(username, password).await.context("failed to login")?;
+        Ok(client)
     }
 
     #[instrument(skip(token))]
@@ -59,7 +59,7 @@ impl Client {
     }
 
     #[instrument(skip(self, password))]
-    async fn login(&self, username: &str, password: &str) {
+    async fn login(&self, username: &str, password: &str) -> anyhow::Result<()> {
         let url = format!("{}{}", BASE_URL, PATH_LOGIN);
         let body = LoginBody {
             username: username.to_string(),
@@ -69,8 +69,9 @@ impl Client {
         let request = self.inner.post(url)
             .form(&body)
             .build()
-            .unwrap();
-        let _ = self.inner.execute(request).await.unwrap();
+            .context("failed to build request")?;
+        let _ = self.inner.execute(request).await.context("failed to execute request")?;
+        Ok(())
     }
 
     pub async fn get_user(&self) -> Result<Option<String>> {

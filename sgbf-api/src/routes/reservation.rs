@@ -29,7 +29,7 @@ pub async fn login(
     State(state): State<SharedState>,
     Json(payload): Json<LoginRequest>
 ) -> Result<Json<LoginResponse>, UnknownServerError> {
-    let client = sgbf_client::Client::from_credentials(&payload.username, &payload.password).await;
+    let client = sgbf_client::Client::from_credentials(&payload.username, &payload.password).await.context("failed to create client")?;
     let token = client.get_token();
     let auth_cache = AuthCache::from_ref(&state);
     let user = client.get_user().await?;
