@@ -91,7 +91,8 @@ impl Client {
     #[instrument(skip(self))]
     pub async fn get_calendar(&self) -> Result<Vec<DayOverview>> {
         let url = format!("{}{}", BASE_URL, PATH_CALENDAR);
-        let request = self.inner.get(url)
+        let request = self.inner.post(url)
+            .form(&[("timebracket", "-9"), ("event_type", "0")])
             .build()
             .context("Failed to build request")?;
         let response = self.inner.execute(request).await.context("Failed to execute request")?;

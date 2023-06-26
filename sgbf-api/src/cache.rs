@@ -5,11 +5,15 @@ use anyhow::{bail, Context};
 use axum::headers::authorization::Credentials;
 use chrono::NaiveDate;
 use firestore::FirestoreDb;
+use onesignal_rust_api::apis;
+use onesignal_rust_api::apis::configuration::Configuration;
+use onesignal_rust_api::models::{Notification, StringMap};
 use tokio::select;
 use tokio::sync::{mpsc, RwLock};
 use tokio::time::timeout;
 use tracing::{debug, error, info, instrument, warn};
 use sgbf_client::model::{Day, DayOverview, RosterEntryType};
+use crate::config::CacheConfig;
 
 const REGISTERED_PILOTS_THRESHOLD: u32 = 10;
 
@@ -53,20 +57,22 @@ pub struct Cache {
     db: FirestoreDb,
     credentials: (String, String),
     tx_handle: mpsc::Sender<()>,
-    rx_handle: Arc<RwLock<mpsc::Receiver<()>>>
+    rx_handle: Arc<RwLock<mpsc::Receiver<()>>>,
+    notifications: Arc<Option<Configuration>>
 }
 
 impl Cache {
 
-    pub fn new(db: FirestoreDb, username: &str, password: &str) -> Self {
+    pub fn new(db: FirestoreDb, config: &CacheConfig, notifications: Option<Configuration>) -> Self {
         let (tx, rx) = mpsc::channel(1);
         Self {
             last_update: Arc::new(RwLock::new(chrono::Utc::now())),
             inner: Arc::new(RwLock::new(Default::default())),
-            credentials: (username.to_owned(), password.to_owned()),
+            credentials: (config.username.to_owned(), config.password.to_owned()),
             db,
             tx_handle: tx,
             rx_handle: Arc::new(RwLock::new(rx)),
+            notifications: Arc::new(notifications)
         }
     }
 
@@ -117,13 +123,13 @@ impl Cache {
             }
         }
         let new_calendar = inner.clone();
-        self.compare_calendars(old_calendar, new_calendar).await;
+        self.compare_calendars(old_calendar, new_calendar).await?;
         Ok(())
     }
 
-    async fn compare_calendars(&self, mut old: Calendar, mut new: Calendar) {
+    async fn compare_calendars(&self, mut old: Calendar, mut new: Calendar) -> anyhow::Result<()> {
         if old.day_overviews.is_empty() || new.day_overviews.is_empty() {
-            return;
+            return Ok(());
         }
         // transform each day into vector of changes
         if old.day_overviews.first().map(|overview| overview.date) != new.day_overviews.first().map(|overview| overview.date) {
@@ -136,16 +142,14 @@ impl Cache {
         }
 
         if old.day_overviews.len() != new.day_overviews.len() {
-            warn!("calendar length mismatch, cannot compare calendars");
-            return;
+            bail!("calendar length mismatch, cannot compare calendars");
         }
 
         // zip old and new days together
         let mut overviews = old.day_overviews.into_iter().zip(new.day_overviews.into_iter());
         for (old_overview, new_overview) in overviews {
             if old_overview.date != new_overview.date {
-                warn!("calendar date mismatch, cannot compare calendars");
-                return;
+                bail!("calendar date mismatch, cannot compare calendars");
             }
             let relevant_pilots = new.days.get(&new_overview.date)
                 .map(|(_, day)| day.entries.iter()
@@ -156,6 +160,7 @@ impl Cache {
                 && new_overview.registered_pilots.definitive == REGISTERED_PILOTS_THRESHOLD {
                 // todo: notification for interested pilots
                 info!("{} pilot threshold reached for {}", REGISTERED_PILOTS_THRESHOLD, new_overview.date);
+                self.send_notification(&format!("{} pilot threshold reached for {}", REGISTERED_PILOTS_THRESHOLD, new_overview.date)).await?;
             }
 
             let old_entries = old_overview.entries;
@@ -167,9 +172,24 @@ impl Cache {
             for new_entry in new_entries {
                 // todo: notification for interested pilots
                 info!("new entry {} for {} (type {:?})", new_entry.name, new_overview.date, new_entry.entry_type);
+                self.send_notification(&format!("new entry {} for {} (type {:?})", new_entry.name, new_overview.date, new_entry.entry_type)).await?;
             }
         }
+        Ok(())
+    }
 
+    async fn send_notification(&self, text: &str) -> anyhow::Result<()> {
+        if let Some(config) = self.notifications.as_ref() {
+            // todo: make app id configurable
+            let mut notification = Notification::new(String::from("597019c4-d476-4efa-9832-34791456301c"));
+            let mut contents = StringMap::new();
+            contents.en = Some(text.to_owned());
+            notification.contents = Some(Box::new(contents));
+            // todo: configure users dynamically
+            notification.include_external_user_ids = Some(vec![self.credentials.0.clone()]);
+            apis::default_api::create_notification(config, notification).await.context("failed to send notification")?;
+        }
+        Ok(())
     }
 
     async fn compare_days(&self, old: Day, new: Day) {

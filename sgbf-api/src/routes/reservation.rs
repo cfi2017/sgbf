@@ -60,12 +60,25 @@ pub async fn me(
     Ok(Json(user))
 }
 
+fn default_calendar_limit() -> usize {
+    31
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct CalendarQuery {
+    #[serde(default = "default_calendar_limit")]
+    limit: usize
+}
+
 pub async fn get_calendar(
     // _client: sgbf_client::Client,
+    extract::Query(query): extract::Query<CalendarQuery>,
     State(state): State<SharedState>
 ) -> Result<Json<Vec<DayOverview>>, ServerError> {
     let cache = state.inner.read().unwrap().cache.clone();
     let calendar = cache.inner.read().await.day_overviews.clone();
+    // only the first `limit` days
+    let calendar = calendar.into_iter().take(query.limit).collect();
     // let calendar = client.get_calendar().await;
     // if let Err(sgbf_client::client::ClientError::InvalidToken) = calendar {
     //     return Err(ServerError::InvalidToken);

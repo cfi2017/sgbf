@@ -15,6 +15,7 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum_client_ip::SecureClientIpSource;
 use firestore::FirestoreDb;
+use onesignal_rust_api::apis::configuration::Configuration;
 use tokio::signal;
 use tower::ServiceBuilder;
 use tower_http::catch_panic::CatchPanicLayer;
@@ -24,8 +25,8 @@ use tower_http::trace::{DefaultOnFailure, DefaultOnRequest, DefaultOnResponse, T
 use tracing::{error, info, Level};
 use sgbf_client::client::axum::AuthCache;
 use crate::cache::Cache;
-use crate::config::Config;
-use crate::routes;
+use crate::config::{Config, OneSignal};
+use crate::{onesignal, routes};
 use crate::state::{AppState, SharedState};
 use crate::store::with_uid;
 
@@ -34,9 +35,10 @@ pub async fn init_default_server() -> anyhow::Result<()> {
     let _guard = crate::tracing::init_tracing(&config.tracing)?;
 
     let db = FirestoreDb::new(&config.firebase.project).await?;
+    let notifications = onesignal::create_onesignal_configuration(&config.onesignal);
 
     let auth_cache = AuthCache::new();
-    let cache = Arc::new(Cache::new(db.clone(), &config.cache.username, &config.cache.password));
+    let cache = Arc::new(Cache::new(db.clone(), &config.cache, notifications));
     let cache_handle = {
         let cache = cache.clone();
         info!("starting cache polling");

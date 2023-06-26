@@ -19,10 +19,17 @@ pub struct CacheConfig {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+pub struct OneSignal {
+    pub key: Option<String>,
+    pub id: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct Config {
     pub server: Server,
     pub cache: CacheConfig,
     pub firebase: Firebase,
+    pub onesignal: OneSignal,
     pub tracing: crate::tracing::TracingConfig
 }
 

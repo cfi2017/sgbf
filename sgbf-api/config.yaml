@@ -6,6 +6,9 @@ cache:
   # password: ""
 firebase:
   # project: ""
+onesignal:
+  # key: ""
+  id: ""
 tracing:
   error_reporting:
     # sentry_dsn: ""

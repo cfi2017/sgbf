@@ -45,7 +45,7 @@ impl Parser {
         let rows = table.select(&self.selectors.tr);
         // skip the first four rows
         let rows = rows.skip(4);
-        let rows = rows.flat_map(|row| self.parse_row(row)).collect::<Vec<_>>();
+        let rows = rows.filter(|row| row.children().count() > 3).flat_map(|row| self.parse_row(row)).collect::<Vec<_>>();
 
         // group by day
         let mut grouped_rows: Vec<Vec<TableEntry>> = Vec::new();
