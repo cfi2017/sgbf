@@ -108,7 +108,7 @@ jobs:
           echo "${{ needs.build.outputs.tags }}"
           echo "${{ matrix.package }}"
           # first seven characters of the sha
-          sha=$(echo ${{ github.sha:0:7 }} | cut -c1-7)
+          sha=$(echo ${{ github.sha }} | cut -c1-7)
           img="ghcr.io/cfi2017/sgbf/${{ matrix.package }}=sha-$sha"
           echo "$img"
           kustomize edit set image $img
