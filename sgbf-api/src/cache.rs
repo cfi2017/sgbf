@@ -11,7 +11,7 @@ use onesignal_rust_api::models::{Notification, StringMap};
 use tokio::select;
 use tokio::sync::{mpsc, RwLock};
 use tokio::time::timeout;
-use tracing::{debug, error, info, instrument, warn};
+use tracing::{debug, error, event, info, instrument, Level, warn};
 use sgbf_client::model::{Day, DayOverview, RosterEntryType};
 use crate::config::CacheConfig;
 
@@ -86,8 +86,8 @@ impl Cache {
         loop {
             debug!("updating cache");
             let result = self.update().await;
-            if result.is_err() {
-                error!("failed to update cache {}", result.err().unwrap());
+            if let Err(error) = result {
+                error!(%error, backtrace = ?error, "failed to update cache");
             } else {
                 info!("cache updated");
             }

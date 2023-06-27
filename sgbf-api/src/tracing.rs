@@ -77,13 +77,14 @@ pub fn init_tracing(cfg: &TracingConfig) -> anyhow::Result<ClientInitGuard> {
         .with_filter(tracing_subscriber::filter::EnvFilter::from_default_env());
     #[cfg(debug_assertions)]
         let log_layer = tracing_subscriber::fmt::layer()
+        .pretty()
         .with_filter(tracing_subscriber::filter::EnvFilter::from_default_env());
 
     // tracing subscriber
     let subscriber = tracing_subscriber::registry()
         .with(log_layer)
-        .with(ErrorLayer::default())
         .with(sentry::integrations::tracing::layer())
+        .with(ErrorLayer::default())
         .with(tracer)
         .with(meter);
 
