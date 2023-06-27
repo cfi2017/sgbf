@@ -44,8 +44,8 @@ impl Default for Selectors {
 impl Parser {
 
     pub fn parse(&self, document: &Html) -> anyhow::Result<Day> {
-        let roster = self.parse_roster(&document).context("could not parse roster")?;
-        let action = self.parse_action(&document).context("could not parse action")?;
+        let roster = self.parse_roster(document).context("could not parse roster")?;
+        let action = self.parse_action(document).context("could not parse action")?;
         let format = document.select(&self.selectors.format).next()
             .context("could not select format field")?
             .value().attr("value")

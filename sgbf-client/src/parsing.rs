@@ -2,11 +2,11 @@ mod calendar;
 mod day;
 mod menu;
 
-use anyhow::{anyhow, bail, Context};
-use scraper::{ElementRef, Html};
+use anyhow::{Context};
+
 use serde::{Deserialize, Serialize};
-use tracing::{debug, instrument, trace};
-use crate::model::{Day, DayOverview, EditAction, EntryType, ParticipantType, PersonEntry, RosterEntry, RosterEntryType, TimeFrame};
+use tracing::{instrument};
+use crate::model::{Day, DayOverview, EntryType, PersonEntry, TimeFrame};
 
 #[derive(Debug, Default)]
 pub struct Parser {

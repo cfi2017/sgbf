@@ -113,8 +113,8 @@ impl Parser {
         let note = tds.next()
             .context("could not get next td")?;
         // if note contains an <a> tag, extract its title
-        let note_3 = note.select(&self.selectors.a).next().map(|a| a.value()
-            .attr("title").map(|v| v.to_string())).flatten();
+        let note_3 = note.select(&self.selectors.a).next().and_then(|a| a.value()
+            .attr("title").map(|v| v.to_string()));
         // next is name of person corresponding to entry type
         let name = tds.next().context("could not get next td")?.text().collect::<String>().trim().to_string();
         let name = if name.is_empty() {
@@ -139,7 +139,7 @@ impl Parser {
         // select a tags
         let selected = el.select(&self.selectors.a).nth(1);
         selected
-            .map(|el| el.value().attr("name")).flatten()
+            .and_then(|el| el.value().attr("name"))
             .ok_or_else(|| anyhow!("could not get name attribute"))
             .map(|v| chrono::NaiveDate::parse_from_str(v, "%Y-%m-%d").context("could not parse date"))?
             .context("could not parse date")

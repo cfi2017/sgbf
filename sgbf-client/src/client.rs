@@ -2,11 +2,11 @@ use std::sync::Arc;
 use anyhow::Context;
 use reqwest::cookie;
 use reqwest::cookie::CookieStore;
-use serde::{Serialize, Deserialize};
+use serde::{Serialize};
 use thiserror::Error;
 use tracing::instrument;
 use crate::parsing;
-use crate::model::{Day, DayOverview, EditAction, ParticipantType, RosterEntry, RosterEntryType};
+use crate::model::{Day, DayOverview, EditAction, ParticipantType, RosterEntryType};
 use crate::parsing::Parser;
 
 pub struct Client {
@@ -41,12 +41,12 @@ impl Client {
         let jar = cookie::Jar::default();
         jar.add_cookie_str(format!("PHPSESSID={}", token).as_str(), &reqwest::Url::parse(BASE_URL).unwrap());
         let provider = Arc::new(jar);
-        let client = Self {
+        
+
+        Self {
             inner: reqwest::Client::builder().cookie_provider(provider.clone()).build().unwrap(),
             cookie_provider: provider,
-        };
-
-        client
+        }
     }
 
     pub fn get_token(&self) -> String {
@@ -185,9 +185,9 @@ pub mod axum {
     use std::collections::HashMap;
     use std::sync::{Arc, Mutex};
     use std::time::{Duration, Instant};
-    use anyhow::Context;
-    use tokio::time::{sleep, timeout};
-    use axum::handler::Handler;
+    
+    use tokio::time::{sleep};
+    
     use tracing::{debug, info};
 
     #[async_trait]
@@ -196,7 +196,7 @@ pub mod axum {
               S: Send + Sync
     {
         type Rejection = StatusCode;
-        async fn from_request_parts(parts: &mut Parts, s: &S) -> Result<Self, Self::Rejection> {
+        async fn from_request_parts(parts: &mut Parts, _s: &S) -> Result<Self, Self::Rejection> {
             // get AuthState from extensions
             let auth_state = parts.extensions.get::<AuthState>();
             if let Some(auth_state) = auth_state {

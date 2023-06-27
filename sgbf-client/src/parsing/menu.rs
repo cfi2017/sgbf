@@ -1,6 +1,6 @@
 use anyhow::Context;
 use scraper::Html;
-use tracing::instrument;
+
 
 #[derive(Debug, Default)]
 pub struct Parser {
