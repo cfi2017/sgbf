@@ -31,7 +31,7 @@ spec:
               name: http
           env:
             - name: SGBF__TRACING__ERROR_REPORTING__SENTRY_DSN
-              value: "https://952ffd64359f4f2e83b283faacdd545f@sentry-relay.sentry:3000/3"
+              value: "https://952ffd64359f4f2e83b283faacdd545f@sentry-web.sentry:9000/3"
             - name: RUST_LOG
               value: "info"
             - name: SGBF__CACHE__USERNAME
