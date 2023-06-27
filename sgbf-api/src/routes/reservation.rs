@@ -8,6 +8,7 @@ use log::info;
 use opentelemetry::trace::SpanKind::Server;
 use sgbf_client::model::{Day, DayOverview, RosterEntry, RosterEntryType};
 use serde::{Serialize, Deserialize};
+use tracing::instrument;
 use sgbf_client::client::axum::{AuthCache, AuthState};
 use crate::server::{ServerError, UnknownServerError};
 use crate::state::SharedState;
@@ -25,6 +26,7 @@ pub struct LoginResponse {
 }
 
 #[debug_handler]
+#[instrument(skip(state, payload), fields(user = %payload.username))]
 pub async fn login(
     State(state): State<SharedState>,
     Json(payload): Json<LoginRequest>
@@ -51,6 +53,7 @@ pub async fn login(
 }
 
 #[debug_handler]
+#[instrument(skip(state), fields(user = %uid))]
 pub async fn me(
     State(state): State<SharedState>,
     extract::Extension(Uid(uid)): extract::Extension<Uid>
@@ -70,10 +73,13 @@ pub struct CalendarQuery {
     limit: usize
 }
 
+#[debug_handler]
+#[instrument(skip(state), fields(limit = %query.limit, user = %_uid))]
 pub async fn get_calendar(
     // _client: sgbf_client::Client,
     extract::Query(query): extract::Query<CalendarQuery>,
-    State(state): State<SharedState>
+    State(state): State<SharedState>,
+    extract::Extension(Uid(_uid)): extract::Extension<Uid>
 ) -> Result<Json<Vec<DayOverview>>, ServerError> {
     let cache = state.inner.read().unwrap().cache.clone();
     let calendar = cache.inner.read().await.day_overviews.clone();
