@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-import { apiService } from '@/api';
-import type { DayOverview, RosterEntry, Day } from '@/model';
+import {defineStore} from 'pinia';
+import {apiService} from '@/api';
+import type {Day, DayOverview} from '@/model';
 import {RosterEntryType} from "@/model";
 import router from "@/router";
 import type {AxiosError} from "axios";
@@ -28,8 +28,13 @@ export const useStore = defineStore({
                     console.log("dev mode");
                     this.dev = true;
                 }
-            } catch (ex) {
-                await this.logout();
+            } catch (ex: any) {
+                if (isAxiosError(ex)) {
+                    const error = ex as AxiosError;
+                    if (ex.response?.status === 401) {
+                        await this.logout();
+                    }
+                }
             }
         },
         async logout() {
