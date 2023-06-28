@@ -2,11 +2,11 @@ use anyhow::Context;
 use axum::extract::{FromRef, State};
 use axum::http;
 use axum::http::StatusCode;
-use firestore::FirestoreDb;
-use firestore::struct_path::paths;
+use chrono::Utc;
+use firestore::{FirestoreDb, FirestoreQueryCollection, FirestoreTimestamp, path};
 use serde::{Deserialize, Serialize};
 use sha2::{Sha256, Digest};
-use tracing::debug;
+use tracing::{debug, warn};
 use sgbf_client::client::axum::{AuthCache, AuthState};
 use crate::server::ServerError::Unknown;
 
@@ -39,8 +39,34 @@ pub struct NotificationSettings {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TokenBinding {
+    #[serde(alias = "_firestore_id")]
+    id: Option<String>,
     pub user_id: String,
+    #[serde(with = "firestore::serialize_as_timestamp")]
     pub expiry: chrono::DateTime<chrono::Utc>,
+}
+
+pub async fn clean_expired_tokens(db: &FirestoreDb) -> anyhow::Result<()> {
+    let tokens: Vec<TokenBinding> = db.fluent()
+        .select()
+        .from("tokens")
+        .filter(|q| {
+            q.field(path!(TokenBinding::expiry)).less_than(FirestoreTimestamp(Utc::now()))
+        })
+        .obj()
+        .query()
+        .await?;
+    debug!("found {} expired tokens", tokens.len());
+    for token in tokens {
+        let result = db.fluent()
+            .delete()
+            .from("tokens")
+            .document_id(&token.id.unwrap())
+            .execute()
+            .await;
+        result.context("could not delete token binding")?;
+    }
+    Ok(())
 }
 
 pub async fn store_token(db: &FirestoreDb, token: &str, user_id: &str) -> anyhow::Result<TokenBinding> {
@@ -53,6 +79,7 @@ pub async fn store_token(db: &FirestoreDb, token: &str, user_id: &str) -> anyhow
         .in_col("tokens")
         .document_id(&hash)
         .object(&TokenBinding {
+            id: None,
             user_id: user_id.to_string(),
             expiry: chrono::Utc::now() + chrono::Duration::hours(48),
         })
@@ -87,6 +114,9 @@ pub async fn with_uid<B, S>(
     where FirestoreDb: FromRef<S> {
     let db = FirestoreDb::from_ref(&s);
     let auth_state = req.extensions().get::<AuthState>();
+    if let Err(err) = clean_expired_tokens(&db).await {
+        warn!("could not clean expired tokens: {}", err);
+    }
     if let Some(auth_state) = auth_state {
         if let Some((token, _)) = &auth_state.0 {
             let uid = get_uid_for_token(&db, token).await;

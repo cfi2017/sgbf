@@ -2826,6 +2826,7 @@ dependencies = [
  "serde_json",
  "sgbf-client",
  "sha2",
+ "struct-path",
  "tokio",
  "tower",
  "tower-http",
