@@ -7,6 +7,8 @@ use chrono::NaiveDate;
 use firestore::FirestoreDb;
 use onesignal_rust_api::apis;
 use onesignal_rust_api::apis::configuration::Configuration;
+use onesignal_rust_api::apis::default_api::CreateNotificationError;
+use onesignal_rust_api::apis::Error;
 use onesignal_rust_api::models::{Notification, StringMap};
 use tokio::select;
 use tokio::sync::{mpsc, RwLock};
@@ -187,7 +189,11 @@ impl Cache {
             notification.contents = Some(Box::new(contents));
             // todo: configure users dynamically
             notification.include_external_user_ids = Some(vec![self.credentials.0.clone()]);
-            apis::default_api::create_notification(config, notification).await.context("failed to send notification")?;
+            let result = apis::default_api::create_notification(config, notification).await;
+            if let Err(Error::ResponseError(err)) = &result {
+                bail!("onesignal response error ({}), {:?}", err.status, err.entity)
+            }
+            result.context("failed to send notification")?;
         }
         Ok(())
     }
