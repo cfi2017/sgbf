@@ -5,7 +5,7 @@ pub fn create_onesignal_configuration(config: &OneSignal) -> Option<Configuratio
     let key = config.key.as_ref()?;
     let mut configuration = Configuration::new();
     configuration.api_key = Some(ApiKey {
-        prefix: None,
+        prefix: Some("Basic".to_string()),
         key: key.clone(),
     });
     Some(configuration)
