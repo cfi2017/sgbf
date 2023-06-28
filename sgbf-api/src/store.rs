@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use anyhow::Context;
 use axum::extract::{FromRef, State};
 use axum::http;
@@ -105,6 +106,12 @@ pub async fn get_uid_for_token(db: &FirestoreDb, token: &str) -> anyhow::Result<
 
 #[derive(Debug, Clone)]
 pub struct Uid(pub String);
+
+impl Display for Uid {
+fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", &self.0)
+    }
+}
 
 pub async fn with_uid<B, S>(
     State(s): State<S>,

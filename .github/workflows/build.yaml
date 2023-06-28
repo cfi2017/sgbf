@@ -99,13 +99,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - uses: imranismail/setup-kustomize@v2
-      - name: Kustomize edit images
+      - name: Kustomize set frontend image
+        if: ${{ needs.changes.outputs.frontend == 'true' }}
+        run: |
+          cd k8s
+          # first seven characters of the sha
+          sha=$(echo ${{ github.sha }} | cut -c1-7)
+          kustomize edit set image "ghcr.io/cfi2017/sgbf/frontend=ghcr.io/cfi2017/sgbf/frontend:sha-$sha"
+      - name: Kustomize set api image
+        if: ${{ needs.changes.outputs.api == 'true' }}
         run: |
           cd k8s
           # first seven characters of the sha
           sha=$(echo ${{ github.sha }} | cut -c1-7)
           kustomize edit set image "ghcr.io/cfi2017/sgbf/api=ghcr.io/cfi2017/sgbf/api:sha-$sha"
-          kustomize edit set image "ghcr.io/cfi2017/sgbf/frontend=ghcr.io/cfi2017/sgbf/frontend:sha-$sha"
       - name: write to repo
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
