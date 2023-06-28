@@ -22,13 +22,13 @@ use tower_http::catch_panic::CatchPanicLayer;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::LatencyUnit;
 use tower_http::trace::{DefaultOnFailure, DefaultOnRequest, DefaultOnResponse, TraceLayer};
-use tracing::{error, info, Level};
+use tracing::{error, info, Level, Span};
 use sgbf_client::client::axum::AuthCache;
 use crate::cache::Cache;
 use crate::config::{Config, OneSignal};
 use crate::{onesignal, routes};
 use crate::state::{AppState, SharedState};
-use crate::store::with_uid;
+use crate::store::{Uid, with_uid};
 
 pub async fn init_default_server() -> anyhow::Result<()> {
     let config = Config::load().context("could not load config")?;
@@ -97,7 +97,24 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
                 // Handle errors from middleware
                 .layer(CatchPanicLayer::new())
                 .layer(TraceLayer::new_for_http()
-                    .on_response(DefaultOnResponse::new().level(Level::INFO).latency_unit(LatencyUnit::Millis))
+                    .on_response(|response: &Response<_>, latency, span| {
+                        let uid = response.extensions().get::<Uid>();
+                        if let Some(uid) = uid {
+                            info!(
+                                user = %uid,
+                                status = %response.status(),
+                                latency = format_args!("{} ms", $latency.as_millis()),
+                                "finished processing request"
+                            )
+                        } else {
+                            info!(
+                                status = %response.status(),
+                                latency = format_args!("{} ms", $latency.as_millis()),
+                                "finished processing request"
+                            )
+                        }
+                    })
+                    // .on_response(DefaultOnResponse::new().include_headers(true).level(Level::INFO).latency_unit(LatencyUnit::Millis))
                     .on_request(DefaultOnRequest::new().level(Level::DEBUG))
                     .on_failure(DefaultOnFailure::new().level(Level::ERROR))
                 )
