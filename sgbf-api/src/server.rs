@@ -97,19 +97,19 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
                 // Handle errors from middleware
                 .layer(CatchPanicLayer::new())
                 .layer(TraceLayer::new_for_http()
-                    .on_response(|response: &Response<_>, latency, span| {
+                    .on_response(|response: &Response<_>, latency: Duration, _span: &Span| {
                         let uid = response.extensions().get::<Uid>();
                         if let Some(uid) = uid {
                             info!(
                                 user = %uid,
                                 status = %response.status(),
-                                latency = format_args!("{} ms", $latency.as_millis()),
+                                latency = format_args!("{} ms", latency.as_millis()),
                                 "finished processing request"
                             )
                         } else {
                             info!(
                                 status = %response.status(),
-                                latency = format_args!("{} ms", $latency.as_millis()),
+                                latency = format_args!("{} ms", latency.as_millis()),
                                 "finished processing request"
                             )
                         }
