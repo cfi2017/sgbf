@@ -4,10 +4,10 @@ kind: Kustomization
 images:
 - name: ghcr.io/cfi2017/sgbf/api
   newName: ghcr.io/cfi2017/sgbf/api
-  newTag: sha-1e8776f
+  newTag: sha-bb22ce5
 - name: ghcr.io/cfi2017/sgbf/frontend
   newName: ghcr.io/cfi2017/sgbf/frontend
-  newTag: sha-1e8776f
+  newTag: sha-bb22ce5
 
 resources:
 - ambassador.yaml
