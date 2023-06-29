@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       packages: ${{ steps.filter.outputs.changes }}
+      api: ${{ steps.filter.outputs.api }}
+      frontend: ${{ steps.filter.outputs.frontend }}
     steps:
       - uses: actions/checkout@v2
       - uses: dorny/paths-filter@v2
@@ -100,14 +102,14 @@ jobs:
         uses: actions/checkout@v2
       - uses: imranismail/setup-kustomize@v2
       - name: Kustomize set frontend image
-        if: ${{ needs.changes.outputs.frontend == 'true' }}
+        if: ${{ needs.changes.outputs.packages.frontend == 'true' }}
         run: |
           cd k8s
           # first seven characters of the sha
           sha=$(echo ${{ github.sha }} | cut -c1-7)
           kustomize edit set image "ghcr.io/cfi2017/sgbf/frontend=ghcr.io/cfi2017/sgbf/frontend:sha-$sha"
       - name: Kustomize set api image
-        if: ${{ needs.changes.outputs.api == 'true' }}
+        if: ${{ needs.changes.outputs.packages.api == 'true' }}
         run: |
           cd k8s
           # first seven characters of the sha
