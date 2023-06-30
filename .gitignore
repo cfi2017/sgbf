@@ -4,3 +4,5 @@
 **/service-account.json
 sgbf-api/.env
 **/*.override.yaml
+
+**/tests/data/*.html
