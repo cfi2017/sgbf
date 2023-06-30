@@ -1,5 +1,6 @@
 FROM rustlang/rust:nightly AS chef
 
+RUN rustup override set nightly-2023-06-28
 RUN apt-get update && apt-get install protobuf-compiler -y
 
 RUN cargo install cargo-chef
