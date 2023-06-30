@@ -36,13 +36,35 @@ impl Default for Selectors {
 impl Parser {
     pub fn parse(&self, document: &Html) -> anyhow::Result<Vec<Member>> {
         let table = document.select(&self.selectors.table).next().unwrap();
-        let rows = table.select(&self.selectors.tr).skip(6);
+        let rows = table.select(&self.selectors.tr).skip(6).chunks(12);
 
         let mut members = vec![];
-        for row in rows {
-
+        for mut row in &rows {
+            let row = row.next().unwrap();
+            let tds = row.select(&self.selectors.td).collect::<Vec<_>>();
+            println!("tds: {:?}", tds.len());
+            let name = super::get_text(tds[0]).join("");
+            let address = super::get_text(tds[1]).join("");
+            let phone = super::get_text(tds[2]);
+            let fax = super::get_text(tds[3]);
+            let mobile = super::get_text(tds[4]);
+            let mail = super::get_text(tds[5]);
+            println!("{} {} {} {} {} {}", name, address, phone.join(""), fax.join(""), mobile.join(""), mail.join(""));
         }
 
         Ok(members)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_parse() {
+        // tests/data/reservations.html
+        let document = include_str!("../../tests/data/members.html");
+        let document = scraper::Html::parse_document(document);
+        let parser = super::Parser::default();
+        let result = parser.parse(&document);
+        assert!(result.is_ok());
     }
 }

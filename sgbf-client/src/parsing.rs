@@ -4,10 +4,11 @@ mod menu;
 mod reservation;
 mod members;
 
-use anyhow::{Context};
+use anyhow::Context;
 
 use serde::{Deserialize, Serialize};
-use tracing::{instrument};
+use tracing::instrument;
+use scraper::ElementRef;
 use crate::model::{Day, DayOverview, EntryType, PersonEntry, Reservation, TimeFrame};
 
 #[derive(Debug, Default)]
@@ -86,6 +87,11 @@ impl TryFrom<Vec<TableEntry>> for DayOverview {
             registered_pilots: registered_pilots.into(),
             entries,
             note,
+            reservations: None,
         })
     }
+}
+
+pub fn get_text(el: ElementRef) -> Vec<String> {
+    el.text().map(|s| s.trim().to_string()).filter(|s| !s.is_empty()).collect::<Vec<_>>()
 }

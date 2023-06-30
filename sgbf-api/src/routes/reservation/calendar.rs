@@ -3,7 +3,7 @@ use tracing::instrument;
 use axum::{extract, Json};
 use axum::extract::State;
 use serde::Deserialize;
-use sgbf_client::model::{Day, DayOverview};
+use sgbf_client::model::{Day, DayOverview, Overlaps};
 use crate::server::{ServerError, UnknownServerError};
 use crate::state::SharedState;
 use crate::store::Uid;
@@ -29,7 +29,20 @@ pub async fn get_calendar(
     let cache = state.inner.read().unwrap().cache.clone();
     let calendar = cache.inner.read().await.day_overviews.clone();
     // only the first `limit` days
-    let calendar = calendar.into_iter().take(query.limit).collect();
+    let calendar: Vec<_> = calendar.into_iter().take(query.limit).collect();
+    let reservations = cache.inner.read().await.reservations.clone();
+
+    // for each day find reservations and add them to the day
+    let calendar = calendar.into_iter().map(|day| {
+        let reservations = reservations.iter().filter(|reservation| {
+            reservation.period.overlaps(&day.date)
+        }).cloned().collect();
+        DayOverview {
+            reservations: Some(reservations),
+            ..day
+        }
+    }).collect();
+
     // let calendar = client.get_calendar().await;
     // if let Err(sgbf_client::client::ClientError::InvalidToken) = calendar {
     //     return Err(ServerError::InvalidToken);

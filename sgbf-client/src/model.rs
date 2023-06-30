@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -49,6 +50,7 @@ pub struct DayOverview {
     pub registered_pilots: Stats,
     pub entries: Vec<PersonEntry>,
     pub note: Option<String>,
+    pub reservations: Option<Vec<Reservation>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -109,6 +111,34 @@ pub struct Addresses {
 pub struct Period {
     pub from: chrono::NaiveDateTime,
     pub to: chrono::NaiveDateTime,
+}
+
+impl From<NaiveDate> for Period {
+    fn from(date: NaiveDate) -> Self {
+        let date_end = date.and_hms_opt(23, 59, 59);
+        let date_start = date.and_hms_opt(0, 0, 0);
+        Self {
+            from: date_start.unwrap(),
+            to: date_end.unwrap(),
+        }
+    }
+}
+
+pub trait Overlaps<T> {
+    fn overlaps(&self, other: &T) -> bool;
+}
+
+impl Overlaps<NaiveDate> for Period {
+    fn overlaps(&self, other: &NaiveDate) -> bool {
+        let other = Period::from(*other);
+        self.from <= other.to && other.from <= self.to
+    }
+}
+
+impl Overlaps<Period> for Period {
+    fn overlaps(&self, other: &Period) -> bool {
+        self.from <= other.to && other.from >= self.to
+    }
 }
 
 impl Display for Period {

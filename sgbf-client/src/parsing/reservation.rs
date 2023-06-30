@@ -2,6 +2,7 @@ use std::fmt::Display;
 use itertools::Itertools;
 use scraper::{ElementRef, Html};
 use crate::model::{Period, Reservation};
+use crate::parsing;
 
 #[derive(Debug, Default)]
 pub struct Parser {
@@ -52,10 +53,10 @@ impl Parser {
                 // a[name] contains the id
                 let id = table.select(&self.selectors.a).next().unwrap();
                 let id = id.value().attr("name").unwrap();
-                let plane_data = get_text(table);
+                let plane_data = parsing::get_text(table);
                 let (plane, reservation_date, who) = (plane_data[0].clone(), plane_data[1].clone(), plane_data[2].clone());
                 let reservation_date = chrono::NaiveDate::parse_from_str(&reservation_date, "%d.%m.%Y").unwrap();
-                let info = get_text(info);
+                let info = parsing::get_text(info);
                 let (period, comments) = if info.len() == 1 {
                     // single day, no comments (period)
                     (parse_single_day(&info[0])?, vec![])
@@ -94,10 +95,6 @@ impl Parser {
         Ok(reservations)
     }
 
-}
-
-fn get_text(table: ElementRef) -> Vec<String> {
-    table.text().map(|s| s.trim().to_string()).filter(|s| !s.is_empty()).collect::<Vec<_>>()
 }
 
 // parse single day with format "16.07.2023\u{a0}\u{a0}11:00\u{a0}-\u{a0}18:00"
