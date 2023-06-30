@@ -2,6 +2,7 @@ mod calendar;
 mod day;
 mod menu;
 mod reservation;
+mod members;
 
 use anyhow::{Context};
 
