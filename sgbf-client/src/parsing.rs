@@ -1,18 +1,20 @@
 mod calendar;
 mod day;
 mod menu;
+mod reservation;
 
 use anyhow::{Context};
 
 use serde::{Deserialize, Serialize};
 use tracing::{instrument};
-use crate::model::{Day, DayOverview, EntryType, PersonEntry, TimeFrame};
+use crate::model::{Day, DayOverview, EntryType, PersonEntry, Reservation, TimeFrame};
 
 #[derive(Debug, Default)]
 pub struct Parser {
     day_parser: day::Parser,
     calendar_parser: calendar::Parser,
     menu_parser: menu::Parser,
+    reservation_parser: reservation::Parser,
 }
 
 impl Parser {
@@ -33,6 +35,12 @@ impl Parser {
     pub fn parse_menu(&self, document: String) -> anyhow::Result<String> {
         let document = scraper::Html::parse_document(&document);
         self.menu_parser.parse(&document)
+    }
+
+    #[instrument(skip(document))]
+    pub fn parse_reservations(&self, document: String) -> anyhow::Result<Vec<Reservation>> {
+        let document = scraper::Html::parse_document(&document);
+        self.reservation_parser.parse(&document)
     }
 
 }

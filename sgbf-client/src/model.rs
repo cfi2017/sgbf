@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -102,4 +103,27 @@ pub struct Addresses {
     pub phone: Option<String>,
     pub email: Option<String>,
     pub mobile: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct Period {
+    pub from: chrono::NaiveDateTime,
+    pub to: chrono::NaiveDateTime,
+}
+
+impl Display for Period {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} - {}", self.from, self.to)
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Reservation {
+    pub id: i32,
+    pub period: Period,
+    pub plane: String,
+    pub reserved_by: String,
+    pub created_at: chrono::NaiveDate,
+    pub comments: Vec<String>
 }

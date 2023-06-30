@@ -84,11 +84,14 @@ export default defineComponent({
     onMounted(async () => {
       isLoading.value = true;
       await store.getCalendar();
+      await store.getReservations();
+      // console.log(store.reservations);
       isLoading.value = false;
     });
     const refreshData = async () => {
       isLoading.value = true;
       await store.getCalendar();
+      await store.getReservations();
       isLoading.value = false;
     };
 

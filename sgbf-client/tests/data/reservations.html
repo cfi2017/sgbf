@@ -1,0 +1,815 @@
+<html>
+
+<body background="../images/background_body.gif" style="background-attachment: fixed">
+
+<table width="640" cellspacing="1">
+    <form method="POST" name="res_acft" action="reservation_aircraft.php">
+
+        <tr>
+            <td>
+                <font class="title">Flugzeug Reservationen - Aircraft Reservations</font>
+                <br>&nbsp;<br>
+                <input type="submit" value="Flugzeug Reservieren" name="Bbookacft"
+                       onClick="return popup('reservation_aircraft_form.php', 'myedit')"
+                       title="Ein neue Reservation für ein bestimmtes Flugzeug erstellen">
+                <br>&nbsp; <br>
+                <!--<a href="reservation_aircraft_form.php" onClick="return popup(this, 'myedit')">Neue Reservation tätigen</a> -->
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <select size="1" name="Dacft" class="normal" onChange="subm()"
+                        title="Reservationen eines bestimmten Flugzeuges anzeigen">
+                    <option value="all">Alle Flugzeuge</option>
+                    <option value="husk">HB-Kxx &nbsp;&nbsp;Husky</option>
+                    <option value="g109">Grob G109B Motorsegler</option>
+                    <option value="dg">DGx Dirks Glaser</option>
+                    <option value="as">ASx Schleicher</option>
+                    <option value="ls">LSx Schneider</option>
+                    <option value="ES1">ES-1 Einsitzer - Basis</option>
+                    <option value="ES2">ES-2 Einsitzer - Leistung</option>
+                    <option value="ES3">ES-3 Einsitzer - W&ouml;lbklappen / Eigenstarter (keine)</option>
+                    <option value="ES4">ES-4 Einsitzer - Hochleistung (keine)</option>
+                    <option value="DS1">DS-1 Doppelsitzer - Basis</option>
+                    <option value="DS2">DS-2 Doppelsitzer - Leistung</option>
+                    <option value="DS3">DS-3 Doppelsitzer - W&ouml;lbklappen / Eigenstarter</option>
+                    <option value="DS4">DS-4 Doppelsitzer - Hochleistung (keine)</option>
+                    <option value="OLD">OLD Oldtimer / Holz</option>
+                    <option value="Other">Andere (nicht SGF/SGB)</option>
+                </select>&nbsp;&nbsp;&nbsp;
+
+                <!-- <option value="sgf"   >SG-Fricktal</option> -->
+                <!-- <option value="sgb"   >SG-Basel</option> -->
+
+
+                <select size="1" name="Dtimeframe" class="normal" onChange="subm()">
+                    <option value="-1" selected>Alle Reservationen</option>
+                    <option value="0">Heute</option>
+                    <option value="1">Morgen</option>
+                    <option value="2">Übermorgen</option>
+                    <option value="3">3 Tage</option>
+                    <option value="7">7 Tage</option>
+                    <option value="14">14 Tage</option>
+                </select>&nbsp;&nbsp;&nbsp;
+                <!--  <input type="text" name="my_htis" class="normal" size="10" value="Treffer 28" disabled /> -->
+
+    </form>
+    </td></tr>
+
+
+    <!--
+    <tr><td>
+
+    <select size="1" name="DacftNew" style="font-family: Courier New" onChange="subm()"  title="Reservationen eines bestimmten Flugzeuges anzeigen">
+        <option value="all" >Alle</option>
+
+      <option value='HB-87 Baby ' >HB-87 Baby </option>
+
+      <option value='HB-212 S18 ' >HB-212 S18 </option>
+
+      <option value='HB-595 Ka4 ' >HB-595 Ka4 </option>
+
+      <option value='HB-860 Ka4 ' >HB-860 Ka4 </option>
+
+      <option value='HB-2087 G109 ' >HB-2087 G109 </option>
+
+      <option value='HB-2356 DuoDiscus ' >HB-2356 DuoDiscus </option>
+
+      <option value='HB-2444 ASW28 ' >HB-2444 ASW28 </option>
+
+      <option value='HB-2471 ARCUS M - BF1' >HB-2471 ARCUS M - BF1</option>
+
+      <option value='HB-2505 DG1001M - FB ' >HB-2505 DG1001M - FB </option>
+
+      <option value='HB-3171 LS4 - 8F ' >HB-3171 LS4 - 8F </option>
+
+      <option value='HB-3187 LS4 - 9F ' >HB-3187 LS4 - 9F </option>
+
+      <option value='HB-3284 LS8 - XF ' >HB-3284 LS8 - XF </option>
+
+      <option value='HB-3360 LS8 - 12F ' >HB-3360 LS8 - 12F </option>
+
+      <option value='HB-3370 ASW28 ' >HB-3370 ASW28 </option>
+
+      <option value='HB-3472 DG1001C- BF2' >HB-3472 DG1001C- BF2</option>
+
+      <option value='HB-3473 DG1001C - BF3' >HB-3473 DG1001C - BF3</option>
+
+      <option value='HB-KMY Husky' >HB-KMY Husky</option>
+          </select><br>
+    </form>
+    </td></tr>
+    -->
+
+
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5630'></a>
+                        <b>
+                            <font class="normal"> HB-3473 DG1001C - BF3</font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">10.03.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Peter Allegrini</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <font class="small">17.06.2023&nbsp;&nbsp;07:00&nbsp;-&nbsp;<br>01.07.2023&nbsp;&nbsp;20:00
+            <br></b><font face="Arial" size="1">BFK Samedan Alpenflugeinführung (Vorstand bewilligt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5789'></a>
+                        <b>
+                            <font class="normal"> HB-2356 DuoDiscus </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">24.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Domenic Planta</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">26.06.2023&nbsp;&nbsp;10:15&nbsp;-&nbsp;<br>29.06.2023&nbsp;&nbsp;18:15
+            <br></b><font face="Arial" size="1">BFK SAMEDAN <br/>
+                (durch den Vorstand bewilligt)</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5794'></a>
+                        <b>
+                            <font class="normal"> HB-2087 G109 </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">27.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Alfred Stauffiger</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">29.06.2023&nbsp;&nbsp;10:00&nbsp;-&nbsp;14:00
+            <br></b><font face="Arial" size="1">Flug mit Markus. </font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5799'></a>
+                        <b>
+                            <font class="normal"> HB-2087 G109 </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">28.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Fabian Schurtenberger</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">29.06.2023&nbsp;&nbsp;14:15&nbsp;-&nbsp;20:00
+            <br></b><font face="Arial" size="1"></font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5735'></a>
+                        <b>
+                            <font class="normal"> HB-3171 LS4 - 8F </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">21.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Fabian Schurtenberger</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">01.07.2023&nbsp;&nbsp;12:00&nbsp;-&nbsp;<br>08.07.2023&nbsp;&nbsp;22:00
+            <br></b><font face="Arial" size="1">Lager Zweisimmen<br/>
+                Vom Vorstand bewilligt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5730'></a>
+                        <b>
+                            <font class="normal"> HB-2505 DG1001M - FB </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">21.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Fabian Schurtenberger</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">01.07.2023&nbsp;&nbsp;12:00&nbsp;-&nbsp;<br>15.07.2023&nbsp;&nbsp;12:00
+            <br></b><font face="Arial" size="1">Lager Zweisimmen<br/>
+                Vom Vorstand bewilligt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5732'></a>
+                        <b>
+                            <font class="normal"> HB-3370 ASW28 </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">21.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Fabian Schurtenberger</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">01.07.2023&nbsp;&nbsp;12:00&nbsp;-&nbsp;<br>15.07.2023&nbsp;&nbsp;12:00
+            <br></b><font face="Arial" size="1">Lager Zweisimmen<br/>
+                Vom Vorstand bewilligt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5733'></a>
+                        <b>
+                            <font class="normal"> HB-3284 LS8 - XF </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">21.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Fabian Schurtenberger</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">01.07.2023&nbsp;&nbsp;12:00&nbsp;-&nbsp;<br>15.07.2023&nbsp;&nbsp;12:00
+            <br></b><font face="Arial" size="1">Lager Zweisimmen<br/>
+                Vom Vorstand bewilligt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5734'></a>
+                        <b>
+                            <font class="normal"> HB-3360 LS8 - 12F </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">21.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Fabian Schurtenberger</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">01.07.2023&nbsp;&nbsp;12:00&nbsp;-&nbsp;<br>15.07.2023&nbsp;&nbsp;12:00
+            <br></b><font face="Arial" size="1">Lager Zweisimmen<br/>
+                Vom Vorstand bewilligt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5731'></a>
+                        <b>
+                            <font class="normal"> HB-3473 DG1001C - BF3</font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">21.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Fabian Schurtenberger</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">01.07.2023&nbsp;&nbsp;20:00&nbsp;-&nbsp;<br>09.07.2023&nbsp;&nbsp;22:00
+            <br></b><font face="Arial" size="1">Lager Zweisimmen<br/>
+                Vom Vorstand bewilligt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5792'></a>
+                        <b>
+                            <font class="normal"> HB-2087 G109 </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">25.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Benjamin Brencklé</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">02.07.2023&nbsp;&nbsp;10:00&nbsp;-&nbsp;20:00
+            <br></b><font face="Arial" size="1">Zweisimmen</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5759'></a>
+                        <b>
+                            <font class="normal"> HB-2087 G109 </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">15.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Adrian Müller</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">04.07.2023&nbsp;&nbsp;09:00&nbsp;-&nbsp;16:00
+            <br></b><font face="Arial" size="1">mit D. Planta</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5760'></a>
+                        <b>
+                            <font class="normal"> HB-2087 G109 </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">15.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Adrian Müller</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">05.07.2023&nbsp;&nbsp;09:00&nbsp;-&nbsp;16:00
+            <br></b><font face="Arial" size="1">Ausweichdatum für 4.7.23</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5787'></a>
+                        <b>
+                            <font class="normal"> HB-KMY Husky</font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">27.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Fabian Schurtenberger</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">07.07.2023&nbsp;&nbsp;10:00&nbsp;-&nbsp;18:00
+            <br></b><font face="Arial" size="1">ARC Kontrolle Werkstatt LSZI</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5743'></a>
+                        <b>
+                            <font class="normal"> HB-3360 LS8 - 12F </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">18.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Jvo Müller</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">15.07.2023&nbsp;&nbsp;12:00&nbsp;-&nbsp;<br>22.07.2023&nbsp;&nbsp;22:00
+            <br></b><font face="Arial" size="1">Vom Vorstand bewilligt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5762'></a>
+                        <b>
+                            <font class="normal"> HB-2087 G109 </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">13.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Benjamin Brencklé</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">16.07.2023&nbsp;&nbsp;11:00&nbsp;-&nbsp;18:00
+            <br></b><font face="Arial" size="1"></font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5770'></a>
+                        <b>
+                            <font class="normal"> HB-3472 DG1001C- BF2</font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Rolf Boller</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">17.07.2023&nbsp;&nbsp;09:00&nbsp;-&nbsp;<br>21.07.2023&nbsp;&nbsp;20:00
+            <br></b><font face="Arial" size="1">Schulungslager<br/>
+                vom Vorstand bewilligt.</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5771'></a>
+                        <b>
+                            <font class="normal"> HB-3473 DG1001C - BF3</font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Rolf Boller</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">17.07.2023&nbsp;&nbsp;09:00&nbsp;-&nbsp;<br>21.07.2023&nbsp;&nbsp;20:00
+            <br></b><font face="Arial" size="1">Grundschulungslager<br/>
+                vom Vorstand bewilligt.</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5774'></a>
+                        <b>
+                            <font class="normal"> HB-3171 LS4 - 8F </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Rolf Boller</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">17.07.2023&nbsp;&nbsp;09:15&nbsp;-&nbsp;<br>21.07.2023&nbsp;&nbsp;20:15
+            <br></b><font face="Arial" size="1">Schulungslager<br/>
+                vom Vorstand bewilligt.</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5772'></a>
+                        <b>
+                            <font class="normal"> HB-3472 DG1001C- BF2</font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Rolf Boller</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">23.07.2023&nbsp;&nbsp;09:00&nbsp;-&nbsp;<br>28.07.2023&nbsp;&nbsp;20:00
+            <br></b><font face="Arial" size="1">Grundschulungslager<br/>
+                vom Vorstand bewilligt.</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5773'></a>
+                        <b>
+                            <font class="normal"> HB-3473 DG1001C - BF3</font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Rolf Boller</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">23.07.2023&nbsp;&nbsp;09:00&nbsp;-&nbsp;<br>28.07.2023&nbsp;&nbsp;20:00
+            <br></b><font face="Arial" size="1">Schulungslager<br/>
+                vom Vorstand bewilligt.</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5775'></a>
+                        <b>
+                            <font class="normal"> HB-3171 LS4 - 8F </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Rolf Boller</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">23.07.2023&nbsp;&nbsp;09:00&nbsp;-&nbsp;<br>28.07.2023&nbsp;&nbsp;20:00
+            <br></b><font face="Arial" size="1">Schulungslager<br/>
+                vom Vorstand bewilligt.</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5778'></a>
+                        <b>
+                            <font class="normal"> HB-3473 DG1001C - BF3</font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Remigius Stalder</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">29.07.2023&nbsp;&nbsp;08:00&nbsp;-&nbsp;<br>11.08.2023&nbsp;&nbsp;22:00
+            <br></b><font face="Arial" size="1">Lager Pont sur Yonne<br/>
+                Beim Vorstand beantragt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5779'></a>
+                        <b>
+                            <font class="normal"> HB-2505 DG1001M - FB </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Remigius Stalder</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">29.07.2023&nbsp;&nbsp;08:00&nbsp;-&nbsp;<br>11.08.2023&nbsp;&nbsp;22:00
+            <br></b><font face="Arial" size="1">Lager Pont sur Yonne<br/>
+                Beim Vorstand beantragt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5780'></a>
+                        <b>
+                            <font class="normal"> HB-2471 ARCUS M - BF1</font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Remigius Stalder</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">29.07.2023&nbsp;&nbsp;08:00&nbsp;-&nbsp;<br>11.08.2023&nbsp;&nbsp;22:00
+            <br></b><font face="Arial" size="1">Lager Pont sur Yonne<br/>
+                Beim Vorstand beantragt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5782'></a>
+                        <b>
+                            <font class="normal"> HB-3284 LS8 - XF </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Remigius Stalder</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">29.07.2023&nbsp;&nbsp;08:00&nbsp;-&nbsp;<br>11.08.2023&nbsp;&nbsp;22:00
+            <br></b><font face="Arial" size="1">Lager Pont sur Yonne<br/>
+                Beim Vorstand beantragt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5783'></a>
+                        <b>
+                            <font class="normal"> HB-2444 ASW28 </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">24.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Remigius Stalder</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">29.07.2023&nbsp;&nbsp;08:00&nbsp;-&nbsp;<br>11.08.2023&nbsp;&nbsp;22:00
+            <br></b><font face="Arial" size="1">Lager Pont sur Yonne<br/>
+                Beim Vorstand beantragt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left">
+            <table border="0" width="98%">
+                <tr>
+                    <td width="137%" nowrap rowspan="2" valign="top" align="left">
+                        <a name='5784'></a>
+                        <b>
+                            <font class="normal"> HB-3370 ASW28 </font> </b></td>
+                    <td width="16%" nowrap align="right" valign="top"><font class="small">20.06.2023</font></td>
+                </tr>
+                <tr>
+                    <td width="16%" nowrap align="right"><font class="small">Remigius Stalder</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" bgcolor="#C0C0C0" valign="top" align="left"><font class="small">29.07.2023&nbsp;&nbsp;08:00&nbsp;-&nbsp;<br>11.08.2023&nbsp;&nbsp;22:00
+            <br></b><font face="Arial" size="1">Lager Pont sur Yonne<br/>
+                Beim Vorstand beantragt</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" nowrap valign="top" align="left"><font face="Arial" size="1">&nbsp;</font></td>
+    </tr>
+
+</table>
+
+<table border="0" cellspacing="1" width="640">
+    <tr>
+        <td width="100"><a href="../index2.html" target="_top">Home</a></td>
+        <td width="440" align="center">
+            <font class="s">(c) walterengineering 2002-2023</font>
+        </td>
+        <td width="100"><font class="small">PHP-Version: 8.0.29</font></td>
+    </tr>
+</table>
+
+
+</body>
+
+</html>

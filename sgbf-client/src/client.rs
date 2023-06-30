@@ -6,7 +6,7 @@ use serde::{Serialize};
 use thiserror::Error;
 use tracing::instrument;
 use crate::parsing;
-use crate::model::{Day, DayOverview, EditAction, ParticipantType, RosterEntryType};
+use crate::model::{Day, DayOverview, EditAction, ParticipantType, Reservation, RosterEntryType};
 use crate::parsing::Parser;
 
 pub struct Client {
@@ -106,6 +106,21 @@ impl Client {
     }
 
     #[instrument(skip(self))]
+    pub async fn get_reservations(&self) -> Result<Vec<Reservation>> {
+        let url = format!("{}{}", BASE_URL, PATH_RESERVATIONS);
+        let request = self.inner.post(url)
+            // Dacft=all&Dtimeframe=-1
+            .form(&[("Dacft", "all"), ("Dtimeframe", "-1")])
+            .build()
+            .context("Failed to build request")?;
+        let response = self.inner.execute(request).await.context("Failed to execute request")?;
+        // body is html
+        let body = response.text().await.context("Failed to read response body")?;
+        // parse
+        Parser::default().parse_reservations(body).map_err(|e| e.into())
+    }
+
+    #[instrument(skip(self))]
     pub async fn get_day(&self, date: chrono::NaiveDate) -> anyhow::Result<Day> {
         let url = format!("{}{}", BASE_URL, PATH_DAY);
         let request = self.inner.get(url)
@@ -165,6 +180,7 @@ const PATH_LOGIN: &str = "/edit/login_check.php";
 const PATH_CALENDAR: &str = "/roster/list_roster_new.php";
 const PATH_DAY: &str = "/roster/participant_edit.php";
 const PATH_DAY_UPDATE: &str = "/roster/participant_update.php";
+const PATH_RESERVATIONS: &str = "/roster/reservation_aircraft.php";
 
 #[derive(Debug, Clone, Serialize)]
 struct LoginBody {

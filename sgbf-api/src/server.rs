@@ -27,6 +27,7 @@ use sgbf_client::client::axum::AuthCache;
 use crate::cache::Cache;
 use crate::config::{Config, OneSignal};
 use crate::{onesignal, routes};
+use crate::routes::reservation;
 use crate::state::{AppState, SharedState};
 use crate::store::{Uid, with_uid};
 
@@ -83,13 +84,16 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
     let server = Router::new()
         .route("/status", get(routes::status))
         .route("/reservation/login", post(routes::reservation::login))
-        .route("/reservation/calendar", get(routes::reservation::get_calendar)
+        .route("/reservation/calendar", get(reservation::get_calendar)
+            .layer(auth_service.to_owned())
+        )
+        .route("/reservation/reservations", get(reservation::get_reservations)
             .layer(auth_service.to_owned())
         )
         .route("/reservation/@me", get(routes::reservation::me)
             .layer(auth_service.to_owned())
         )
-        .route("/reservation/day", get(routes::reservation::get_day).post(routes::reservation::update_day)
+        .route("/reservation/day", get(reservation::get_day).post(reservation::update_day)
             .layer(auth_service.to_owned())
         )
         .layer(

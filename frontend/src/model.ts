@@ -73,3 +73,17 @@ export enum EntryType {
     TowingPilot = 'TowingPilot',
     WinchOperator = 'WinchOperator',
 }
+
+export interface Period {
+    from: string,
+    to: string,
+}
+
+export interface Reservation {
+    id: number,
+    plane: string,
+    reservedBy: string,
+    createdAt: string,
+    period: Period,
+    comments: string[]
+}

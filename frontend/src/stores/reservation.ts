@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 import {apiService} from '@/api';
-import type {Day, DayOverview} from '@/model';
+import type {Day, DayOverview, Reservation} from '@/model';
 import {RosterEntryType} from "@/model";
 import router from "@/router";
 import type {AxiosError} from "axios";
@@ -11,6 +11,7 @@ export const useStore = defineStore({
     state: () => ({
         token: '',
         calendar: [] as DayOverview[],
+        reservations: [] as Reservation[],
         days: {} as Record<string, Day>,
         dev: false
     }),
@@ -58,6 +59,25 @@ export const useStore = defineStore({
                         if (localStorage.getItem('username') && localStorage.getItem('password')) {
                             await this.login(localStorage.getItem('username')!, localStorage.getItem('password')!);
                             await this.getCalendar();
+                        } else {
+                            await this.logout();
+                        }
+                    }
+                }
+            }
+        },
+        async getReservations() {
+            if (!this.token) throw new Error("Not authenticated");
+            try {
+                this.reservations = await apiService.getReservations(this.token);
+            } catch (ex: any | AxiosError) {
+                if (isAxiosError(ex)) {
+                    const error = ex as AxiosError;
+                    // console.error(error);
+                    if (error.response?.status === 401) {
+                        if (localStorage.getItem('username') && localStorage.getItem('password')) {
+                            await this.login(localStorage.getItem('username')!, localStorage.getItem('password')!);
+                            await this.getReservations();
                         } else {
                             await this.logout();
                         }
