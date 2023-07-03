@@ -12,6 +12,7 @@ pub struct Day {
     pub format: String,
     pub remarks: Option<String>,
     pub entry_type: Option<RosterEntryType>,
+    pub reservations: Option<Vec<Reservation>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

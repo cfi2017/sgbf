@@ -60,6 +60,7 @@ impl Parser {
                 format,
                 remarks: None,
                 entry_type: None,
+                reservations: None,
             }),
             EditAction::Edit => {
                 let id = document.select(&self.selectors.edit_id).next()
@@ -90,6 +91,7 @@ impl Parser {
                     format,
                     remarks: Some(remarks),
                     entry_type,
+                    reservations: None,
                 })
             }
         }

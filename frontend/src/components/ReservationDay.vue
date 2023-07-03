@@ -51,6 +51,19 @@
         </v-form>
       </v-expansion-panel-text>
     </v-expansion-panel>
+    <v-expansion-panel>
+      <v-expansion-panel-title>{{ t('reservations.title') }}</v-expansion-panel-title>
+      <v-expansion-panel-text>
+        <v-list>
+          <v-list-item v-for="reservation in reservations()" :key="reservation.plane">
+            <!-- Display your reservation data here -->
+            <b>{{ reservation.plane }}</b>
+            <p>{{ reservation.reservedBy }}</p>
+            <p v-for="comment in reservation.comments" :key="comment">{{ comment }}</p>
+          </v-list-item>
+        </v-list>
+      </v-expansion-panel-text>
+    </v-expansion-panel>
   </v-expansion-panels>
 </template>
 
@@ -58,7 +71,7 @@
 import {defineComponent, onMounted, ref, toRefs, watch} from 'vue';
 import {useStore} from '@/stores/reservation';
 import {format, isToday, isTomorrow, parse} from 'date-fns';
-import type {Day} from "@/model";
+import type {Day, Reservation} from "@/model";
 import {useField, useForm} from "vee-validate";
 import {RosterEntryType} from "@/model";
 import {useI18n} from "vue-i18n";
@@ -125,6 +138,7 @@ export default defineComponent({
       tomorrow,
       entryType,
       remarks,
+      reservations: () => day.value?.reservations || [] as Reservation[],
       submit: handleSubmit(async values => {
         console.log('submitted');
         console.log(day.value);

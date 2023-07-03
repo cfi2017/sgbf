@@ -7,6 +7,7 @@ export interface Day {
     format: string,
     remarks?: string;
     entryType?: RosterEntryType;
+    reservations: Reservation[];
 }
 
 export interface User {
@@ -51,6 +52,7 @@ export interface DayOverview {
     registeredPilots: Stats;
     entries: PersonEntry[];
     note?: string;
+    reservations: Reservation[];
 }
 
 export interface Stats {

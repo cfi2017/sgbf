@@ -58,9 +58,15 @@ pub struct GetDayQuery {
 
 pub async fn get_day(
     client: sgbf_client::Client,
-    extract::Query(query): extract::Query<GetDayQuery>
+    extract::Query(query): extract::Query<GetDayQuery>,
+    State(state): State<SharedState>,
 ) -> Result<Json<Day>, ServerError> {
-    let day = client.get_day(query.date).await?;
+    let mut day = client.get_day(query.date).await?;
+    let cache = state.inner.read().unwrap().cache.clone();
+    let reservations = cache.inner.read().await.reservations.clone();
+    day.reservations = Some(reservations.iter().filter(|reservation| {
+        reservation.period.overlaps(&query.date)
+    }).cloned().collect::<Vec<_>>());
     Ok(Json(day))
 }
 
