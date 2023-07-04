@@ -4,7 +4,7 @@ kind: Kustomization
 images:
 - name: ghcr.io/cfi2017/sgbf/api
   newName: ghcr.io/cfi2017/sgbf/api
-  newTag: sha-f1e0a77
+  newTag: sha-3273559
 - name: ghcr.io/cfi2017/sgbf/frontend
   newName: ghcr.io/cfi2017/sgbf/frontend
   newTag: sha-f1e0a77
