@@ -37,7 +37,7 @@
             <template v-if="entry.entryType === 'WinchOperator'"><v-icon color="primary">mdi-airplane-takeoff</v-icon> {{ t('reservation.entry.pilotType.winchOperator') }}</template>
             <template v-if="entry.entryType === 'TowingPilot'"><v-icon color="primary">mdi-airplane-takeoff</v-icon> {{ t('reservation.entry.pilotType.towPilot') }}</template>: {{ entry.name }}
           </v-list-item-title>
-          <v-list-item-subtitle>{{ entry.timeFrame[0] }} - {{ entry.timeFrame[1] }}</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ entry.timeFrame[0].substring(0, 5) }} - {{ entry.timeFrame[1].substring(0, 5) }}</v-list-item-subtitle>
           <v-list-item-subtitle v-if="entry.note1">Note 1: {{ entry.note1 }}</v-list-item-subtitle>
           <v-list-item-subtitle v-if="entry.note2">Note 2: {{ entry.note2 }}</v-list-item-subtitle>
         </v-list-item>

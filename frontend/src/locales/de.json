@@ -39,6 +39,9 @@
         "save": "Speichern",
         "remarks": "Bemerkungen"
       },
+      "reservations": {
+        "title": "Reservationen"
+      },
       "close": "Close"
     }
   },

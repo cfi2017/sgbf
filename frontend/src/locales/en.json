@@ -39,6 +39,9 @@
         "save": "Save",
         "remarks": "Remarks"
       },
+      "reservations": {
+        "title": "Reservations"
+      },
       "close": "Close"
     }
   },

@@ -83,9 +83,15 @@ export interface Period {
 
 export interface Reservation {
     id: number,
-    plane: string,
+    plane: Aircraft,
     reservedBy: string,
     createdAt: string,
     period: Period,
     comments: string[]
+}
+
+export interface Aircraft {
+    registrationNumber: string,
+    model: string,
+    competitionNumber?: string,
 }

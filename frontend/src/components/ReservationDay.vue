@@ -51,13 +51,13 @@
         </v-form>
       </v-expansion-panel-text>
     </v-expansion-panel>
-    <v-expansion-panel>
+    <v-expansion-panel v-if="reservations().length > 0">
       <v-expansion-panel-title>{{ t('reservations.title') }}</v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-list>
-          <v-list-item v-for="reservation in reservations()" :key="reservation.plane">
+          <v-list-item v-for="reservation in reservations()" :key="reservation.plane.registrationNumber">
             <!-- Display your reservation data here -->
-            <b>{{ reservation.plane }}</b>
+            <b>{{ reservation.plane.competitionNumber || reservation.plane.model }} ({{reservation.plane.registrationNumber}})</b>
             <p>{{ reservation.reservedBy }}</p>
             <p v-for="comment in reservation.comments" :key="comment">{{ comment }}</p>
           </v-list-item>

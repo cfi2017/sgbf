@@ -2,7 +2,9 @@ use std::fmt::Display;
 use itertools::Itertools;
 use scraper::{ElementRef, Html};
 use crate::model::{Period, Reservation};
+use crate::model::aircraft::Aircraft;
 use crate::parsing;
+use anyhow::Context;
 
 #[derive(Debug, Default)]
 pub struct Parser {
@@ -80,8 +82,8 @@ impl Parser {
                     }
                 };
                 let reservation = Reservation {
-                    id: id.parse().unwrap(),
-                    plane,
+                    id: id.parse().context(format!("could not parse id: {}", id))?,
+                    plane: Aircraft::try_from(plane.as_str()).context(format!("could not parse plane: {}", plane))?,
                     created_at: reservation_date,
                     reserved_by: who,
                     period,

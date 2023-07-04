@@ -1,6 +1,9 @@
+pub mod aircraft;
+
 use std::fmt::Display;
 use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
+use crate::model::aircraft::Aircraft;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -153,7 +156,7 @@ impl Display for Period {
 pub struct Reservation {
     pub id: i32,
     pub period: Period,
-    pub plane: String,
+    pub plane: Aircraft,
     pub reserved_by: String,
     pub created_at: chrono::NaiveDate,
     pub comments: Vec<String>
