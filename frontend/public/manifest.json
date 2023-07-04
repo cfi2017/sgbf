@@ -1,0 +1,13 @@
+{   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "display": "standalone",
+  "start_url": "/",
+  "name": "SGBF Reservation System",
+  "short_name": "SGBF",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "126x126",
+      "type": "image/png"
+    }
+  ]
+}
