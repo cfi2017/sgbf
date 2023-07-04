@@ -4,10 +4,7 @@ use crate::config::OneSignal;
 pub fn create_onesignal_configuration(config: &OneSignal) -> Option<Configuration> {
     let key = config.key.as_ref()?;
     let mut configuration = Configuration::new();
-    configuration.api_key = Some(ApiKey {
-        prefix: Some("Basic".to_string()),
-        key: key.clone(),
-    });
+    configuration.app_key_token = Some(key.to_owned());
     Some(configuration)
 }
 
