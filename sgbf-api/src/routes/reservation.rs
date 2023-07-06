@@ -3,24 +3,20 @@ mod calendar;
 
 use std::time::Duration;
 use anyhow::Context;
-use axum::{extract, Json};
 use axum::extract::{FromRef, State};
+use axum::{extract, Json};
 use axum_macros::debug_handler;
 use firestore::FirestoreDb;
-use log::info;
-use opentelemetry::trace::SpanKind::Server;
-use sgbf_client::model::{Day, DayOverview, RosterEntry, RosterEntryType};
 use serde::{Deserialize, Serialize};
-use tracing::instrument;
-use sgbf_client::client::axum::{AuthCache, AuthState};
-use crate::server::{ServerError, UnknownServerError};
-use crate::state::SharedState;
-use crate::store::{get_user, store_token, store_user, Uid, User};
-
+use tracing::{info, instrument};
 pub use calendar::get_calendar;
 pub use calendar::get_day;
 pub use calendar::update_day;
 pub use reservations::get_reservations;
+use sgbf_client::client::axum::AuthCache;
+use crate::server::UnknownServerError;
+use crate::state::SharedState;
+use crate::store::{get_user, store_token, store_user, Uid, User};
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
@@ -44,7 +40,7 @@ pub async fn login(
     let auth_cache = AuthCache::from_ref(&state);
     let user = client.get_user().await?;
     if let Some(user) = &user {
-        info!("logged in as {} (uid {})", user, payload.username);
+        info!(user.name = %user, user.id = %payload.username, "user logged in");
         let db = FirestoreDb::from_ref(&state);
         let id = payload.username;
         if get_user(&db, &id).await?.is_none() {

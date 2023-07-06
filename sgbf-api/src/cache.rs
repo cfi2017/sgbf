@@ -164,7 +164,11 @@ impl Cache {
             if old_overview.registered_pilots.definitive < new_overview.registered_pilots.definitive
                 && new_overview.registered_pilots.definitive == REGISTERED_PILOTS_THRESHOLD {
                 // todo: notification for interested pilots
-                info!("{} pilot threshold reached for {}", REGISTERED_PILOTS_THRESHOLD, new_overview.date);
+                info!(
+                    entry.threshold = %REGISTERED_PILOTS_THRESHOLD, 
+                    entry.date = %new_overview.date,
+                    "pilot threshold reached"
+                );
                 self.send_notification(&format!("{} pilot threshold reached for {}", REGISTERED_PILOTS_THRESHOLD, new_overview.date)).await?;
             }
 
@@ -176,8 +180,13 @@ impl Cache {
             }).collect::<Vec<_>>();
             for new_entry in new_entries {
                 // todo: notification for interested pilots
-                info!("new entry {} for {} (type {:?})", new_entry.name, new_overview.date, new_entry.entry_type);
-                self.send_notification(&format!("new entry {} for {} (type {:?})", new_entry.name, new_overview.date, new_entry.entry_type)).await?;
+                info!(
+                    entry.name = %new_entry.name,
+                    entry.r#type = ?new_entry.entry_type,
+                    entry.date = %new_overview.date,
+                    "new entry for type {:?}", new_entry.entry_type
+                );
+                self.send_notification(&format!("new entry {} for {} (type {:?})", new_entry.name, new_overview.date.format("%a, %-d %B"), new_entry.entry_type)).await?;
             }
         }
         Ok(())
