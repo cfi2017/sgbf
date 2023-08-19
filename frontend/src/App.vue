@@ -12,6 +12,7 @@
       <v-list>
         <v-list-item prepend-icon="mdi-airplane-clock" @click="router.push('/reservation/calendar')" :title="t('nav.reservation')"></v-list-item>
         <v-list-item v-if="dev" prepend-icon="mdi-clipboard-check-outline" @click="router.push('/reservation/checklist')" :title="t('nav.checklist')"></v-list-item>
+        <v-list-item v-if="dev" prepend-icon="mdi-airplane-takeoff" @click="router.push('/startlist')" :title="t('nav.startlist')"></v-list-item>
         <v-divider></v-divider>
         <v-list-item prepend-icon="mdi-cog" :title="t('nav.settings')" @click="router.push('/settings')"></v-list-item>
         <v-list-item prepend-icon="mdi-exit-to-app" :title="t('nav.logout')" @click="logout()"></v-list-item>

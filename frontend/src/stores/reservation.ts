@@ -33,7 +33,11 @@ export const useStore = defineStore({
                 if (isAxiosError(ex)) {
                     const error = ex as AxiosError;
                     if (ex.response?.status === 401) {
-                        await this.logout();
+                        if (localStorage.getItem('username') && localStorage.getItem('password')) {
+                            await this.login(localStorage.getItem('username')!, localStorage.getItem('password')!);
+                        } else {
+                            await this.logout();
+                        }
                     }
                 }
             }

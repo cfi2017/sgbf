@@ -3,4 +3,5 @@
 members = [
     "sgbf-api",
     "sgbf-client",
+    "ogn"
 ]
