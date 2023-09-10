@@ -76,6 +76,17 @@ export enum EntryType {
     WinchOperator = 'WinchOperator',
 }
 
+export interface Start {
+    from: string,
+    to: string,
+    pic: string,
+    copilot: string,
+    isPax: boolean,
+    plane: string,
+    updated: Date,
+    readonly id?: number,
+}
+
 export interface Period {
     from: string,
     to: string,
