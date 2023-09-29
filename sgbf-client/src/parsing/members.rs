@@ -1,7 +1,8 @@
 use std::fmt::Display;
 use itertools::Itertools;
 use scraper::{ElementRef, Html};
-use crate::model::{Member, Period, Reservation};
+use crate::model::{Addresses, Member, Period, Reservation};
+use crate::model::EditAction::Add;
 
 #[derive(Debug, Default)]
 pub struct Parser {
@@ -48,7 +49,21 @@ impl Parser {
             let fax = super::get_text(tds[8]);
             let mobile = super::get_text(tds[11]);
             let mail = super::get_text(tds[14]);
-            println!("{} {} {} {} {} {}", name, address, phone.join(""), fax.join(""), mobile.join(""), mail.join(""));
+            let member = Member {
+                name,
+                address: Some(address),
+                private: Addresses {
+                    phone: phone.get(0).map(|s| s.to_string()),
+                    email: mail.get(0).map(|s| s.to_string()),
+                    mobile: mobile.get(0).map(|s| s.to_string()),
+                },
+                office: Addresses {
+                    phone: fax.get(1).map(|s| s.to_string()),
+                    email: mail.get(1).map(|s| s.to_string()),
+                    mobile: mobile.get(1).map(|s| s.to_string()),
+                },
+            };
+            members.push(member);
         }
 
         Ok(members)

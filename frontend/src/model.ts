@@ -60,6 +60,19 @@ export interface Stats {
     tentative: number;
 }
 
+export interface Member {
+    name: string;
+    address?: string;
+    private: Addresses;
+    office: Addresses;
+}
+
+export interface Addresses {
+    phone?: string;
+    email?: string;
+    mobile?: string;
+}
+
 export interface PersonEntry {
     timeFrame: TimeFrame; // equivalent to (chrono::NaiveTime, chrono::NaiveTime) in JavaScript
     name: string;

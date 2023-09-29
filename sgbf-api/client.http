@@ -21,3 +21,11 @@ Authorization: Bearer {{token}}
 ###
 GET {{url}}/reservation/@me
 Authorization: Bearer {{token}}
+
+###
+GET {{url}}/reservation/reservations
+Authorization: Bearer {{token}}
+
+###
+GET {{url}}/members
+Authorization: Bearer {{token}}

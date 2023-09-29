@@ -23,6 +23,7 @@ const REGISTERED_PILOTS_THRESHOLD: u32 = 10;
 pub struct Calendar {
     pub day_overviews: Vec<sgbf_client::model::DayOverview>,
     pub reservations: Vec<sgbf_client::model::Reservation>,
+    pub members: Vec<sgbf_client::model::Member>,
     pub days: HashMap<NaiveDate, (Instant, Day)>
 }
 
@@ -106,12 +107,14 @@ impl Cache {
         let client = sgbf_client::Client::from_credentials(&self.credentials.0, &self.credentials.1).await.context("failed to create client")?;
         // update calendar
         let reservations = client.get_reservations().await.context("failed to update reservations")?;
+        let members = client.get_members().await.context("failed to update members")?;
         let calendar = client.get_calendar().await.context("failed to update calendar")?;
         let mut inner = self.inner.write().await;
         let old_calendar = inner.clone();
         // todo: compare old calendar to new one, send notifications for changes
         inner.day_overviews = calendar.clone();
         inner.reservations = reservations.clone();
+        inner.members = members.clone();
         let mut guard = self.last_update.write().await;
         *guard = chrono::Utc::now();
         // only keep cached days in current period
@@ -165,7 +168,7 @@ impl Cache {
                 && new_overview.registered_pilots.definitive == REGISTERED_PILOTS_THRESHOLD {
                 // todo: notification for interested pilots
                 info!(
-                    entry.threshold = %REGISTERED_PILOTS_THRESHOLD, 
+                    entry.threshold = %REGISTERED_PILOTS_THRESHOLD,
                     entry.date = %new_overview.date,
                     "pilot threshold reached"
                 );

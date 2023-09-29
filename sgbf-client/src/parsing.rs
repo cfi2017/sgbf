@@ -17,6 +17,7 @@ pub struct Parser {
     calendar_parser: calendar::Parser,
     menu_parser: menu::Parser,
     reservation_parser: reservation::Parser,
+    member_parser: members::Parser,
 }
 
 impl Parser {
@@ -43,6 +44,12 @@ impl Parser {
     pub fn parse_reservations(&self, document: String) -> anyhow::Result<Vec<Reservation>> {
         let document = scraper::Html::parse_document(&document);
         self.reservation_parser.parse(&document)
+    }
+
+    #[instrument(skip(document))]
+    pub fn parse_members(&self, document: String) -> anyhow::Result<Vec<crate::model::Member>> {
+        let document = scraper::Html::parse_document(&document);
+        self.member_parser.parse(&document)
     }
 
 }

@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, onMounted} from "vue";
 import {VDataTable} from 'vuetify/labs/VDataTable'
 import type {Start} from "@/model";
 import {startListStore} from "@/stores/startlist";
+import {useStore} from '@/stores/reservation';
 
 type UnwrapReadonlyArrayType<A> = A extends Readonly<Array<infer I>> ? UnwrapReadonlyArrayType<I> : A
 type DT = InstanceType<typeof VDataTable>;
 type ReadonlyDataTableHeader = UnwrapReadonlyArrayType<DT['headers']>;
 
 const store = startListStore();
+const dataStore = useStore();
 
 const forms = store.forms;
 
@@ -69,6 +71,12 @@ const setTime = (obj: any, key: string) => {
 
 const online = ref(navigator.onLine);
 
+onMounted(async () => {
+  if (navigator.onLine) {
+    await dataStore.getMembers();
+  }
+});
+
 addEventListener('online', () => online.value = true);
 addEventListener('offline', () => online.value = false);
 
@@ -87,7 +95,7 @@ const edit = (item) => {
     <v-card-item>
       <div>
         <div v-for="form in ['a', 'b']" class="d-md-flex justify-md-space-between align-center">
-          <v-autocomplete label="PIC" v-model="forms[form].pic" :items="store.pilots" hide-details="auto" class="mr-1 ml-1"></v-autocomplete>
+          <v-autocomplete label="PIC" v-model="forms[form].pic" item-title="name" item-value="name" :items="dataStore.members" hide-details="auto" class="mr-1 ml-1"></v-autocomplete>
           <v-autocomplete label="Copilot" v-model="forms[form].copilot" :items="store.pilots" v-if="!forms[form].isPax" hide-details="auto" class="mr-1 ml-1"></v-autocomplete>
           <v-text-field label="PAX" v-model="forms[form].copilot" v-if="forms[form].isPax" hide-details="auto" class="mr-1 ml-1"></v-text-field>
           <v-checkbox v-model="forms[form].isPax" label="PAX" hide-details="auto" class="mr-1 ml-1"></v-checkbox>

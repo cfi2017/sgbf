@@ -23,6 +23,7 @@ use tower_http::cors::{Any, CorsLayer};
 use tower_http::LatencyUnit;
 use tower_http::trace::{DefaultOnFailure, DefaultOnRequest, DefaultOnResponse, TraceLayer};
 use tracing::{error, info, Level, Span};
+use routes::members;
 use sgbf_client::client::axum::AuthCache;
 use crate::cache::Cache;
 use crate::config::{Config, OneSignal};
@@ -88,6 +89,9 @@ pub async fn init_server(cfg: &Config, state: SharedState) -> anyhow::Result<()>
             .layer(auth_service.to_owned())
         )
         .route("/reservation/reservations", get(reservation::get_reservations)
+            .layer(auth_service.to_owned())
+        )
+        .route("/members", get(members::get_members)
             .layer(auth_service.to_owned())
         )
         .route("/reservation/@me", get(routes::reservation::me)
