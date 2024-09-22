@@ -10,7 +10,6 @@ images:
   newTag: sha-091cb40
 
 resources:
-- ambassador.yaml
 - ./api/deploy.yaml
 - ./frontend/deploy.yaml
 - ./api/service.yaml
