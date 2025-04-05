@@ -4,7 +4,6 @@ metadata:
   name: sgbf
   namespace: sgbf
 spec:
-  ingressClassName: traefik
   rules:
   - host: sgbf.swiss.dev
     http:
