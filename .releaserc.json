@@ -50,13 +50,13 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "cargo set-version ${nextRelease.version} && cargo update -w"
+        "prepareCmd": ".release-scripts/update-versions.sh ${nextRelease.version}"
       }
     ],
     [
       "@semantic-release/git",
       {
-        "assets": ["CHANGELOG.md", "Cargo.toml", "Cargo.lock", "**/Cargo.toml"],
+        "assets": ["CHANGELOG.md", "Cargo.toml", "Cargo.lock", "**/Cargo.toml", "charts/sgbf/Chart.yaml"],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ],

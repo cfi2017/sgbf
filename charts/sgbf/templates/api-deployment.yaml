@@ -1,0 +1,99 @@
+{{- if .Values.api.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sgbf.fullname" . }}-{{ .Values.api.name }}
+  labels:
+    {{- include "sgbf.api.labels" . | nindent 4 }}
+  annotations:
+    {{- include "sgbf.linkerdAnnotations" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  revisionHistoryLimit: {{ .Values.api.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      {{- include "sgbf.api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- include "sgbf.linkerdAnnotations" . | nindent 8 }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "sgbf.api.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Always
+      {{- with .Values.api.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Values.api.name }}
+          image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
+          imagePullPolicy: {{ .Values.api.image.pullPolicy | default .Values.global.imagePullPolicy }}
+          {{- with .Values.api.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.api.containerPort }}
+              protocol: TCP
+          env:
+            - name: SGBF__TRACING__ERROR_REPORTING__SENTRY_DSN
+              value: {{ .Values.api.env.sentryDsn | quote }}
+            - name: RUST_LOG
+              value: {{ .Values.api.env.rustLog | quote }}
+            - name: SGBF__CACHE__USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.api.secrets.cache.name }}
+                  key: {{ .Values.api.secrets.cache.usernameKey }}
+            - name: SGBF__CACHE__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.api.secrets.cache.name }}
+                  key: {{ .Values.api.secrets.cache.passwordKey }}
+            - name: SGBF__FIREBASE__PROJECT
+              value: {{ .Values.api.env.firebaseProject | quote }}
+            - name: SGBF__ONESIGNAL__KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.api.secrets.onesignal.name }}
+                  key: {{ .Values.api.secrets.onesignal.keyKey }}
+            - name: SGBF__ONESIGNAL__ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.api.secrets.onesignal.name }}
+                  key: {{ .Values.api.secrets.onesignal.idKey }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: {{ .Values.api.env.googleApplicationCredentials | quote }}
+          volumeMounts:
+            - name: service-account
+              mountPath: /etc/sgbf/
+              readOnly: true
+          {{- with .Values.api.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: service-account
+          secret:
+            secretName: {{ .Values.api.secrets.firebase.name }}
+            items:
+              - key: {{ .Values.api.secrets.firebase.serviceAccountKey }}
+                path: {{ .Values.api.secrets.firebase.serviceAccountKey }}
+{{- end }}

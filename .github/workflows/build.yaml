@@ -89,38 +89,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-  deploy:
-    needs:
-    - changes
-    - build
-    runs-on: ubuntu-latest
-    name: Write tags to k8s manifests using kustomize
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: imranismail/setup-kustomize@v2
-      - name: Kustomize set frontend image
-        if: ${{ needs.changes.outputs.frontend == 'true' }}
-        run: |
-          cd k8s
-          # first seven characters of the sha
-          sha=$(echo ${{ github.sha }} | cut -c1-7)
-          kustomize edit set image "ghcr.io/cfi2017/sgbf/frontend=ghcr.io/cfi2017/sgbf/frontend:sha-$sha"
-      - name: Kustomize set api image
-        if: ${{ needs.changes.outputs.api == 'true' }}
-        run: |
-          cd k8s
-          # first seven characters of the sha
-          sha=$(echo ${{ github.sha }} | cut -c1-7)
-          kustomize edit set image "ghcr.io/cfi2017/sgbf/api=ghcr.io/cfi2017/sgbf/api:sha-$sha"
-      - name: write to repo
-        # Only commit on main branch pushes, not on tags
-        if: github.ref == 'refs/heads/main'
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add k8s
-          git diff --staged --quiet || git commit -m "chore(k8s): update image tags [skip ci]"
-          git push
+  # Note: Deployment is now managed via Helm chart in charts/sgbf/
+  # Use `helm upgrade --install sgbf ./charts/sgbf --set api.image.tag=<tag> --set frontend.image.tag=<tag>`
+  # or integrate with ArgoCD/Flux for GitOps-based deployment
