@@ -1,0 +1,222 @@
+# Default values for sgbf
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Global settings
+global:
+  # -- Global image pull policy
+  imagePullPolicy: IfNotPresent
+  linkerd:
+    # -- Enable Linkerd service mesh injection for all pods
+    enabled: true
+
+# -- API service configuration
+api:
+  # -- Enable API deployment
+  enabled: true
+  # -- API service name
+  name: api
+
+  # -- Number of API replicas
+  replicaCount: 1
+  # -- Number of revisions to keep
+  revisionHistoryLimit: 3
+
+  image:
+    # -- API image repository
+    repository: ghcr.io/cfi2017/sgbf/api
+    # -- API image tag (overrides the chart appVersion)
+    tag: latest
+    # -- API image pull policy
+    pullPolicy: IfNotPresent
+
+  # -- API container port
+  containerPort: 8000
+
+  service:
+    # -- API service type
+    type: ClusterIP
+    # -- API service port
+    port: 80
+    # -- API service target port
+    targetPort: 8000
+
+  # -- Pod security context for API pods (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Container security context for API container (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    capabilities:
+      drop:
+        - ALL
+
+  # -- API environment configuration
+  env:
+    # -- Sentry DSN for error reporting
+    sentryDsn: "https://952ffd64359f4f2e83b283faacdd545f@sentry-web.infra-sentry:9000/3"
+    # -- Rust log level (trace, debug, info, warn, error)
+    rustLog: "info"
+    # -- Firebase project ID
+    firebaseProject: "sgbf-system"
+    # -- Path to Google application credentials file
+    googleApplicationCredentials: "/etc/sgbf/service-account.json"
+
+  # -- Secret references for API
+  secrets:
+    # -- Cache (Redis) credentials secret
+    cache:
+      # -- Name of the cache secret
+      name: cache
+      # -- Key for cache username
+      usernameKey: username
+      # -- Key for cache password
+      passwordKey: password
+    # -- OneSignal credentials secret
+    onesignal:
+      # -- Name of the OneSignal secret
+      name: onesignal
+      # -- Key for OneSignal API key
+      keyKey: key
+      # -- Key for OneSignal app ID
+      idKey: id
+    # -- Firebase service account secret
+    firebase:
+      # -- Name of the Firebase secret
+      name: firebase
+      # -- Key for service account JSON file
+      serviceAccountKey: service-account.json
+
+  # -- Additional labels for API pods
+  labels:
+    app: api
+    swiss.dev/logging: json
+
+  # -- Resource limits and requests for API pods
+  resources: {}
+    # limits:
+    #   cpu: 500m
+    #   memory: 512Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+# -- Frontend service configuration
+frontend:
+  # -- Enable frontend deployment
+  enabled: true
+  # -- Frontend service name
+  name: frontend
+
+  # -- Number of frontend replicas
+  replicaCount: 1
+  # -- Number of revisions to keep
+  revisionHistoryLimit: 3
+
+  image:
+    # -- Frontend image repository
+    repository: ghcr.io/cfi2017/sgbf/frontend
+    # -- Frontend image tag (overrides the chart appVersion)
+    tag: latest
+    # -- Frontend image pull policy
+    pullPolicy: IfNotPresent
+
+  # -- Frontend container port
+  containerPort: 80
+
+  service:
+    # -- Frontend service type
+    type: ClusterIP
+    # -- Frontend service port
+    port: 80
+    # -- Frontend service target port
+    targetPort: 80
+
+  # -- Pod security context for frontend pods (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 101  # nginx user
+    runAsGroup: 101
+    fsGroup: 101
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Container security context for frontend container (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true  # Frontend should be read-only
+    runAsNonRoot: true
+    runAsUser: 101
+    capabilities:
+      drop:
+        - ALL
+
+  # -- Additional labels for frontend pods
+  labels:
+    app: frontend
+    swiss.dev/logging: json
+
+  # -- Resource limits and requests for frontend pods
+  resources: {}
+    # limits:
+    #   cpu: 200m
+    #   memory: 256Mi
+    # requests:
+    #   cpu: 50m
+    #   memory: 64Mi
+
+# -- Ingress configuration
+ingress:
+  # -- Enable ingress
+  enabled: true
+  # -- Ingress class name
+  className: ""
+  # -- Ingress annotations
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+
+  # -- Ingress hostname
+  host: sgbf.swiss.dev
+
+  # -- Ingress path configuration
+  paths:
+    # -- API path configuration
+    api:
+      # -- API path
+      path: /api
+      # -- API path type
+      pathType: Prefix
+    # -- Frontend path configuration
+    frontend:
+      # -- Frontend path
+      path: /
+      # -- Frontend path type
+      pathType: Prefix
+
+  # -- TLS configuration for ingress
+  tls: []
+    # - secretName: sgbf-tls
+    #   hosts:
+    #     - sgbf.swiss.dev
+
+# -- Pod annotations (applied to all pods)
+podAnnotations: {}
+
+# -- Node selector for all pods
+nodeSelector: {}
+
+# -- Tolerations for all pods
+tolerations: []
+
+# -- Affinity rules for all pods
+affinity: {}

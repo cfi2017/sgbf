@@ -31,7 +31,10 @@ pub fn init_tracing(cfg: &TracingConfig) -> anyhow::Result<ClientInitGuard> {
     if std::env::var_os("RUST_LOG").is_none() {
         // Set `RUST_LOG=todos=debug` to see debug logs,
         // this only shows access logs.
-        std::env::set_var("RUST_LOG", &cfg.logger.level);
+        // SAFETY: Called during initialization before any other threads exist
+        unsafe {
+            std::env::set_var("RUST_LOG", &cfg.logger.level);
+        }
     }
     // log interoperability layer
     LogTracer::init().context("could not initialise log tracer")?;

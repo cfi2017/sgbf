@@ -1,0 +1,73 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sgbf.fullname" . }}-{{ .Values.frontend.name }}
+  labels:
+    {{- include "sgbf.frontend.labels" . | nindent 4 }}
+  annotations:
+    {{- include "sgbf.linkerdAnnotations" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  revisionHistoryLimit: {{ .Values.frontend.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      {{- include "sgbf.frontend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- include "sgbf.linkerdAnnotations" . | nindent 8 }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "sgbf.frontend.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Always
+      {{- with .Values.frontend.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Values.frontend.name }}
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy | default .Values.global.imagePullPolicy }}
+          {{- with .Values.frontend.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.containerPort }}
+              protocol: TCP
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: cache
+              mountPath: /var/cache/nginx
+            - name: run
+              mountPath: /var/run
+          {{- with .Values.frontend.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+        - name: run
+          emptyDir: {}
+{{- end }}

@@ -1,0 +1,54 @@
+version: 2
+updates:
+  # Monitor Cargo dependencies
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      rust-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Monitor GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Monitor Docker base images in Dockerfiles
+  - package-ecosystem: "docker"
+    directory: "/sgbf-api"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+
+  - package-ecosystem: "docker"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"

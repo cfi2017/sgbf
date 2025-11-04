@@ -17,8 +17,8 @@ jobs:
       api: ${{ steps.filter.outputs.api }}
       frontend: ${{ steps.filter.outputs.frontend }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
@@ -56,20 +56,20 @@ jobs:
     name: Build docker images and publish to ghcr.io
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ${{ matrix.image }}
           tags: |
@@ -80,7 +80,7 @@ jobs:
             type=sha
             type=raw,value=latest,enable={{is_default_branch}}
       - name: Build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
@@ -89,36 +89,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-  deploy:
-    needs:
-    - changes
-    - build
-    runs-on: ubuntu-latest
-    name: Write tags to k8s manifests using kustomize
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: imranismail/setup-kustomize@v2
-      - name: Kustomize set frontend image
-        if: ${{ needs.changes.outputs.frontend == 'true' }}
-        run: |
-          cd k8s
-          # first seven characters of the sha
-          sha=$(echo ${{ github.sha }} | cut -c1-7)
-          kustomize edit set image "ghcr.io/cfi2017/sgbf/frontend=ghcr.io/cfi2017/sgbf/frontend:sha-$sha"
-      - name: Kustomize set api image
-        if: ${{ needs.changes.outputs.api == 'true' }}
-        run: |
-          cd k8s
-          # first seven characters of the sha
-          sha=$(echo ${{ github.sha }} | cut -c1-7)
-          kustomize edit set image "ghcr.io/cfi2017/sgbf/api=ghcr.io/cfi2017/sgbf/api:sha-$sha"
-      - name: write to repo
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add k8s
-          git commit -m "update image tag for ${{ matrix.package }}"
-          git push
+  # Note: Deployment is now managed via Helm chart in charts/sgbf/
+  # Use `helm upgrade --install sgbf ./charts/sgbf --set api.image.tag=<tag> --set frontend.image.tag=<tag>`
+  # or integrate with ArgoCD/Flux for GitOps-based deployment
