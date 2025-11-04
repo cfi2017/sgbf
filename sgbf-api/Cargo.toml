@@ -54,4 +54,4 @@ opentelemetry_sdk = "0.18"
 firestore = { version = "0.32.2", features = [] }
 sha2 = "0.10.6"
 struct-path = "0.2.2"
-itertools = "0.11.0"
+itertools = "0.14.0"
