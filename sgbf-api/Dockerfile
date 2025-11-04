@@ -23,8 +23,8 @@ WORKDIR /app/sgbf
 
 RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
-RUN useradd -u 65534 -m -s /bin/bash appuser && \
+# Create non-root user (UID 10001 to avoid conflicts with system users)
+RUN useradd -u 10001 -U -m -s /bin/bash appuser && \
     mkdir -p /tmp && \
     chown -R appuser:appuser /app/sgbf /tmp
 
