@@ -1,4 +1,4 @@
-FROM rust:1.83-bookworm AS chef
+FROM rust:1.91-bookworm AS chef
 
 RUN apt-get update && apt-get install -y protobuf-compiler && rm -rf /var/lib/apt/lists/*
 
