@@ -26,7 +26,7 @@ tower = { version = "0.4", features = ["util", "timeout", "load-shed", "limit"] 
 tower-layer = "0.3"
 tower-http = { version = "0.4", features = ["add-extension", "auth", "compression-full", "limit", "trace", "cors", "catch-panic"] }
 hyper = { version = "0.14", features = ["full"] }
-reqwest = { version = "0.11", default-features = false, features = ["json", "cookies", "rustls-tls"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "cookies", "rustls-tls"] }
 # for libraries
 # axum-core = "0.3"
 
