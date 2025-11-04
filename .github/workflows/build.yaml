@@ -116,9 +116,11 @@ jobs:
           sha=$(echo ${{ github.sha }} | cut -c1-7)
           kustomize edit set image "ghcr.io/cfi2017/sgbf/api=ghcr.io/cfi2017/sgbf/api:sha-$sha"
       - name: write to repo
+        # Only commit on main branch pushes, not on tags
+        if: github.ref == 'refs/heads/main'
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git add k8s
-          git commit -m "update image tag for ${{ matrix.package }}"
+          git diff --staged --quiet || git commit -m "chore(k8s): update image tags [skip ci]"
           git push
