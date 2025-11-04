@@ -48,7 +48,7 @@ sentry = {version = "0.31", default-features = false, features = [
 ] }
 # otel harness
 tracing-opentelemetry = "0.18"
-opentelemetry = { version = "0.18", features = ["rt-tokio"] }
+opentelemetry = { version = "0.20", features = ["rt-tokio"] }
 opentelemetry-otlp = { version = "0.11", features = ["tokio", "metrics"] }
 opentelemetry_sdk = "0.18"
 firestore = { version = "0.32.2", features = [] }
