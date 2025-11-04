@@ -12,7 +12,7 @@ A Helm chart for SGBF application (API + Frontend)
 
 ## Prerequisites
 
-- Kubernetes 1.19+
+- Kubernetes 1.23+
 - Helm 3.0+
 - Required secrets (see below)
 
@@ -77,7 +77,7 @@ kubectl create secret generic firebase \
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Affinity rules for all pods |
-| api | object | `{"containerPort":8000,"enabled":true,"env":{"firebaseProject":"sgbf-system","googleApplicationCredentials":"/etc/sgbf/service-account.json","rustLog":"info","sentryDsn":"https://952ffd64359f4f2e83b283faacdd545f@sentry-web.infra-sentry:9000/3"},"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/cfi2017/sgbf/api","tag":"latest"},"labels":{"app":"api","swiss.dev/logging":"json"},"name":"api","podSecurityContext":{"fsGroup":65534,"runAsGroup":65534,"runAsNonRoot":true,"runAsUser":65534,"seccompProfile":{"type":"RuntimeDefault"}},"replicaCount":1,"resources":{},"revisionHistoryLimit":3,"secrets":{"cache":{"name":"cache","passwordKey":"password","usernameKey":"username"},"firebase":{"name":"firebase","serviceAccountKey":"service-account.json"},"onesignal":{"idKey":"id","keyKey":"key","name":"onesignal"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":false,"runAsNonRoot":true,"runAsUser":65534},"service":{"port":80,"targetPort":8000,"type":"ClusterIP"}}` | API service configuration |
+| api | object | `{"containerPort":8000,"enabled":true,"env":{"firebaseProject":"sgbf-system","googleApplicationCredentials":"/etc/sgbf/service-account.json","rustLog":"info","sentryDsn":"https://952ffd64359f4f2e83b283faacdd545f@sentry-web.infra-sentry:9000/3"},"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/cfi2017/sgbf/api","tag":"latest"},"labels":{"app":"api","swiss.dev/logging":"json"},"name":"api","podSecurityContext":{"fsGroup":65534,"runAsGroup":65534,"runAsNonRoot":true,"runAsUser":65534,"seccompProfile":{"type":"RuntimeDefault"}},"replicaCount":1,"resources":{},"revisionHistoryLimit":3,"secrets":{"cache":{"name":"cache","passwordKey":"password","usernameKey":"username"},"firebase":{"name":"firebase","serviceAccountKey":"service-account.json"},"onesignal":{"idKey":"id","keyKey":"key","name":"onesignal"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534},"service":{"port":80,"targetPort":8000,"type":"ClusterIP"}}` | API service configuration |
 | api.containerPort | int | `8000` | API container port |
 | api.enabled | bool | `true` | Enable API deployment |
 | api.env | object | `{"firebaseProject":"sgbf-system","googleApplicationCredentials":"/etc/sgbf/service-account.json","rustLog":"info","sentryDsn":"https://952ffd64359f4f2e83b283faacdd545f@sentry-web.infra-sentry:9000/3"}` | API environment configuration |
@@ -106,7 +106,7 @@ kubectl create secret generic firebase \
 | api.secrets.onesignal.idKey | string | `"id"` | Key for OneSignal app ID |
 | api.secrets.onesignal.keyKey | string | `"key"` | Key for OneSignal API key |
 | api.secrets.onesignal.name | string | `"onesignal"` | Name of the OneSignal secret |
-| api.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":false,"runAsNonRoot":true,"runAsUser":65534}` | Container security context for API container (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) |
+| api.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534}` | Container security context for API container (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) |
 | api.service.port | int | `80` | API service port |
 | api.service.targetPort | int | `8000` | API service target port |
 | api.service.type | string | `"ClusterIP"` | API service type |

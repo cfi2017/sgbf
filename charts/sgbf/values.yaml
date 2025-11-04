@@ -53,7 +53,7 @@ api:
   # -- Container security context for API container (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
   securityContext:
     allowPrivilegeEscalation: false
-    readOnlyRootFilesystem: false  # API may need to write temporary files
+    readOnlyRootFilesystem: true
     runAsNonRoot: true
     runAsUser: 65534
     capabilities:

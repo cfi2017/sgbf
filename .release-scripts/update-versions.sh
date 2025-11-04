@@ -8,11 +8,25 @@ if [ -z "$VERSION" ]; then
   exit 1
 fi
 
-echo "Updating versions to: $VERSION"
+# Strip 'v' prefix if present
+VERSION="${VERSION#v}"
+
+# Extract base version (strip pre-release and metadata)
+# e.g., 1.2.3-alpha.1+build.123 -> 1.2.3
+BASE_VERSION="${VERSION%%-*}"
+BASE_VERSION="${BASE_VERSION%%+*}"
+
+# Validate version format (semver: major.minor.patch)
+if ! [[ "$BASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "Error: Invalid version format '$VERSION'. Expected semver format: X.Y.Z"
+  exit 1
+fi
+
+echo "Updating versions to: $BASE_VERSION"
 
 # Update Cargo workspace versions
 echo "Updating Cargo.toml versions..."
-cargo set-version "$VERSION"
+cargo set-version "$BASE_VERSION"
 cargo update -w
 
 # Check if there are any non-chart changes in this release
@@ -34,14 +48,23 @@ CURRENT_CHART_VERSION=$(grep '^version:' "$CHART_FILE" | awk '{print $2}')
 
 if [ "$NON_CHART_CHANGES" -gt 0 ]; then
   # App code changed - update both appVersion and chart version
-  echo "Detected application code changes - updating appVersion to $VERSION"
-  sed -i "s/^appVersion: .*/appVersion: \"$VERSION\"/" "$CHART_FILE"
+  echo "Detected application code changes - updating appVersion to $BASE_VERSION"
+  sed -i "s/^appVersion: .*/appVersion: \"$BASE_VERSION\"/" "$CHART_FILE"
 
   # Bump chart version to match (same as app version for simplicity)
-  sed -i "s/^version: .*/version: $VERSION/" "$CHART_FILE"
+  sed -i "s/^version: .*/version: $BASE_VERSION/" "$CHART_FILE"
 else
   # Only chart changes - bump chart version only
   echo "Only Helm chart changes detected - keeping appVersion unchanged"
+
+  # Strip 'v' prefix from current chart version if present
+  CURRENT_CHART_VERSION="${CURRENT_CHART_VERSION#v}"
+
+  # Validate current chart version format
+  if ! [[ "$CURRENT_CHART_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "Warning: Current chart version '$CURRENT_CHART_VERSION' is not in semver format. Using 0.1.0"
+    CURRENT_CHART_VERSION="0.1.0"
+  fi
 
   # Parse version and increment patch
   IFS='.' read -r -a version_parts <<< "$CURRENT_CHART_VERSION"
