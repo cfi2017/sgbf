@@ -66,10 +66,15 @@ api:
     sentryDsn: "https://952ffd64359f4f2e83b283faacdd545f@sentry-web.infra-sentry:9000/3"
     # -- Rust log level (trace, debug, info, warn, error)
     rustLog: "info"
-    # -- Firebase project ID
-    firebaseProject: "sgbf-system"
-    # -- Path to Google application credentials file
-    googleApplicationCredentials: "/etc/sgbf/service-account.json"
+
+  # -- External PostgreSQL database configuration
+  database:
+    # -- Database host
+    host: "postgres"
+    # -- Database port
+    port: 5432
+    # -- Database name
+    database: "sgbf"
 
   # -- Secret references for API
   secrets:
@@ -89,12 +94,14 @@ api:
       keyKey: key
       # -- Key for OneSignal app ID
       idKey: id
-    # -- Firebase service account secret
-    firebase:
-      # -- Name of the Firebase secret
-      name: firebase
-      # -- Key for service account JSON file
-      serviceAccountKey: service-account.json
+    # -- Database credentials secret
+    database:
+      # -- Name of the database secret
+      name: database
+      # -- Key for database username
+      usernameKey: username
+      # -- Key for database password
+      passwordKey: password
 
   # -- Additional labels for API pods
   labels:

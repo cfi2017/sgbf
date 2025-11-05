@@ -77,12 +77,14 @@ kubectl create secret generic firebase \
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Affinity rules for all pods |
-| api | object | `{"containerPort":8000,"enabled":true,"env":{"firebaseProject":"sgbf-system","googleApplicationCredentials":"/etc/sgbf/service-account.json","rustLog":"info","sentryDsn":"https://952ffd64359f4f2e83b283faacdd545f@sentry-web.infra-sentry:9000/3"},"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/cfi2017/sgbf/api","tag":"latest"},"labels":{"app":"api","swiss.dev/logging":"json"},"name":"api","podSecurityContext":{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}},"replicaCount":1,"resources":{},"revisionHistoryLimit":3,"secrets":{"cache":{"name":"cache","passwordKey":"password","usernameKey":"username"},"firebase":{"name":"firebase","serviceAccountKey":"service-account.json"},"onesignal":{"idKey":"id","keyKey":"key","name":"onesignal"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":10001},"service":{"port":80,"targetPort":8000,"type":"ClusterIP"}}` | API service configuration |
+| api | object | `{"containerPort":8000,"database":{"database":"sgbf","host":"postgres","port":5432},"enabled":true,"env":{"rustLog":"info","sentryDsn":"https://952ffd64359f4f2e83b283faacdd545f@sentry-web.infra-sentry:9000/3"},"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/cfi2017/sgbf/api","tag":"latest"},"labels":{"app":"api","swiss.dev/logging":"json"},"name":"api","podSecurityContext":{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}},"replicaCount":1,"resources":{},"revisionHistoryLimit":3,"secrets":{"cache":{"name":"cache","passwordKey":"password","usernameKey":"username"},"database":{"name":"database","passwordKey":"password","usernameKey":"username"},"onesignal":{"idKey":"id","keyKey":"key","name":"onesignal"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":10001},"service":{"port":80,"targetPort":8000,"type":"ClusterIP"}}` | API service configuration |
 | api.containerPort | int | `8000` | API container port |
+| api.database | object | `{"database":"sgbf","host":"postgres","port":5432}` | External PostgreSQL database configuration |
+| api.database.database | string | `"sgbf"` | Database name |
+| api.database.host | string | `"postgres"` | Database host |
+| api.database.port | int | `5432` | Database port |
 | api.enabled | bool | `true` | Enable API deployment |
-| api.env | object | `{"firebaseProject":"sgbf-system","googleApplicationCredentials":"/etc/sgbf/service-account.json","rustLog":"info","sentryDsn":"https://952ffd64359f4f2e83b283faacdd545f@sentry-web.infra-sentry:9000/3"}` | API environment configuration |
-| api.env.firebaseProject | string | `"sgbf-system"` | Firebase project ID |
-| api.env.googleApplicationCredentials | string | `"/etc/sgbf/service-account.json"` | Path to Google application credentials file |
+| api.env | object | `{"rustLog":"info","sentryDsn":"https://952ffd64359f4f2e83b283faacdd545f@sentry-web.infra-sentry:9000/3"}` | API environment configuration |
 | api.env.rustLog | string | `"info"` | Rust log level (trace, debug, info, warn, error) |
 | api.env.sentryDsn | string | `"https://952ffd64359f4f2e83b283faacdd545f@sentry-web.infra-sentry:9000/3"` | Sentry DSN for error reporting |
 | api.image.pullPolicy | string | `"IfNotPresent"` | API image pull policy |
@@ -94,14 +96,15 @@ kubectl create secret generic firebase \
 | api.replicaCount | int | `1` | Number of API replicas |
 | api.resources | object | `{}` | Resource limits and requests for API pods |
 | api.revisionHistoryLimit | int | `3` | Number of revisions to keep |
-| api.secrets | object | `{"cache":{"name":"cache","passwordKey":"password","usernameKey":"username"},"firebase":{"name":"firebase","serviceAccountKey":"service-account.json"},"onesignal":{"idKey":"id","keyKey":"key","name":"onesignal"}}` | Secret references for API |
+| api.secrets | object | `{"cache":{"name":"cache","passwordKey":"password","usernameKey":"username"},"database":{"name":"database","passwordKey":"password","usernameKey":"username"},"onesignal":{"idKey":"id","keyKey":"key","name":"onesignal"}}` | Secret references for API |
 | api.secrets.cache | object | `{"name":"cache","passwordKey":"password","usernameKey":"username"}` | Cache (Redis) credentials secret |
 | api.secrets.cache.name | string | `"cache"` | Name of the cache secret |
 | api.secrets.cache.passwordKey | string | `"password"` | Key for cache password |
 | api.secrets.cache.usernameKey | string | `"username"` | Key for cache username |
-| api.secrets.firebase | object | `{"name":"firebase","serviceAccountKey":"service-account.json"}` | Firebase service account secret |
-| api.secrets.firebase.name | string | `"firebase"` | Name of the Firebase secret |
-| api.secrets.firebase.serviceAccountKey | string | `"service-account.json"` | Key for service account JSON file |
+| api.secrets.database | object | `{"name":"database","passwordKey":"password","usernameKey":"username"}` | Database credentials secret |
+| api.secrets.database.name | string | `"database"` | Name of the database secret |
+| api.secrets.database.passwordKey | string | `"password"` | Key for database password |
+| api.secrets.database.usernameKey | string | `"username"` | Key for database username |
 | api.secrets.onesignal | object | `{"idKey":"id","keyKey":"key","name":"onesignal"}` | OneSignal credentials secret |
 | api.secrets.onesignal.idKey | string | `"id"` | Key for OneSignal app ID |
 | api.secrets.onesignal.keyKey | string | `"key"` | Key for OneSignal API key |

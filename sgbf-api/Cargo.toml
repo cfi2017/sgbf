@@ -51,7 +51,7 @@ tracing-opentelemetry = "0.18"
 opentelemetry = { version = "0.18", features = ["rt-tokio"] }
 opentelemetry-otlp = { version = "0.11", features = ["tokio", "metrics"] }
 opentelemetry_sdk = "0.18"
-firestore = { version = "0.32.2", features = [] }
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono", "json"] }
 sha2 = "0.10.6"
 struct-path = "0.2.2"
 itertools = "0.11.0"

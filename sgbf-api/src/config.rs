@@ -8,8 +8,21 @@ pub struct Server {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-pub struct Firebase {
-    pub project: String,
+pub struct Database {
+    pub host: String,
+    pub port: u16,
+    pub user: String,
+    pub password: String,
+    pub database: String,
+}
+
+impl Database {
+    pub fn connection_string(&self) -> String {
+        format!(
+            "postgres://{}:{}@{}:{}/{}",
+            self.user, self.password, self.host, self.port, self.database
+        )
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -28,7 +41,7 @@ pub struct OneSignal {
 pub struct Config {
     pub server: Server,
     pub cache: CacheConfig,
-    pub firebase: Firebase,
+    pub database: Database,
     pub onesignal: OneSignal,
     pub tracing: crate::tracing::TracingConfig
 }

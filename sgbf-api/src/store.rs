@@ -4,12 +4,11 @@ use axum::extract::{FromRef, State};
 use axum::http;
 use axum::http::StatusCode;
 use chrono::Utc;
-use firestore::{FirestoreDb, FirestoreQueryCollection, FirestoreTimestamp, path};
 use serde::{Deserialize, Serialize};
 use sha2::{Sha256, Digest};
+use sqlx::PgPool;
 use tracing::{debug, warn};
 use sgbf_client::client::axum::{AuthCache, AuthState};
-use crate::server::ServerError::Unknown;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -37,70 +36,66 @@ pub struct NotificationSettings {
     pub tow_pilot_requests: bool,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct TokenBinding {
-    #[serde(alias = "_firestore_id")]
-    id: Option<String>,
+    pub id: String,
     pub user_id: String,
-    #[serde(with = "firestore::serialize_as_timestamp")]
     pub expiry: chrono::DateTime<chrono::Utc>,
 }
 
-pub async fn clean_expired_tokens(db: &FirestoreDb) -> anyhow::Result<()> {
-    let tokens: Vec<TokenBinding> = db.fluent()
-        .select()
-        .from("tokens")
-        .filter(|q| {
-            q.field(path!(TokenBinding::expiry)).less_than(FirestoreTimestamp(Utc::now()))
-        })
-        .obj()
-        .query()
-        .await?;
-    debug!("found {} expired tokens", tokens.len());
-    for token in tokens {
-        let result = db.fluent()
-            .delete()
-            .from("tokens")
-            .document_id(&token.id.unwrap())
-            .execute()
-            .await;
-        result.context("could not delete token binding")?;
-    }
+pub async fn clean_expired_tokens(db: &PgPool) -> anyhow::Result<()> {
+    let result = sqlx::query(
+        "DELETE FROM tokens WHERE expiry < $1"
+    )
+    .bind(Utc::now())
+    .execute(db)
+    .await
+    .context("could not delete expired tokens")?;
+
+    debug!("deleted {} expired tokens", result.rows_affected());
     Ok(())
 }
 
-pub async fn store_token(db: &FirestoreDb, token: &str, user_id: &str) -> anyhow::Result<TokenBinding> {
+pub async fn store_token(db: &PgPool, token: &str, user_id: &str) -> anyhow::Result<TokenBinding> {
     let mut hasher = Sha256::default();
     hasher.update(token);
     let hash = hasher.finalize();
     let hash = format!("{:x}", hash);
-    let result = db.fluent()
-        .update()
-        .in_col("tokens")
-        .document_id(&hash)
-        .object(&TokenBinding {
-            id: None,
-            user_id: user_id.to_string(),
-            expiry: chrono::Utc::now() + chrono::Duration::hours(48),
-        })
-        .execute::<TokenBinding>()
-        .await;
-    result.context("could not save token binding")
+    let expiry = chrono::Utc::now() + chrono::Duration::hours(48);
+
+    sqlx::query(
+        "INSERT INTO tokens (id, user_id, expiry) VALUES ($1, $2, $3)
+         ON CONFLICT (id) DO UPDATE SET user_id = $2, expiry = $3"
+    )
+    .bind(&hash)
+    .bind(user_id)
+    .bind(expiry)
+    .execute(db)
+    .await
+    .context("could not save token binding")?;
+
+    Ok(TokenBinding {
+        id: hash,
+        user_id: user_id.to_string(),
+        expiry,
+    })
 }
 
-pub async fn get_uid_for_token(db: &FirestoreDb, token: &str) -> anyhow::Result<Option<String>> {
+pub async fn get_uid_for_token(db: &PgPool, token: &str) -> anyhow::Result<Option<String>> {
     let mut hasher = Sha256::default();
     hasher.update(token);
     let hash = hasher.finalize();
     let hash = format!("{:x}", hash);
-    let result = db.fluent()
-        .select()
-        .by_id_in("tokens")
-        .obj()
-        .one(&hash)
-        .await;
-    let binding: Option<TokenBinding> = result.context("could not get token binding")?;
+
+    let binding: Option<TokenBinding> = sqlx::query_as(
+        "SELECT id, user_id, expiry FROM tokens WHERE id = $1"
+    )
+    .bind(&hash)
+    .fetch_optional(db)
+    .await
+    .context("could not get token binding")?;
+
     Ok(binding.map(|binding| binding.user_id))
 }
 
@@ -118,8 +113,8 @@ pub async fn with_uid<B, S>(
     mut req: http::Request<B>,
     next: axum::middleware::Next<B>
 ) -> Result<axum::response::Response, StatusCode>
-    where FirestoreDb: FromRef<S> {
-    let db = FirestoreDb::from_ref(&s);
+    where PgPool: FromRef<S> {
+    let db = PgPool::from_ref(&s);
     let auth_state = req.extensions().get::<AuthState>();
     if let Err(err) = clean_expired_tokens(&db).await {
         warn!("could not clean expired tokens: {}", err);
@@ -137,24 +132,40 @@ pub async fn with_uid<B, S>(
     Err(StatusCode::INTERNAL_SERVER_ERROR)
 }
 
-pub async fn store_user(db: &FirestoreDb, user: &User) -> anyhow::Result<User> {
-    let result = db.fluent()
-        .update()
-        .in_col("users")
-        .document_id(&user.id.to_string())
-        .object(user)
-        .execute::<User>()
-        .await;
-    result.context("could not save user")
+pub async fn store_user(db: &PgPool, user: &User) -> anyhow::Result<User> {
+    let settings_json = serde_json::to_value(&user.settings)
+        .context("could not serialize user settings")?;
+
+    sqlx::query(
+        "INSERT INTO users (id, name, settings) VALUES ($1, $2, $3)
+         ON CONFLICT (id) DO UPDATE SET name = $2, settings = $3"
+    )
+    .bind(&user.id)
+    .bind(&user.name)
+    .bind(&settings_json)
+    .execute(db)
+    .await
+    .context("could not save user")?;
+
+    Ok(user.clone())
 }
 
-pub async fn get_user(db: &FirestoreDb, user_id: &str) -> anyhow::Result<Option<User>> {
-    let result = db.fluent()
-        .select()
-        .by_id_in("users")
-        .obj()
-        .one(&user_id.to_string())
-        .await;
-    let user: Option<User> = result.context("could not get user")?;
-    Ok(user)
+pub async fn get_user(db: &PgPool, user_id: &str) -> anyhow::Result<Option<User>> {
+    let row: Option<(String, String, serde_json::Value)> = sqlx::query_as(
+        "SELECT id, name, settings FROM users WHERE id = $1"
+    )
+    .bind(user_id)
+    .fetch_optional(db)
+    .await
+    .context("could not get user")?;
+
+    Ok(row.map(|(id, name, settings)| {
+        let settings: UserSettings = serde_json::from_value(settings)
+            .unwrap_or_default();
+        User {
+            id,
+            name,
+            settings,
+        }
+    }))
 }

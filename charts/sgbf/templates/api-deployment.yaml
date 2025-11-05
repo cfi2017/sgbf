@@ -67,8 +67,22 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.api.secrets.cache.name }}
                   key: {{ .Values.api.secrets.cache.passwordKey }}
-            - name: SGBF__FIREBASE__PROJECT
-              value: {{ .Values.api.env.firebaseProject | quote }}
+            - name: SGBF__DATABASE__HOST
+              value: {{ .Values.api.database.host | quote }}
+            - name: SGBF__DATABASE__PORT
+              value: {{ .Values.api.database.port | quote }}
+            - name: SGBF__DATABASE__DATABASE
+              value: {{ .Values.api.database.database | quote }}
+            - name: SGBF__DATABASE__USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.api.secrets.database.name }}
+                  key: {{ .Values.api.secrets.database.usernameKey }}
+            - name: SGBF__DATABASE__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.api.secrets.database.name }}
+                  key: {{ .Values.api.secrets.database.passwordKey }}
             - name: SGBF__ONESIGNAL__KEY
               valueFrom:
                 secretKeyRef:
@@ -79,12 +93,7 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.api.secrets.onesignal.name }}
                   key: {{ .Values.api.secrets.onesignal.idKey }}
-            - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: {{ .Values.api.env.googleApplicationCredentials | quote }}
           volumeMounts:
-            - name: service-account
-              mountPath: /etc/sgbf/
-              readOnly: true
             - name: tmp
               mountPath: /tmp
           {{- with .Values.api.resources }}
@@ -92,12 +101,6 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        - name: service-account
-          secret:
-            secretName: {{ .Values.api.secrets.firebase.name }}
-            items:
-              - key: {{ .Values.api.secrets.firebase.serviceAccountKey }}
-                path: {{ .Values.api.secrets.firebase.serviceAccountKey }}
         - name: tmp
           emptyDir: {}
 {{- end }}

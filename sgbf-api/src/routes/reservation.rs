@@ -6,7 +6,7 @@ use anyhow::Context;
 use axum::extract::{FromRef, State};
 use axum::{extract, Json};
 use axum_macros::debug_handler;
-use firestore::FirestoreDb;
+use sqlx::PgPool;
 use serde::{Deserialize, Serialize};
 use tracing::{info, instrument};
 pub use calendar::get_calendar;
@@ -41,7 +41,7 @@ pub async fn login(
     let user = client.get_user().await?;
     if let Some(user) = &user {
         info!(user.name = %user, user.id = %payload.username, "user logged in");
-        let db = FirestoreDb::from_ref(&state);
+        let db = PgPool::from_ref(&state);
         let id = payload.username;
         if get_user(&db, &id).await?.is_none() {
             store_user(&db, &User {
@@ -62,7 +62,7 @@ pub async fn me(
     State(state): State<SharedState>,
     extract::Extension(Uid(uid)): extract::Extension<Uid>
 ) -> Result<Json<User>, UnknownServerError> {
-    let db = FirestoreDb::from_ref(&state);
+    let db = PgPool::from_ref(&state);
     let user = get_user(&db, &uid).await?.context("failed to get user")?;
     Ok(Json(user))
 }

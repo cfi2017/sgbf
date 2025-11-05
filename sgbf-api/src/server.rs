@@ -14,7 +14,7 @@ use axum::middleware::from_fn_with_state;
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum_client_ip::SecureClientIpSource;
-use firestore::FirestoreDb;
+use sqlx::PgPool;
 use onesignal_rust_api::apis::configuration::Configuration;
 use tokio::signal;
 use tower::ServiceBuilder;
@@ -36,11 +36,13 @@ pub async fn init_default_server() -> anyhow::Result<()> {
     let config = Config::load().context("could not load config")?;
     let _guard = crate::tracing::init_tracing(&config.tracing)?;
 
-    let db = FirestoreDb::new(&config.firebase.project).await?;
+    let db = PgPool::connect(&config.database.connection_string())
+        .await
+        .context("could not connect to database")?;
     let notifications = onesignal::create_onesignal_configuration(&config.onesignal);
 
     let auth_cache = AuthCache::new();
-    let cache = Arc::new(Cache::new(db.clone(), &config.cache, notifications));
+    let cache = Arc::new(Cache::new(&config.cache, notifications));
     let cache_handle = {
         let cache = cache.clone();
         info!("starting cache polling");

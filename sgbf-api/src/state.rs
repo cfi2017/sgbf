@@ -1,6 +1,6 @@
 use std::sync::{Arc, RwLock};
 use axum::extract::FromRef;
-use firestore::FirestoreDb;
+use sqlx::PgPool;
 use sgbf_client::client::axum::{AuthCache};
 use crate::cache::{Cache, CacheRef};
 use crate::config::Config;
@@ -21,7 +21,7 @@ pub struct AppState {
     pub(crate) auth_cache: AuthCache,
     pub(crate) config: Config,
     pub(crate) cache: CacheRef,
-    pub(crate) db: FirestoreDb
+    pub(crate) db: PgPool
 }
 
 impl FromRef<SharedState> for AppState {
@@ -42,7 +42,7 @@ impl FromRef<SharedState> for AuthCache {
     }
 }
 
-impl FromRef<SharedState> for FirestoreDb {
+impl FromRef<SharedState> for PgPool {
     fn from_ref(input: &SharedState) -> Self {
         input.inner.read().unwrap().db.clone()
     }

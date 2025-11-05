@@ -4,7 +4,6 @@ use std::time::{Duration, Instant};
 use anyhow::{bail, Context};
 use axum::headers::authorization::Credentials;
 use chrono::NaiveDate;
-use firestore::FirestoreDb;
 use onesignal_rust_api::apis;
 use onesignal_rust_api::apis::configuration::Configuration;
 use onesignal_rust_api::apis::default_api::CreateNotificationError;
@@ -58,7 +57,6 @@ pub type CacheRef = Arc<Cache>;
 pub struct Cache {
     pub last_update: Arc<RwLock<chrono::DateTime<chrono::Utc>>>,
     pub inner: Arc<RwLock<Calendar>>,
-    db: FirestoreDb,
     credentials: (String, String),
     tx_handle: mpsc::Sender<()>,
     rx_handle: Arc<RwLock<mpsc::Receiver<()>>>,
@@ -67,13 +65,12 @@ pub struct Cache {
 
 impl Cache {
 
-    pub fn new(db: FirestoreDb, config: &CacheConfig, notifications: Option<Configuration>) -> Self {
+    pub fn new(config: &CacheConfig, notifications: Option<Configuration>) -> Self {
         let (tx, rx) = mpsc::channel(1);
         Self {
             last_update: Arc::new(RwLock::new(chrono::Utc::now())),
             inner: Arc::new(RwLock::new(Default::default())),
             credentials: (config.username.to_owned(), config.password.to_owned()),
-            db,
             tx_handle: tx,
             rx_handle: Arc::new(RwLock::new(rx)),
             notifications: Arc::new(notifications)
