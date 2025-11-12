@@ -2,8 +2,8 @@ apiVersion: v2
 name: sgbf
 description: A Helm chart for SGBF application (API + Frontend)
 type: application
-version: 1.0.0
-appVersion: "1.0.0"
+version: 1.0.1
+appVersion: "1.0.1"
 maintainers:
   - name: cfi2017
 keywords:

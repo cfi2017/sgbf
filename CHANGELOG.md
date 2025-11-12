@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/cfi2017/sgbf/compare/v1.0.0...v1.0.1) (2025-11-12)
+
+### Bug Fixes
+
+* dependabot.yml ([0f341d0](https://github.com/cfi2017/sgbf/commit/0f341d05f9f6882254563e3cef5c6748f06799fd))
+
 ## 1.0.0 (2025-11-04)
 
 ### Features
