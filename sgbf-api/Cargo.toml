@@ -8,7 +8,7 @@ edition = "2024"
 [dependencies]
 # common libraries
 anyhow = "1.0.71"
-config = { version = "0.13.3", features = ["yaml"] }
+config = { version = "0.15.19", features = ["yaml"] }
 chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1", features = ["serde_derive"] }
 serde_json = { version = "1" }
@@ -20,24 +20,24 @@ tokio = { version = "1", features = ["full"] }
 
 # axum & tower
 axum = { version = "0.6", features = ["headers", "http2"] }
-axum-client-ip = "0.4"
-axum-macros = "0.3"
-tower = { version = "0.4", features = ["util", "timeout", "load-shed", "limit"] }
+axum-client-ip = "1.1"
+axum-macros = "0.5"
+tower = { version = "0.5", features = ["util", "timeout", "load-shed", "limit"] }
 tower-layer = "0.3"
-tower-http = { version = "0.4", features = ["add-extension", "auth", "compression-full", "limit", "trace", "cors", "catch-panic"] }
-hyper = { version = "0.14", features = ["full"] }
-reqwest = { version = "0.11", default-features = false, features = ["json", "cookies", "rustls-tls"] }
+tower-http = { version = "0.6", features = ["add-extension", "auth", "compression-full", "limit", "trace", "cors", "catch-panic"] }
+hyper = { version = "1.8", features = ["full"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "cookies", "rustls-tls"] }
 # for libraries
 # axum-core = "0.3"
 
 # tracing
 tracing = { version = "0.1", features = ["log"] }
 log = { version = "0.4", features = ["max_level_info", "release_max_level_info"] }
-tracing-log = "0.1"
+tracing-log = "0.2"
 tracing-subscriber = { version = "0.3", features = ["fmt", "json", "env-filter"] }
 tracing-error = { version = "0.2", features = ["traced-error"] }
 # error reporting
-sentry = {version = "0.31", default-features = false, features = [
+sentry = {version = "0.45", default-features = false, features = [
     "backtrace",
     "contexts",
     "debug-images",
@@ -47,11 +47,11 @@ sentry = {version = "0.31", default-features = false, features = [
     "rustls"
 ] }
 # otel harness
-tracing-opentelemetry = "0.18"
+tracing-opentelemetry = "0.32"
 opentelemetry = { version = "0.18", features = ["rt-tokio"] }
-opentelemetry-otlp = { version = "0.11", features = ["tokio", "metrics"] }
-opentelemetry_sdk = "0.18"
-firestore = { version = "0.32.2", features = [] }
+opentelemetry-otlp = { version = "0.31", features = ["tokio", "metrics"] }
+opentelemetry_sdk = "0.31"
+firestore = { version = "0.47.0", features = [] }
 sha2 = "0.10.6"
 struct-path = "0.2.2"
-itertools = "0.11.0"
+itertools = "0.14.0"
